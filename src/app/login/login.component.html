@@ -1,17 +1,17 @@
-<div class="register-container">
+<div class="login-container">
   <div class="logo">
     <img src="assets/logoPlusTexto.svg" alt="WeFit Logo" />
     <!--h1><span class="green-text">We</span>Fit</h1-->
   </div>
 
-  <form (ngSubmit)="onSubmit(registerForm)" #registerForm="ngForm">
-    <input type="text" name="user" ngModel placeholder="Usuario" required />
+  <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
     <input type="email" name="email" ngModel placeholder="Correo electrónico" required />
     <input type="password" name="password" ngModel placeholder="Contraseña" required />
-    <button type="submit">Registrarse</button>
+    <button type="submit">Iniciar sesión</button>
   </form>
 
-  <p class="login-text">
-    ¿Ya tienes cuenta? <a href="#">Inicia sesión</a>
+  <p class="register-text">
+    ¿No tienes cuenta? <a href="#">Regístrate</a>
   </p>
 </div>
+

@@ -1,5 +1,5 @@
 /* Estilos generales */
-.register-container {
+.login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,6 +42,7 @@ input {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
+
 }
 
 button {
@@ -60,11 +61,12 @@ button:hover {
   background-color: #14d578;
 }
 
-.login-text {
+/* Texto de registro */
+.register-text {
   margin-top: 10px;
 }
 
-.login-text a {
+.register-text a {
   color: blue;
   text-decoration: none;
 }

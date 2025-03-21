@@ -1,39 +1,25 @@
-import { Component } from '@angular/core';
-import { UserService } from '../services/user.service';
+import { Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html',
   imports: [
-    FormsModule,
-    NgIf
+    FormsModule
   ],
-  styleUrls: ['./register.component.css']
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  email: string = '';
-  password: string = '';
-  username: string = '';
-  errorMessage: string = '';
-  successMessage: string = '';
+  user = {
+    username: '',
+    email: '',
+    password: ''
+  };
 
-  constructor(private userService: UserService) {}
-
-  async onSubmit(event: Event) {
-    event.preventDefault(); // Evita recargar la página
-
-    try {
-      const user = await this.userService.registerUser(this.email, this.password, this.username);
-      this.successMessage = "Registro exitoso ✅";
-      this.errorMessage = '';
-      console.log("Usuario registrado:", user);
-    } catch (error) {
-      this.successMessage = '';
-      this.errorMessage = "Error al registrar el usuario ❌";
-      console.error("Error en el registro:", error);
-    }
+  onSubmit(form: any) {
+    this.user.username = form.value.user;
+    this.user.email = form.value.email;
+    this.user.password = form.value.password;
+    console.log('User registered:', this.user);
   }
 }
-
