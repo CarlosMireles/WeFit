@@ -1,23 +1,9 @@
-header {
-  padding: 20px;
-  display: flex;
-  justify-content: flex-start;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.logo-container {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  height: 80px;
-}
-
 footer {
   position: absolute;
   bottom: 50px;
-  left: 38%;
-  align-content: center;
+  left: 50%;
+  transform: translateX(-50%);
+
   z-index: 10;
   background-color: white;
   padding: 20px;
@@ -26,12 +12,12 @@ footer {
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
   border: 2px solid;
   width: 435px;
-  align-items: center;
-  align-self: center;
-  justify-self: center;
+
+  display: flex;          /* Para que justify-content funcione */
   justify-content: center;
-  justify-items: center;
+  align-items: center;    /* Centra verticalmente el contenido dentro del footer */
 }
+
 
 .footer-container {
   display: flex;

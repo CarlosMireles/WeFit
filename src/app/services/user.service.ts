@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, setDoc } from '@angular/fire/firestore';
-import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import {doc, Firestore, setDoc} from '@angular/fire/firestore';
+import {Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +24,16 @@ export class UserService {
       return user;
     } catch (error) {
       console.error("Error al registrar el usuario:", error);
+      throw error;
+    }
+  }
+
+  async loginUser(email: string, password: string) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      return userCredential.user;
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
       throw error;
     }
   }

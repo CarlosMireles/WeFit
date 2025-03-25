@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user.service';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -23,10 +24,12 @@ export class RegisterComponent {
     errorMessage: '',
     usernameError: '',
     emailError: '',
-    passwordError: ''
+    passwordError: '',
+    homeRoute:''
   };
 
-  constructor(private userService: UserService) {}
+
+  constructor(private userService: UserService, private router: Router) {}
 
   validateForm() {
     this.user.usernameError = '';
@@ -74,6 +77,7 @@ export class RegisterComponent {
     try {
       const user = await this.userService.registerUser(this.user.email, this.user.password, this.user.username);
       this.user.successMessage = "¡Registro exitoso! 🎉";
+      this.router.navigate(['/home']);
       console.log("Usuario registrado:", user);
     } catch (error) {
       this.user.errorMessage = "Error al registrar el usuario ❌";
