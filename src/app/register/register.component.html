@@ -1,17 +1,54 @@
 <div class="register-container">
   <div class="logo">
     <img src="assets/logoPlusTexto.svg" alt="WeFit Logo" />
-    <!--h1><span class="green-text">We</span>Fit</h1-->
   </div>
 
   <form (ngSubmit)="onSubmit(registerForm)" #registerForm="ngForm">
-    <input type="text" name="user" ngModel placeholder="Usuario" required />
-    <input type="email" name="email" ngModel placeholder="Correo electrónico" required />
-    <input type="password" name="password" ngModel placeholder="Contraseña" required />
+    <input
+      type="text"
+      name="user"
+      ngModel
+      placeholder="Usuario"
+      required
+      [class.is-invalid]="user.usernameError" />
+    <div *ngIf="user.usernameError" class="error-message">
+      {{ user.usernameError }}
+    </div>
+
+    <input
+      type="email"
+      name="email"
+      ngModel
+      placeholder="Correo electrónico"
+      required
+      [class.is-invalid]="user.emailError" />
+    <div *ngIf="user.emailError" class="error-message">
+      {{ user.emailError }}
+    </div>
+
+    <input
+      type="password"
+      name="password"
+      ngModel
+      placeholder="Contraseña"
+      required
+      [class.is-invalid]="user.passwordError" />
+    <div *ngIf="user.passwordError" class="error-message">
+      {{ user.passwordError }}
+    </div>
+
     <button type="submit">Registrarse</button>
   </form>
 
+  <div *ngIf="user.successMessage" class="alert alert-success">
+    {{ user.successMessage }}
+  </div>
+
+  <div *ngIf="user.errorMessage" class="alert alert-danger">
+    {{ user.errorMessage }}
+  </div>
+
   <p class="login-text">
-    ¿Ya tienes cuenta? <a href="#">Inicia sesión</a>
+    ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
   </p>
 </div>
