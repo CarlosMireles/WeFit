@@ -8,7 +8,7 @@
   font-family: Arial, sans-serif;
 }
 
-/* Logo y título */
+
 .logo {
   display: flex;
   align-items: center;
@@ -29,7 +29,6 @@
   color: #00c853;
 }
 
-/* Formulario */
 form {
   display: flex;
   flex-direction: column;
@@ -61,7 +60,6 @@ button:hover {
   background-color: #14d578;
 }
 
-/* Texto de registro */
 .register-text {
   margin-top: 10px;
 }

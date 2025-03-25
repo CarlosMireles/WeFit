@@ -1,7 +1,7 @@
 .create-event-button {
   position: absolute;
-  top: 29px;
-  left: 8px;
+  top: 30px;
+  left: 30px;
   background-color: black;
   color: white;
   padding: 10px 20px;
@@ -11,9 +11,12 @@
 }
 
 .create-event-button:hover {
-  background-color: #027502; /* verde más claro al pasar el ratón */
+  background-color: #14d578;
 }
 
 .create-event-button.active {
-  background-color: green; /* verde permanente cuando está activo */
+  background-color: #14d578;
+}
+.create-event-button.active:hover {
+  background-color: red;
 }

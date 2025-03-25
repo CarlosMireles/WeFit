@@ -3,7 +3,6 @@ import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
-
 import { Feature } from 'ol';
 import { Point } from 'ol/geom';
 import { Icon, Style } from 'ol/style';
@@ -26,6 +25,7 @@ export class MapComponent implements OnInit {
   private initMap(): void {
     this.map = new Map({
       target: 'map',
+      controls: [],
       layers: [
         new TileLayer({
           source: new OSM()
@@ -42,7 +42,6 @@ export class MapComponent implements OnInit {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Extrae latitud y longitud
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
 
@@ -53,7 +52,6 @@ export class MapComponent implements OnInit {
         },
         (error) => {
           console.error('Error al obtener la geolocalización:', error);
-          // Manejo de error o fallback
         }
       );
     } else {
