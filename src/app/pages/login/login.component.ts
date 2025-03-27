@@ -23,12 +23,9 @@ export class LoginComponent {
   async onSubmit(form: any) {
     this.user.email = form.value.email;
     this.user.password = form.value.password;
-    try {
-      const loggedUser = await this.userService.loginUser(this.user.email, this.user.password);
-      console.log('User logged in:', loggedUser);
-      this.router.navigate(['/home']);
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-    }
+    this.userService.loginUser(this.user.email, this.user.password)
+      .then(user => console.log('Usuario autenticado:', user))
+      .then(() => {this.router.navigate(['/home']);})
+      .catch(error => console.error('Error:', error));
   }
 }

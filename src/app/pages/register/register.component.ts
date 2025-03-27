@@ -74,14 +74,9 @@ export class RegisterComponent {
       return;
     }
 
-    try {
-      const user = await this.userService.registerUser(this.user.email, this.user.password, this.user.username);
-      this.user.successMessage = "¡Registro exitoso! 🎉";
-      this.router.navigate(['/home']);
-      console.log("Usuario registrado:", user);
-    } catch (error) {
-      this.user.errorMessage = "Error al registrar el usuario ❌";
-      console.error("Error en el registro:", error);
-    }
+    this.userService.registerUser(this.user.email, this.user.password, this.user.username)
+      .then(user => console.log('Usuario registrado:', user))
+      .then(() => {this.router.navigate(['/home']);})
+      .catch(error => console.error('Error:', error));
   }
 }
