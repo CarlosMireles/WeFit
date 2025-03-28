@@ -8,6 +8,7 @@ import { Point } from 'ol/geom';
 import { Icon, Style } from 'ol/style';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
+import { CommunicationService } from '../../services/CommunicationService';
 
 @Component({
   selector: 'app-map',
@@ -16,10 +17,29 @@ import VectorLayer from 'ol/layer/Vector';
 })
 export class MapComponent implements OnInit {
   map!: Map;
+  receptiveMode = false;
+
+  constructor(private communicationService: CommunicationService) {}
 
   ngOnInit(): void {
     this.initMap();
     this.setCurrentLocation();
+    // Suscribirse a los cambios del modo receptivo
+    this.communicationService.receptiveMode$.subscribe(mode => {
+      this.receptiveMode = mode;
+    });
+    // Añadir el listener para detectar clicks en el mapa
+    this.map.on('click', (evt) => {
+      console.log("Hola jefe");
+      if (this.receptiveMode) {
+        // Obtiene las coordenadas del click en la proyección del mapa
+        const coordinates = evt.coordinate;
+        // Notifica el click (puedes incluir más datos si lo requieres)
+        this.communicationService.notifyMapClick({ coordinate: coordinates });
+        // Desactiva el modo receptivo tras procesar el click
+        this.communicationService.setReceptiveMode(false);
+      }
+    });
   }
 
   private initMap(): void {
@@ -44,10 +64,10 @@ export class MapComponent implements OnInit {
         (position) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-
+          // Centra y ajusta el zoom del mapa a la ubicación actual
           this.map.getView().setCenter(fromLonLat([longitude, latitude]));
           this.map.getView().setZoom(14);
-
+          // Añade un marcador en la ubicación actual
           this.addMarker(longitude, latitude);
         },
         (error) => {
@@ -82,5 +102,13 @@ export class MapComponent implements OnInit {
     });
 
     this.map.addLayer(vectorLayer);
+  }
+
+  handleMapClick() {
+    if (this.receptiveMode) {
+      const clickData = { /* coordenadas, etc. */ };
+      this.communicationService.notifyMapClick(clickData);
+      this.communicationService.setReceptiveMode(false);
+    }
   }
 }

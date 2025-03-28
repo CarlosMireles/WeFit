@@ -1,51 +1,63 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {UserService} from '../../services/user.service';
+import {EventService} from '../../services/event.service';
+import {CommunicationService} from '../../services/CommunicationService';
+
 
 @Component({
   selector: 'app-create-event-form',
+  standalone: true, // Marca el componente como standalone
+  imports: [CommonModule, FormsModule], // Importa los módulos necesarios
   templateUrl: './create-event-form.component.html',
-  imports: [
-    ReactiveFormsModule
-  ],
   styleUrls: ['./create-event-form.component.css']
 })
-export class CreateEventFormComponent implements OnInit {
-  // Usamos '!' para indicar que la variable será inicializada antes de su uso
-  eventForm!: FormGroup;
+export class CreateEventFormComponent {
+  isOpen = true;
+  showForm = false;
 
-  // Lista de deportes predeterminada
+  // Propiedades de formulario
+  titulo = '';
+  deporte = '';
+  descripcion = '';
+  fecha = '';
+  hora = '';
+  maxParticipantes = '';
+  privacidad = '';
+
+  // Listas para los select
   deportes: string[] = ['Fútbol', 'Baloncesto', 'Tenis', 'Natación', 'Running'];
-
-  // Opciones para privacidad
   privacidades: string[] = ['Privado', 'Público', 'Mejores amigos'];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private eventApi: EventService, private communicationService: CommunicationService) { }
 
-  ngOnInit(): void {
-    this.eventForm = this.fb.group({
-      titulo: ['', Validators.required],
-      deporte: ['', Validators.required],
-      descripcion: [''],
-      fecha: ['', Validators.required],
-      // Validamos la hora en formato 00:00 (24h)
-      hora: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
-        ]
-      ],
-      maxParticipantes: ['', [Validators.required, Validators.min(1)]],
-      privacidad: ['', Validators.required]
+  ngOnInit() {
+    this.communicationService.mapClick$.subscribe(data => {
+      this.showForm = true;
     });
   }
 
-  onSubmit(): void {
-    if (this.eventForm.valid) {
-      console.log('Evento creado:', this.eventForm.value);
-      // Aquí puedes agregar la lógica para guardar o enviar el formulario
-    } else {
-      console.log('Formulario inválido');
-    }
+  closeForm(): void {
+    this.isOpen = false;
   }
+
+  createEvent(): void {
+    const nuevoEvento = {
+      titulo: this.titulo,
+      deporte: this.deporte,
+      descripcion: this.descripcion,
+      fecha: this.fecha,
+      hora: this.hora,
+      maxParticipantes: this.maxParticipantes,
+      privacidad: this.privacidad
+    };
+
+    this.eventApi.createEvent(nuevoEvento);
+
+    console.log('Evento creado:', nuevoEvento);
+    this.closeForm();
+  }
+
+
 }

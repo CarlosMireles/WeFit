@@ -12,10 +12,7 @@ export class EventService {
     this.eventosCollection = collection(this.firestore, 'eventos');
   }
 
-  /**
-   * Método para obtener todos los eventos desde Firestore.
-   * @returns Un array de eventos obtenidos.
-   */
+
   async getEvents(): Promise<any[]> {
     try {
       const querySnapshot = await getDocs(this.eventosCollection);
@@ -34,27 +31,19 @@ export class EventService {
     }
   }
 
-  /**
-   * Método para crear un nuevo evento en Firestore.
-   * @param evento Los datos del evento a crear.
-   * @returns El ID del evento creado.
-   */
+
   async createEvent(evento: any): Promise<string> {
     try {
       const docRef = await addDoc(this.eventosCollection, evento);
       console.log('Evento creado con ID:', docRef.id);
-      return docRef.id;  // Retornamos el ID del documento creado
+      return docRef.id;
     } catch (error) {
       console.error('Error al crear el evento:', error);
       throw error;
     }
   }
 
-  /**
-   * Método para modificar un evento existente en Firestore.
-   * @param id El ID del evento a modificar.
-   * @param evento Los nuevos datos del evento a actualizar.
-   */
+
   async updateEvent(id: string, evento: any): Promise<void> {
     try {
       const eventoRef = doc(this.firestore, 'eventos', id);  // Referencia al documento del evento
@@ -66,10 +55,7 @@ export class EventService {
     }
   }
 
-  /**
-   * Método para borrar un evento de Firestore.
-   * @param id El ID del evento a borrar.
-   */
+
   async deleteEvent(id: string): Promise<void> {
     try {
       const eventoRef = doc(this.firestore, 'eventos', id);  // Referencia al documento del evento

@@ -1,57 +1,103 @@
-<form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
-  <!-- Título del evento -->
-  <div>
-    <label for="titulo">Título del evento:</label>
-    <input id="titulo" type="text" formControlName="titulo" />
-  </div>
+<!--
+  Si no quieres que la ventana se pueda cerrar, elimina *ngIf="isOpen"
+  y quita la lógica de isOpen en el componente.
+-->
+<div *ngIf="isOpen" class="overlay">
+  <div class="modal-window">
+    <h2>Crear Evento</h2>
 
-  <!-- Deporte: Combobox con lista predeterminada -->
-  <div>
-    <label for="deporte">Deporte:</label>
-    <select id="deporte" formControlName="deporte">
-      <option *ngFor="let deporte of deportes" [value]="deporte">
-        {{ deporte }}
-      </option>
-    </select>
-  </div>
+    <!-- Formulario sin formGroup ni ngSubmit -->
+    <form>
+      <!-- Título del evento -->
+      <div>
+        <label for="titulo">Título del evento:</label>
+        <input
+          id="titulo"
+          type="text"
+          [(ngModel)]="titulo"
+          name="titulo"
+        />
+      </div>
 
-  <!-- Descripción -->
-  <div>
-    <label for="descripcion">Descripción:</label>
-    <textarea id="descripcion" formControlName="descripcion"></textarea>
-  </div>
+      <!-- Deporte -->
+      <div>
+        <label for="deporte">Deporte:</label>
+        <select
+          id="deporte"
+          [(ngModel)]="deporte"
+          name="deporte"
+        >
+          <option value="" disabled>Seleccione un deporte</option>
+          <option *ngFor="let d of deportes" [value]="d">
+            {{ d }}
+          </option>
+        </select>
+      </div>
 
-  <!-- Fecha con calendario -->
-  <div>
-    <label for="fecha">Fecha:</label>
-    <input id="fecha" type="date" formControlName="fecha" />
-  </div>
+      <!-- Descripción -->
+      <div>
+        <label for="descripcion">Descripción:</label>
+        <textarea
+          id="descripcion"
+          [(ngModel)]="descripcion"
+          name="descripcion"
+        ></textarea>
+      </div>
 
-  <!-- Hora en formato 00:00 -->
-  <div>
-    <label for="hora">Hora (00:00):</label>
-    <input id="hora" type="text" placeholder="00:00" formControlName="hora" />
-  </div>
+      <!-- Fecha -->
+      <div>
+        <label for="fecha">Fecha:</label>
+        <input
+          id="fecha"
+          type="date"
+          [(ngModel)]="fecha"
+          name="fecha"
+        />
+      </div>
 
-  <!-- Número máximo de participantes -->
-  <div>
-    <label for="maxParticipantes">Número máximo de participantes:</label>
-    <input
-      id="maxParticipantes"
-      type="number"
-      formControlName="maxParticipantes"
-    />
-  </div>
+      <!-- Hora -->
+      <div>
+        <label for="hora">Hora (00:00):</label>
+        <input
+          id="hora"
+          type="text"
+          placeholder="00:00"
+          [(ngModel)]="hora"
+          name="hora"
+        />
+      </div>
 
-  <!-- Privacidad: Combobox con opciones -->
-  <div>
-    <label for="privacidad">Privacidad:</label>
-    <select id="privacidad" formControlName="privacidad">
-      <option *ngFor="let opcion of privacidades" [value]="opcion">
-        {{ opcion }}
-      </option>
-    </select>
-  </div>
+      <!-- Número máximo de participantes -->
+      <div>
+        <label for="maxParticipantes">Número máximo de participantes:</label>
+        <input
+          id="maxParticipantes"
+          type="number"
+          [(ngModel)]="maxParticipantes"
+          name="maxParticipantes"
+        />
+      </div>
 
-  <button type="submit">Crear Evento</button>
-</form>
+      <!-- Privacidad -->
+      <div>
+        <label for="privacidad">Privacidad:</label>
+        <select
+          id="privacidad"
+          [(ngModel)]="privacidad"
+          name="privacidad"
+        >
+          <option value="" disabled>Seleccione la privacidad</option>
+          <option *ngFor="let p of privacidades" [value]="p">
+            {{ p }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Botones -->
+      <div class="buttons">
+        <button type="button" (click)="closeForm()">Cancelar</button>
+        <button type="button" (click)="createEvent()">Crear Evento</button>
+      </div>
+    </form>
+  </div>
+</div>
