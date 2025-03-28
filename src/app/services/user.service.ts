@@ -18,6 +18,9 @@ export class UserService {
         uid: user.uid,
         email: user.email,
         username: username,
+        image_url: "",
+        events_organizing: [],
+        events_attending: [],
         createdAt: new Date()
       });
 
