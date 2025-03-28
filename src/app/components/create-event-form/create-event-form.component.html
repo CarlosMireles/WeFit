@@ -1,1 +1,57 @@
-<p>create-event-form works!</p>
+<form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+  <!-- Título del evento -->
+  <div>
+    <label for="titulo">Título del evento:</label>
+    <input id="titulo" type="text" formControlName="titulo" />
+  </div>
+
+  <!-- Deporte: Combobox con lista predeterminada -->
+  <div>
+    <label for="deporte">Deporte:</label>
+    <select id="deporte" formControlName="deporte">
+      <option *ngFor="let deporte of deportes" [value]="deporte">
+        {{ deporte }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Descripción -->
+  <div>
+    <label for="descripcion">Descripción:</label>
+    <textarea id="descripcion" formControlName="descripcion"></textarea>
+  </div>
+
+  <!-- Fecha con calendario -->
+  <div>
+    <label for="fecha">Fecha:</label>
+    <input id="fecha" type="date" formControlName="fecha" />
+  </div>
+
+  <!-- Hora en formato 00:00 -->
+  <div>
+    <label for="hora">Hora (00:00):</label>
+    <input id="hora" type="text" placeholder="00:00" formControlName="hora" />
+  </div>
+
+  <!-- Número máximo de participantes -->
+  <div>
+    <label for="maxParticipantes">Número máximo de participantes:</label>
+    <input
+      id="maxParticipantes"
+      type="number"
+      formControlName="maxParticipantes"
+    />
+  </div>
+
+  <!-- Privacidad: Combobox con opciones -->
+  <div>
+    <label for="privacidad">Privacidad:</label>
+    <select id="privacidad" formControlName="privacidad">
+      <option *ngFor="let opcion of privacidades" [value]="opcion">
+        {{ opcion }}
+      </option>
+    </select>
+  </div>
+
+  <button type="submit">Crear Evento</button>
+</form>

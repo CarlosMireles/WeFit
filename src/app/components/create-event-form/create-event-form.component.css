@@ -1,0 +1,33 @@
+/* Aquí puedes agregar estilos específicos para tu formulario */
+form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+label {
+  display: block;
+  margin: 0.5rem 0 0.2rem 0;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.4rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
