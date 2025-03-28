@@ -17,7 +17,7 @@ export class PruebaComponent implements OnInit {
     this.getEvents();  // Llamada a la función para obtener los eventos
   }
 
-  // Método para obtener los eventos y mostrar en consola
+  // Metodo para obtener los eventos y mostrar en consola
   getEvents(): void {
     this.eventService.getEvents()
       .then((eventos) => {

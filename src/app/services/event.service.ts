@@ -12,7 +12,7 @@ export class EventService {
     this.eventosCollection = collection(this.firestore, 'eventos');
   }
 
-  // Método para obtener todos los eventos
+  // Metodo para obtener todos los eventos
   async getEvents() {
     try {
       const querySnapshot = await getDocs(this.eventosCollection);
