@@ -1,0 +1,13 @@
+<div class="prueba-container">
+  <h1>Prueba de Eventos</h1>
+
+  <!-- Mensaje de carga -->
+  <div *ngIf="isLoading" class="loading">
+    Cargando eventos...
+  </div>
+
+  <!-- Mostrar mensaje en consola -->
+  <div *ngIf="!isLoading" class="eventos">
+    <p>Los eventos se han cargado correctamente. Revisa la consola.</p>
+  </div>
+</div>
