@@ -11,3 +11,11 @@
   padding: 0;
 }
 
+/* Evitar que los controles del mapa interfieran con los marcadores */
+.ol-overlaycontainer-stopevent {
+  pointer-events: none;
+}
+
+.event-marker-container {
+  pointer-events: auto;
+}

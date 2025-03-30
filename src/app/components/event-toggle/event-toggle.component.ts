@@ -13,12 +13,11 @@ export class EventToggleComponent {
   isActive = false;
 
   constructor(private communicationService: CommunicationService) {
-    // Suscribirse al estado actual del modo receptivo
-      this.isActive = this.communicationService.getReceptiveMode();
+      this.isActive = this.communicationService.getEventCreationMode();
   }
 
   toggle(): void {
-    this.isActive = !this.isActive; // Cambia el estado del botón
-    this.communicationService.setReceptiveMode(this.isActive); // Activa o desactiva el modo receptivo
+    this.isActive = !this.isActive;
+    this.communicationService.setEventCreationMode(this.isActive);
   }
 }

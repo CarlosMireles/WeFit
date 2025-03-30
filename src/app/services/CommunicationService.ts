@@ -5,33 +5,32 @@ import { BehaviorSubject, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class CommunicationService {
-  // Cambio de Subject a BehaviorSubject para mantener el estado
-  private receptiveModeSubject = new BehaviorSubject<boolean>(false);
-  receptiveMode$ = this.receptiveModeSubject.asObservable();
+  private eventCreationModeSubject = new BehaviorSubject<boolean>(false);
+  eventCreationMode$ = this.eventCreationModeSubject.asObservable();
 
   private mapClickSubject = new Subject<{ lat: number; lon: number }>();
   mapClick$ = this.mapClickSubject.asObservable();
 
-  private eventCreatedSubject = new Subject<{ lat: number; lon: number; titulo: string }>();
+
+  private eventCreatedSubject = new BehaviorSubject<boolean>(false);
   eventCreated$ = this.eventCreatedSubject.asObservable();
 
-  // Método para obtener el valor actual del modo receptivo
-  getReceptiveMode(): boolean {
-    return this.receptiveModeSubject.getValue();
+
+  getEventCreationMode(): boolean {
+    return this.eventCreationModeSubject.getValue();
   }
 
-  setReceptiveMode(value: boolean) {
-    this.receptiveModeSubject.next(value);
+  setEventCreationMode(value: boolean) {
+    this.eventCreationModeSubject.next(value);
   }
 
   notifyMapClick(data: { lat: number; lon: number }) {
-    // Solo notificar clicks cuando estamos en modo receptivo
-    if (this.getReceptiveMode()) {
+    if (this.getEventCreationMode()) {
       this.mapClickSubject.next(data);
     }
   }
 
-  notifyEventCreated(event: { lat: number; lon: number; titulo: string }) {
-    this.eventCreatedSubject.next(event);
+  notifyEventCreated(value: boolean){
+    this.eventCreatedSubject.next(value);
   }
 }

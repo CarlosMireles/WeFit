@@ -1,7 +1,3 @@
-<!--
-  Si no quieres que la ventana se pueda cerrar, elimina *ngIf="isOpen"
-  y quita la lógica de isOpen en el componente.
--->
 <div *ngIf="isOpen" class="overlay">
   <div class="modal-window">
     <h2>Crear Evento</h2>
@@ -10,27 +6,27 @@
     <form>
       <!-- Título del evento -->
       <div>
-        <label for="titulo">Título del evento:</label>
+        <label for="title">Título del evento:</label>
         <input
-          id="titulo"
+          id="title"
           type="text"
-          [(ngModel)]="titulo"
-          name="titulo"
+          [(ngModel)]="title"
+          name="title"
           required
         />
       </div>
 
       <!-- Deporte -->
       <div>
-        <label for="deporte">Deporte:</label>
+        <label for="sport">Deporte:</label>
         <select
-          id="deporte"
-          [(ngModel)]="deporte"
-          name="deporte"
+          id="sport"
+          [(ngModel)]="sport"
+          name="sport"
           required
         >
           <option value="" disabled>Seleccione un deporte</option>
-          <option *ngFor="let d of deportes" [value]="d">
+          <option *ngFor="let d of sports" [value]="d">
             {{ d }}
           </option>
         </select>
@@ -38,48 +34,48 @@
 
       <!-- Descripción -->
       <div>
-        <label for="descripcion">Descripción:</label>
+        <label for="description">Descripción:</label>
         <textarea
-          id="descripcion"
-          [(ngModel)]="descripcion"
-          name="descripcion"
+          id="description"
+          [(ngModel)]="description"
+          name="description"
           required
         ></textarea>
       </div>
 
       <!-- Fecha -->
       <div>
-        <label for="fecha">Fecha:</label>
+        <label for="day">Fecha:</label>
         <input
-          id="fecha"
+          id="day"
           type="date"
-          [(ngModel)]="fecha"
-          name="fecha"
+          [(ngModel)]="day"
+          name="day"
           required
         />
       </div>
 
       <!-- Hora -->
       <div>
-        <label for="hora">Hora (00:00):</label>
+        <label for="hour">Hora (00:00):</label>
         <input
-          id="hora"
+          id="hour"
           type="text"
           placeholder="00:00"
-          [(ngModel)]="hora"
-          name="hora"
+          [(ngModel)]="hour"
+          name="hour"
           required
         />
       </div>
 
       <!-- Número máximo de participantes -->
       <div>
-        <label for="maxParticipantes">Número máximo de participantes:</label>
+        <label for="maxParticipants">Número máximo de participantes:</label>
         <input
-          id="maxParticipantes"
+          id="maxParticipants"
           type="number"
-          [(ngModel)]="maxParticipantes"
-          name="maxParticipantes"
+          [(ngModel)]="maxParticipants"
+          name="maxParticipants"
           min="1"
           max="200"
           step="1"
@@ -89,15 +85,15 @@
 
       <!-- Privacidad -->
       <div>
-        <label for="privacidad">Privacidad:</label>
+        <label for="privacy">Privacidad:</label>
         <select
-          id="privacidad"
-          [(ngModel)]="privacidad"
-          name="privacidad"
+          id="privacy"
+          [(ngModel)]="privacy"
+          name="privacy"
           required
         >
           <option value="" disabled>Seleccione la privacidad</option>
-          <option *ngFor="let p of privacidades" [value]="p">
+          <option *ngFor="let p of privacies" [value]="p">
             {{ p }}
           </option>
         </select>

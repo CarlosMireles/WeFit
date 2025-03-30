@@ -12,32 +12,31 @@ import { CommunicationService } from '../../services/CommunicationService';
   styleUrls: ['./create-event-form.component.css']
 })
 export class CreateEventFormComponent {
-  isOpen = false; // Se abre cuando se hace clic en el mapa
-  showForm = false;
+  isOpen = false;
 
   // Propiedades del formulario
-  titulo!: string;
-  deporte!: string;
-  descripcion!: string;
-  fecha!: string;
-  hora!: string;
-  maxParticipantes!: number;
-  privacidad!: string;
+  title!: string;
+  sport!: string;
+  description!: string;
+  day!: string;
+  hour!: string;
+  maxParticipants!: number;
+  privacy!: string;
 
   // Coordenadas del evento
-  latitud: number | null = null;
-  longitud: number | null = null;
+  latitude: number | null = null;
+  longitude: number | null = null;
 
   // Listas para los select
-  deportes: string[] = ['Fútbol', 'Baloncesto', 'Tenis', 'Natación', 'Running'];
-  privacidades: string[] = ['Privado', 'Público', 'Mejores amigos'];
+  sports: string[] = ['Fútbol', 'Baloncesto', 'Tenis', 'Natación', 'Running'];
+  privacies: string[] = ['Privado', 'Público', 'Mejores amigos'];
 
   constructor(private eventApi: EventService, private communicationService: CommunicationService) {}
 
   ngOnInit() {
     this.communicationService.mapClick$.subscribe(data => {
-      this.latitud = data.lat;
-      this.longitud = data.lon;
+      this.latitude = data.lat;
+      this.longitude = data.lon;
       this.isOpen = true; // Abre el formulario cuando se haga clic en el mapa
       this.resetForm(); // Resetea el formulario
     });
@@ -49,43 +48,36 @@ export class CreateEventFormComponent {
   }
 
   resetForm(): void {
-    this.titulo = '';
-    this.deporte = '';
-    this.descripcion = '';
-    this.fecha = '';
-    this.hora = '';
-    this.maxParticipantes = 1; // Valor mínimo por defecto
-    this.privacidad = '';
+    this.title = '';
+    this.sport = '';
+    this.description = '';
+    this.day = '';
+    this.hour = '';
+    this.maxParticipants = 1; // Valor mínimo por defecto
+    this.privacy = '';
   }
 
   createEvent(): void {
-    if (this.latitud === null || this.longitud === null) {
+    if (this.latitude === null || this.longitude === null) {
       console.error("No se puede crear el evento sin ubicación.");
       return;
     }
 
-    const nuevoEvento = {
-      titulo: this.titulo,
-      deporte: this.deporte,
-      descripcion: this.descripcion,
-      fecha: this.fecha,
-      hora: this.hora,
-      maxParticipantes: this.maxParticipantes,
-      privacidad: this.privacidad,
-      latitud: this.latitud,
-      longitud: this.longitud
+    const newEvent = {
+      title: this.title,
+      sport: this.sport,
+      description: this.description,
+      day: this.day,
+      hour: this.hour,
+      maxParticipants: this.maxParticipants,
+      privacy: this.privacy,
+      latitude: this.latitude,
+      longitude: this.longitude
     };
 
-    this.eventApi.createEvent(nuevoEvento);
-    console.log('Evento creado:', nuevoEvento);
-
-    // Notifica que se ha creado un evento para que el mapa agregue una chincheta
-    this.communicationService.notifyEventCreated({
-      lat: this.latitud,
-      lon: this.longitud,
-      titulo: this.titulo
-    });
-
+    this.eventApi.createEvent(newEvent);
+    this.communicationService.notifyEventCreated(true);
+    console.log('Evento creado:', newEvent);
     this.closeForm();
   }
 }

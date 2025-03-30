@@ -5,26 +5,25 @@ import { collection, Firestore, getDocs, addDoc, doc, updateDoc, deleteDoc } fro
   providedIn: 'root'
 })
 export class EventService {
-  private eventosCollection;
+  private eventsCollection;
 
   constructor(private firestore: Firestore) {
-    // Inicializamos la colección de eventos en Firestore
-    this.eventosCollection = collection(this.firestore, 'eventos');
+    this.eventsCollection = collection(this.firestore, 'eventos');
   }
 
 
   async getEvents(): Promise<any[]> {
     try {
-      const querySnapshot = await getDocs(this.eventosCollection);
+      const querySnapshot = await getDocs(this.eventsCollection);
       console.log('Número de documentos obtenidos:', querySnapshot.size);
 
-      const eventos = querySnapshot.docs.map(doc => {
+      const events = querySnapshot.docs.map(doc => {
         console.log('Documento:', doc.id, doc.data());
         return { id: doc.id, ...doc.data() };
       });
 
-      console.log('Eventos obtenidos del servicio:', eventos);
-      return eventos;
+      console.log('Eventos obtenidos del servicio:', events);
+      return events;
     } catch (error) {
       console.error('Error al obtener los eventos:', error);
       throw error;
@@ -32,9 +31,9 @@ export class EventService {
   }
 
 
-  async createEvent(evento: any): Promise<string> {
+  async createEvent(event: any): Promise<string> {
     try {
-      const docRef = await addDoc(this.eventosCollection, evento);
+      const docRef = await addDoc(this.eventsCollection, event);
       console.log('Evento creado con ID:', docRef.id);
       return docRef.id;
     } catch (error) {
@@ -44,10 +43,10 @@ export class EventService {
   }
 
 
-  async updateEvent(id: string, evento: any): Promise<void> {
+  async updateEvent(id: string, event: any): Promise<void> {
     try {
-      const eventoRef = doc(this.firestore, 'eventos', id);  // Referencia al documento del evento
-      await updateDoc(eventoRef, evento);  // Actualizamos los datos del documento
+      const eventRef = doc(this.firestore, 'eventos', id);  // Referencia al documento del evento
+      await updateDoc(eventRef, event);  // Actualizamos los datos del documento
       console.log('Evento actualizado con ID:', id);
     } catch (error) {
       console.error('Error al modificar el evento:', error);
@@ -58,8 +57,8 @@ export class EventService {
 
   async deleteEvent(id: string): Promise<void> {
     try {
-      const eventoRef = doc(this.firestore, 'eventos', id);  // Referencia al documento del evento
-      await deleteDoc(eventoRef);  // Eliminamos el documento
+      const eventRef = doc(this.firestore, 'eventos', id);  // Referencia al documento del evento
+      await deleteDoc(eventRef);  // Eliminamos el documento
       console.log('Evento borrado con ID:', id);
     } catch (error) {
       console.error('Error al borrar el evento:', error);
