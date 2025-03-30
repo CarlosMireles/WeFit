@@ -16,6 +16,7 @@
           type="text"
           [(ngModel)]="titulo"
           name="titulo"
+          required
         />
       </div>
 
@@ -26,6 +27,7 @@
           id="deporte"
           [(ngModel)]="deporte"
           name="deporte"
+          required
         >
           <option value="" disabled>Seleccione un deporte</option>
           <option *ngFor="let d of deportes" [value]="d">
@@ -41,6 +43,7 @@
           id="descripcion"
           [(ngModel)]="descripcion"
           name="descripcion"
+          required
         ></textarea>
       </div>
 
@@ -52,6 +55,7 @@
           type="date"
           [(ngModel)]="fecha"
           name="fecha"
+          required
         />
       </div>
 
@@ -64,6 +68,7 @@
           placeholder="00:00"
           [(ngModel)]="hora"
           name="hora"
+          required
         />
       </div>
 
@@ -75,6 +80,10 @@
           type="number"
           [(ngModel)]="maxParticipantes"
           name="maxParticipantes"
+          min="1"
+          max="200"
+          step="1"
+          required
         />
       </div>
 
@@ -85,6 +94,7 @@
           id="privacidad"
           [(ngModel)]="privacidad"
           name="privacidad"
+          required
         >
           <option value="" disabled>Seleccione la privacidad</option>
           <option *ngFor="let p of privacidades" [value]="p">

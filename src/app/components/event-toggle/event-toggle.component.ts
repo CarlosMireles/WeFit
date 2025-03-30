@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {CommunicationService} from '../../services/CommunicationService';
+import { CommunicationService } from '../../services/CommunicationService';
 
 @Component({
   selector: 'app-event-toggle',
@@ -11,17 +11,14 @@ import {CommunicationService} from '../../services/CommunicationService';
 })
 export class EventToggleComponent {
   isActive = false;
-  showForm = false;
 
   constructor(private communicationService: CommunicationService) {
+    // Suscribirse al estado actual del modo receptivo
+      this.isActive = this.communicationService.getReceptiveMode();
   }
 
-  activateReceptiveMode() {
-    this.communicationService.setReceptiveMode(true);
-  }
-
-  toggle(): any {
-    this.isActive = !this.isActive;
-    this.activateReceptiveMode();
+  toggle(): void {
+    this.isActive = !this.isActive; // Cambia el estado del botón
+    this.communicationService.setReceptiveMode(this.isActive); // Activa o desactiva el modo receptivo
   }
 }

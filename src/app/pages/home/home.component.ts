@@ -4,6 +4,7 @@ import {MapComponent} from "../../components/map/map.component";
 import {SearchBarComponent} from "../../components/search-bar/search-bar.component";
 import {CreateEventFormComponent} from '../../components/create-event-form/create-event-form.component';
 import {CommunicationService} from '../../services/CommunicationService';
+import {NgIf} from '@angular/common';
 
 
 @Component({
@@ -13,6 +14,7 @@ import {CommunicationService} from '../../services/CommunicationService';
         MapComponent,
         SearchBarComponent,
         CreateEventFormComponent,
+        NgIf
     ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
