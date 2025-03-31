@@ -1,4 +1,9 @@
-/* Fondo semitransparente */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
 .overlay {
   position: fixed;
   top: 0;
@@ -10,28 +15,36 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
 }
 
-/* Ventana emergente */
 .modal-window {
-  background-color: #2b2b2b; /* Fondo oscuro */
+  position: relative;
+  background-color: #1f1f1f;
   color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  width: 400px; /* Ajusta a tu gusto */
+  padding: 2rem;
+  border-radius: 12px;
+  width: 400px;
   max-height: 90vh;
   overflow-y: auto;
   box-sizing: border-box;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  border: 1px solid #2c2c2c;
+  font-family: 'Poppins', sans-serif;
 }
 
 .modal-window h2 {
   margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
-/* Separación entre label e input */
 .modal-window label {
   display: block;
   margin-top: 1rem;
+  font-weight: 500;
 }
 
 .modal-window input,
@@ -39,15 +52,23 @@
 .modal-window textarea {
   width: 100%;
   margin-top: 0.5rem;
-  padding: 0.4rem;
-  background-color: #3b3b3b;
-  border: 1px solid #444;
-  border-radius: 4px;
+  padding: 0.6rem 0.8rem;
+  background-color: #2b2b2b;
+  border: 1px solid #3b3b3b;
+  border-radius: 6px;
   color: #fff;
   box-sizing: border-box;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
 }
 
-/* Botones al final */
+.modal-window input:focus,
+.modal-window select:focus,
+.modal-window textarea:focus {
+  border-color: #00cc66;
+  outline: none;
+}
+
 .buttons {
   margin-top: 1.5rem;
   display: flex;
@@ -56,20 +77,32 @@
 }
 
 .buttons button {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Botón "Cancelar" */
 .buttons button[type="button"] {
-  background-color: #666;
+  background-color: #000;
   color: #fff;
+}
+
+.buttons button[type="button"]:hover {
+  background-color: #ff0000; /* Rojo en hover */
 }
 
 /* Botón "Crear Evento" */
 .buttons button[type="button"]:last-child {
-  background-color: #007bff;
+  background-color: #00cc66; /* Verde de acento */
   color: #fff;
+}
+
+.buttons button[type="button"]:last-child:hover {
+  background-color: #00ff66; /* Verde más vibrante al hover */
 }

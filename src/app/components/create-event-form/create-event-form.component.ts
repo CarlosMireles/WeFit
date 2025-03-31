@@ -23,12 +23,42 @@ export class CreateEventFormComponent {
   maxParticipants!: number;
   privacy!: string;
 
-  // Coordenadas del evento
   latitude: number | null = null;
   longitude: number | null = null;
 
-  // Listas para los select
-  sports: string[] = ['Fútbol', 'Baloncesto', 'Tenis', 'Natación', 'Running'];
+  sports: string[] = [
+    "Atletismo",
+    "Artes marciales",
+    "Bádminton",
+    "Baloncesto",
+    "Balonmano",
+    "Béisbol",
+    "Boxeo",
+    "Críquet",
+    "Ciclismo",
+    "Equitación",
+    "Escalada deportiva",
+    "Esgrima",
+    "Esquí",
+    "Fútbol",
+    "Fútbol americano",
+    "Fútbol sala",
+    "Golf",
+    "Gimnasia",
+    "Hockey sobre césped",
+    "Hockey sobre hielo",
+    "Lucha libre",
+    "Natación",
+    "Padel",
+    "Remo",
+    "Rugby",
+    "Skateboarding",
+    "Snowboard",
+    "Surf",
+    "Tenis",
+    "Voleibol"
+  ];
+
   privacies: string[] = ['Privado', 'Público', 'Mejores amigos'];
 
   constructor(private eventApi: EventService, private communicationService: CommunicationService) {}

@@ -17,7 +17,7 @@ export class MapComponent implements OnInit, OnDestroy {
   map!: Map;
   eventCreationMode = false;
   private subscriptions: Subscription[] = [];
-  private markerComponents: ComponentRef<any>[] = []; // Almacena referencias a los componentes creados
+  private markerComponents: ComponentRef<any>[] = [];
 
   constructor(
     private communicationService: CommunicationService,
@@ -37,17 +37,15 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Limpiar suscripciones
+
     this.subscriptions.forEach(sub => sub.unsubscribe());
 
-    // Destruir todos los componentes de marcadores creados
     this.markerComponents.forEach(componentRef => {
       componentRef.destroy();
     });
   }
 
   private checkEventCreated(){
-    // Suscribirse al modo receptivo
     this.subscriptions.push(
       this.communicationService.eventCreated$.subscribe(mode => {
         this.displayEvents();
@@ -57,7 +55,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private checkEventCreationMode(){
-    // Suscribirse al modo receptivo
     this.subscriptions.push(
       this.communicationService.eventCreationMode$.subscribe(mode => {
         this.eventCreationMode = mode;
@@ -67,7 +64,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private captureLocationFromClick(){
-    // Escuchar eventos de "click en mapa"
     this.map.on('click', (evt) => {
       if (this.eventCreationMode) {
         const coordinates = toLonLat(evt.coordinate);
@@ -84,8 +80,8 @@ export class MapComponent implements OnInit, OnDestroy {
         event.longitude,
         event.latitude,
         event.title,
-        event.privacy || 'Público', // Valor por defecto si no se proporciona
-        event.image_url || ''        // Valor por defecto si no se proporciona
+        event.privacy || 'Público',
+        event.image_url || ''
       );
     }
   }
@@ -125,28 +121,22 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private addCustomMarker(lon: number, lat: number, titulo: string, privacidad: string = 'publico', imagenUrl: string = ''): void {
-    // Crear dinámicamente un componente de marcador
     const factory = this.componentFactoryResolver.resolveComponentFactory(EventMarkerComponent);
     const componentRef = factory.create(this.injector);
 
-    // Establecer propiedades del componente
     componentRef.instance.title = titulo;
     componentRef.instance.coordinates = { lon, lat };
     componentRef.instance.privacy = privacidad;
     componentRef.instance.image_url = imagenUrl;
 
-    // Aplicar detección de cambios
     componentRef.changeDetectorRef.detectChanges();
 
-    // Añadir el componente a la aplicación
     this.applicationRef.attachView(componentRef.hostView);
 
-    // Crear un elemento HTML para el overlay y adjuntar el componente a él
     const element = document.createElement('div');
     element.className = 'event-marker-container';
     element.appendChild(componentRef.location.nativeElement);
 
-    // Crear un overlay de OpenLayers con el elemento del componente
     const overlay = new Overlay({
       element: element,
       position: fromLonLat([lon, lat]),
@@ -154,16 +144,12 @@ export class MapComponent implements OnInit, OnDestroy {
       stopEvent: true
     });
 
-    // Añadir el overlay al mapa
     this.map.addOverlay(overlay);
 
-    // Almacenar la referencia al componente para limpieza
     this.markerComponents.push(componentRef);
 
-    // Añadir evento de clic al componente del marcador
     componentRef.instance.clicked.subscribe((event: any) => {
       console.log('Marcador clickeado:', event);
-      // Aquí puedes manejar eventos del marcador
     });
   }
 }
