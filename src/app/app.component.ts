@@ -4,10 +4,12 @@ import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
 import {ForgotPasswordFinishComponent} from './forgot-password-finish/forgot-password-finish.component';
+import {UserProfileComponent} from './user-profile/user-profile.component';
+import {EventCardComponent} from './user-profile/event-card/event-card.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LoginComponent, RegisterComponent, ForgotPasswordComponent, ForgotPasswordFinishComponent],
+  imports: [RouterOutlet, LoginComponent, RegisterComponent, ForgotPasswordComponent, ForgotPasswordFinishComponent, UserProfileComponent, EventCardComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
