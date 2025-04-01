@@ -1,0 +1,39 @@
+/* Estilos para el botón */
+.event-card {
+  width: 250px;
+  height: 250px;
+  background: linear-gradient(to bottom right, #37cc8d, #44d3c8);
+  border: none;
+  border-radius: 20px;
+  color: #2b2b2b;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 1%;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.name {
+  margin: 0;
+}
+
+/* Efecto al pasar el mouse */
+.event-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Línea debajo del título */
+.event-card h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.event-card hr {
+  width: 80%;
+  border: 1px solid black;
+  margin: 5px auto;
+}
