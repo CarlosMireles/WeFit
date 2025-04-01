@@ -21,7 +21,7 @@ import { EventViewComponent } from '../event-view/event-view.component';
 export class MapComponent implements OnInit, OnDestroy {
   map!: Map;
   eventCreationMode = false;
-  selectedEvent: any = null; // Almacena el evento seleccionado para mostrar el modal
+  selectedEvent: any = null;
 
   // URL del icono para tu ubicación (archivo en assets)
   myLocationIconUrl: string = '/assets/user-pin.svg';
@@ -30,6 +30,8 @@ export class MapComponent implements OnInit, OnDestroy {
   private markerComponents: ComponentRef<any>[] = [];
   // Overlay para la ubicación actual
   private currentLocationOverlay!: Overlay;
+  // Identificador del watchPosition para poder detenerlo
+  private geoWatchId: number | null = null;
 
   constructor(
     private communicationService: CommunicationService,
@@ -41,7 +43,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initMap();
-    this.setCurrentLocation();
+    this.watchCurrentLocation();
     this.checkEventCreationMode();
     this.checkEventCreated();
     this.captureLocationFromClick();
@@ -53,6 +55,10 @@ export class MapComponent implements OnInit, OnDestroy {
     this.markerComponents.forEach(componentRef => {
       componentRef.destroy();
     });
+    // Detenemos el watchPosition si está activo
+    if (this.geoWatchId !== null) {
+      navigator.geolocation.clearWatch(this.geoWatchId);
+    }
   }
 
   private checkEventCreated() {
@@ -117,29 +123,31 @@ export class MapComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setCurrentLocation(): void {
+  private watchCurrentLocation(): void {
     if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
+      // Utilizamos watchPosition para actualizaciones continuas
+      this.geoWatchId = navigator.geolocation.watchPosition(
         (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
-          // Centramos el mapa en tu ubicación
+          // Centramos el mapa en la ubicación actual
           this.map.getView().setCenter(fromLonLat([lon, lat]));
           this.map.getView().setZoom(14);
-          // Añadimos el overlay de la ubicación actual
-          this.addCurrentLocationMarker(lon, lat);
+          // Actualizamos o añadimos el overlay de la ubicación actual
+          this.addOrUpdateCurrentLocationMarker(lon, lat);
         },
         (error) => {
           console.error('Error al obtener la geolocalización:', error);
-        }
+        },
+        { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
       );
     } else {
       console.error('Geolocalización no soportada en este navegador.');
     }
   }
 
-  private addCurrentLocationMarker(lon: number, lat: number): void {
-    console.log('Agregando ubicación actual en:', lon, lat);
+  private addOrUpdateCurrentLocationMarker(lon: number, lat: number): void {
+    console.log('Actualizando ubicación actual en:', lon, lat);
     if (this.currentLocationOverlay) {
       this.currentLocationOverlay.setPosition(fromLonLat([lon, lat]));
       return;
