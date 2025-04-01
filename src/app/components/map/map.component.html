@@ -1,4 +1,10 @@
 <div class="map-container">
+  <!-- Contenedor para OpenLayers -->
   <div id="map" class="map"></div>
-</div>
 
+  <app-event-view
+    *ngIf="selectedEvent"
+    [eventData]="selectedEvent"
+    (close)="selectedEvent = null">
+  </app-event-view>
+</div>
