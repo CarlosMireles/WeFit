@@ -1,11 +1,13 @@
 import { Component, AfterViewInit } from '@angular/core';
-import {EventCardComponent} from './event-card/event-card.component';
+import {EventCardComponent} from '../../components/event-card/event-card.component';
+import {SearchBarComponent} from '../../components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   imports: [
-    EventCardComponent
+    EventCardComponent,
+    SearchBarComponent
   ],
   styleUrls: ['./user-profile.component.css']
 })
