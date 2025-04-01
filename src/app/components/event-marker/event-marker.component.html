@@ -1,0 +1,18 @@
+<div class="marker-container" (click)="onMarkerClick()">
+  <div class="marker">
+    <div class="pin" [ngClass]="{
+      'public': privacy === 'Público',
+      'friends': privacy === 'Mejores amigos',
+      'private': privacy === 'Privado'
+    }"></div>
+    <div class="pulse" [ngClass]="{
+      'public': privacy === 'Público',
+      'friends': privacy === 'Mejores amigos',
+      'private': privacy === 'Privado'
+    }"></div>
+  </div>
+  <div class="marker-label">{{ title }}</div>
+  <div class="marker-image" *ngIf="image_url">
+    <img [src]="image_url" alt="Imagen del evento">
+  </div>
+</div>

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppComponent } from './app.component';
+import { EventToggleComponent } from './event-toggle.component';
 
-describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
+describe('EventToggleComponent', () => {
+  let component: EventToggleComponent;
+  let fixture: ComponentFixture<EventToggleComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent]
+      imports: [EventToggleComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(EventToggleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

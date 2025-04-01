@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppComponent } from './app.component';
+import { EventMarkerComponent } from './event-marker.component';
 
-describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
+describe('EventMarkerComponent', () => {
+  let component: EventMarkerComponent;
+  let fixture: ComponentFixture<EventMarkerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent]
+      imports: [EventMarkerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(EventMarkerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

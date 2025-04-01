@@ -1,0 +1,109 @@
+<div *ngIf="isOpen" class="overlay">
+  <div class="modal-window">
+    <h2>Crear Evento</h2>
+
+    <!-- Formulario sin formGroup ni ngSubmit -->
+    <form>
+      <!-- Título del evento -->
+      <div>
+        <label for="title">Título del evento:</label>
+        <input
+          id="title"
+          type="text"
+          [(ngModel)]="title"
+          name="title"
+          required
+        />
+      </div>
+
+      <!-- Deporte -->
+      <div>
+        <label for="sport">Deporte:</label>
+        <select
+          id="sport"
+          [(ngModel)]="sport"
+          name="sport"
+          required
+        >
+          <option value="" disabled>Seleccione un deporte</option>
+          <option *ngFor="let d of sports" [value]="d">
+            {{ d }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Descripción -->
+      <div>
+        <label for="description">Descripción:</label>
+        <textarea
+          id="description"
+          [(ngModel)]="description"
+          name="description"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Fecha -->
+      <div>
+        <label for="day">Fecha:</label>
+        <input
+          id="day"
+          type="date"
+          [(ngModel)]="day"
+          name="day"
+          required
+        />
+      </div>
+
+      <!-- Hora -->
+      <div>
+        <label for="hour">Hora (00:00):</label>
+        <input
+          id="hour"
+          type="text"
+          placeholder="00:00"
+          [(ngModel)]="hour"
+          name="hour"
+          required
+        />
+      </div>
+
+      <!-- Número máximo de participantes -->
+      <div>
+        <label for="maxParticipants">Número máximo de participantes:</label>
+        <input
+          id="maxParticipants"
+          type="number"
+          [(ngModel)]="maxParticipants"
+          name="maxParticipants"
+          min="1"
+          max="200"
+          step="1"
+          required
+        />
+      </div>
+
+      <!-- Privacidad -->
+      <div>
+        <label for="privacy">Privacidad:</label>
+        <select
+          id="privacy"
+          [(ngModel)]="privacy"
+          name="privacy"
+          required
+        >
+          <option value="" disabled>Seleccione la privacidad</option>
+          <option *ngFor="let p of privacies" [value]="p">
+            {{ p }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Botones -->
+      <div class="buttons">
+        <button type="button" (click)="closeForm()">Cancelar</button>
+        <button type="button" (click)="createEvent()">Crear Evento</button>
+      </div>
+    </form>
+  </div>
+</div>
