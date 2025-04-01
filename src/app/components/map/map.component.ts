@@ -17,7 +17,7 @@ export class MapComponent implements OnInit, OnDestroy {
   map!: Map;
   eventCreationMode = false;
   private subscriptions: Subscription[] = [];
-  private markerComponents: ComponentRef<any>[] = []; // Almacena referencias a los componentes creados
+  private markerComponents: ComponentRef<any>[] = [];
 
   constructor(
     private communicationService: CommunicationService,
