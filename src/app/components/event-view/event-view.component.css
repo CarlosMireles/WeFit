@@ -47,6 +47,24 @@ body {
   font-weight: 500;
 }
 
+/* Campo con borde verde */
+.field {
+  border: 1px solid #00cc66;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 6px;
+
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+
 .modal-window input,
 .modal-window select,
 .modal-window textarea {
@@ -97,12 +115,12 @@ body {
   background-color: #ff0000; /* Rojo en hover */
 }
 
-/* Botón "Crear Evento" */
+/* Botón "Crear Evento" (si lo necesitas) */
 .buttons button[type="button"]:last-child {
   background-color: #00cc66; /* Verde de acento */
   color: #fff;
 }
 
 .buttons button[type="button"]:last-child:hover {
-  background-color: #00ff66; /* Verde más vibrante al hover */
+  background-color: #ff0000; /* Verde más vibrante al hover */
 }

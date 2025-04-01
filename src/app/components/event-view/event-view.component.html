@@ -1,0 +1,30 @@
+<div class="overlay" (click)="onClose()">
+  <div class="modal-window" (click)="$event.stopPropagation()">
+    <h2>Detalle del Evento</h2>
+
+    <label>Nombre:</label>
+    <div class="field">{{ eventData.title }}</div>
+
+    <label>Descripción:</label>
+    <div class="field">{{ eventData.description }}</div>
+
+    <label>Deporte:</label>
+    <div class="field">{{ eventData.sport }}</div>
+
+    <label>Fecha:</label>
+    <div class="field">{{ eventData.day }}</div>
+
+    <label>Hora:</label>
+    <div class="field">{{ eventData.hour }}</div>
+
+    <label>Número de participantes:</label>
+    <div class="field">{{ eventData.maxParticipants }}</div>
+
+    <label>Privacidad:</label>
+    <div class="field">{{ eventData.privacy }}</div>
+
+    <div class="buttons">
+      <button type="button" (click)="onClose()">Cerrar</button>
+    </div>
+  </div>
+</div>
