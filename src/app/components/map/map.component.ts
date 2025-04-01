@@ -22,8 +22,14 @@ export class MapComponent implements OnInit, OnDestroy {
   map!: Map;
   eventCreationMode = false;
   selectedEvent: any = null; // Almacena el evento seleccionado para mostrar el modal
+
+  // URL del icono para tu ubicación (archivo en assets)
+  myLocationIconUrl: string = '/assets/user-pin.svg';
+
   private subscriptions: Subscription[] = [];
   private markerComponents: ComponentRef<any>[] = [];
+  // Overlay para la ubicación actual
+  private currentLocationOverlay!: Overlay;
 
   constructor(
     private communicationService: CommunicationService,
@@ -52,7 +58,6 @@ export class MapComponent implements OnInit, OnDestroy {
   private checkEventCreated() {
     this.subscriptions.push(
       this.communicationService.eventCreated$.subscribe(mode => {
-        // Cuando se crea un nuevo evento, refrescamos la lista de eventos
         this.displayEvents();
         console.log('Refresh eventos', mode);
       })
@@ -91,7 +96,7 @@ export class MapComponent implements OnInit, OnDestroy {
         event.title,
         event.privacy || 'Público',
         event.image_url || '',
-        event // Pasamos el objeto completo
+        event // Se pasa el objeto completo del evento
       );
     }
   }
@@ -118,8 +123,11 @@ export class MapComponent implements OnInit, OnDestroy {
         (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
+          // Centramos el mapa en tu ubicación
           this.map.getView().setCenter(fromLonLat([lon, lat]));
           this.map.getView().setZoom(14);
+          // Añadimos el overlay de la ubicación actual
+          this.addCurrentLocationMarker(lon, lat);
         },
         (error) => {
           console.error('Error al obtener la geolocalización:', error);
@@ -128,6 +136,33 @@ export class MapComponent implements OnInit, OnDestroy {
     } else {
       console.error('Geolocalización no soportada en este navegador.');
     }
+  }
+
+  private addCurrentLocationMarker(lon: number, lat: number): void {
+    console.log('Agregando ubicación actual en:', lon, lat);
+    if (this.currentLocationOverlay) {
+      this.currentLocationOverlay.setPosition(fromLonLat([lon, lat]));
+      return;
+    }
+    // Creamos un contenedor para el icono de ubicación
+    const element = document.createElement('div');
+    element.className = 'current-location-marker';
+    const img = document.createElement('img');
+    img.src = this.myLocationIconUrl;
+    // Ajusta el tamaño del icono según lo necesites
+    img.style.width = '30px';
+    img.style.height = '30px';
+    element.appendChild(img);
+
+    // Usamos "bottom-center" para que la parte inferior del icono se alinee con la ubicación
+    this.currentLocationOverlay = new Overlay({
+      element: element,
+      position: fromLonLat([lon, lat]),
+      positioning: 'bottom-center',
+      offset: [0, 0],
+      stopEvent: false
+    });
+    this.map.addOverlay(this.currentLocationOverlay);
   }
 
   private addCustomMarker(
@@ -148,29 +183,28 @@ export class MapComponent implements OnInit, OnDestroy {
     componentRef.instance.privacy = privacidad;
     componentRef.instance.image_url = imagenUrl;
 
-    // Renderizamos el componente en la vista
     componentRef.changeDetectorRef.detectChanges();
     this.applicationRef.attachView(componentRef.hostView);
 
-    // Creamos un contenedor para el marcador y le inyectamos el componente
+    // Creamos un contenedor para el marcador
     const element = document.createElement('div');
     element.className = 'event-marker-container';
     element.appendChild(componentRef.location.nativeElement);
 
-    // Creamos un overlay de OpenLayers para ubicarlo en el mapa
+    // Creamos un overlay para ubicar el marcador en el mapa
     const overlay = new Overlay({
       element: element,
       position: fromLonLat([lon, lat]),
       positioning: 'bottom-center',
+      offset: [0, 0],
       stopEvent: true
     });
     this.map.addOverlay(overlay);
     this.markerComponents.push(componentRef);
 
-    // Suscribimos al evento "clicked" del marcador
+    // Al hacer clic en la chincheta se asigna el objeto completo del evento para mostrar el modal
     componentRef.instance.clicked.subscribe(() => {
       console.log('Marcador clickeado:', eventData);
-      // Asignamos el evento seleccionado para mostrar el modal en la misma pantalla
       this.selectedEvent = eventData;
     });
   }
