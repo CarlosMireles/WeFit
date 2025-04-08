@@ -1,0 +1,10 @@
+{
+  "login": {
+    "mail": "Email",
+    "password": "password",
+    "button-login-session": "Login",
+    "text-account": "Don't have an account?",
+    "text-register": "Register here",
+    "forgot-password": "Forgot your password?"
+  }
+}

@@ -1,0 +1,10 @@
+{
+"login": {
+  "mail": "Correo electrónico",
+  "password": "contraseña",
+  "button-login-session": "Iniciar Sesión",
+  "text-account": "¿No tienes cuenta?",
+  "text-register": "Regístrate aquí",
+  "forgot-password": "¿Olvidaste tu contraseña?"
+  }
+}

@@ -2,13 +2,16 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import {UserService} from '../../services/user.service';
+import {LanguageService} from '../../services/translate.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   imports: [
     FormsModule,
-    RouterLink
+    RouterLink,
+    TranslatePipe
   ],
   styleUrls: ['./login.component.css']
 })
@@ -18,7 +21,7 @@ export class LoginComponent {
     password: ''
   };
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router, private langService: LanguageService) {}
 
   async onSubmit(form: any) {
     this.user.email = form.value.email;
@@ -28,4 +31,9 @@ export class LoginComponent {
       .then(() => {this.router.navigate(['/home']);})
       .catch(error => console.error('Error:', error));
   }
+
+  switchLang(lang: string) {
+    this.langService.changeLang(lang);
+  }
+
 }
