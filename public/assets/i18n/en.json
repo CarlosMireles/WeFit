@@ -1,10 +1,32 @@
 {
   "login": {
     "mail": "Email",
-    "password": "password",
+    "password": "Password",
     "button-login-session": "Login",
     "text-account": "Don't have an account?",
     "text-register": "Register here",
     "forgot-password": "Forgot your password?"
+  },
+  "register": {
+    "user": "User",
+    "mail": "Email",
+    "password": "Password",
+    "register-button": "Register",
+    "text-already": "Already have an account?",
+    "login-link": "Login"
+  },
+  "profile": {
+    "created-events": "Created Events",
+    "registered-events": "Registered Events",
+    "followers": "Followers",
+    "followed": "Followed"
+  },
+  "forgot-password": {
+    "recover-text": "Having trouble logging in?",
+    "instructions": "Enter your email and we'll send you a link to log back into your account.",
+    "mail": "Email",
+    "code-button": "Send recovery code",
+    "no-account-text": "No account?",
+    "register-link": "Register"
   }
 }

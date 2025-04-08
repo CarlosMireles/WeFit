@@ -4,13 +4,16 @@ import { UserService } from '../../services/user.service';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageService} from '../../services/translate.service';
 
 @Component({
   selector: 'app-register',
   imports: [
     FormsModule,
     NgIf,
-    RouterLink
+    RouterLink,
+    TranslatePipe
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -29,7 +32,7 @@ export class RegisterComponent {
   };
 
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router, private langService: LanguageService) {}
 
   validateForm() {
     this.user.usernameError = '';
@@ -78,5 +81,9 @@ export class RegisterComponent {
       .then(user => console.log('Usuario registrado:', user))
       .then(() => {this.router.navigate(['/home']);})
       .catch(error => console.error('Error:', error));
+  }
+
+  switchLang(lang: string) {
+    this.langService.changeLang(lang);
   }
 }

@@ -6,5 +6,27 @@
   "text-account": "¿No tienes cuenta?",
   "text-register": "Regístrate aquí",
   "forgot-password": "¿Olvidaste tu contraseña?"
+  },
+  "register": {
+    "user": "Usuario",
+    "mail": "Correo electrónico",
+    "password": "Contraseña",
+    "register-button": "Registrarse",
+    "text-already": "¿Ya tienes cuenta?",
+    "login-link": "Inicia sesión"
+  },
+  "profile": {
+    "created-events": "Eventos Creados",
+    "registered-events": "Eventos Registrados",
+    "followers": "Seguidores",
+    "followed": "Seguidos"
+  },
+  "forgot-password": {
+    "recover-text": "¿Tienes problemas para entrar?",
+    "instructions": "Introduce tu correo electrónico y te enviaremos un enlace para que vuelvas a entrar en tu cuenta.",
+    "mail": "Correo electrónico",
+    "code-button": "Enviar código de recuperación",
+    "no-account-text": "¿No tienes cuenta?",
+    "register-link": "Regístrate"
   }
 }

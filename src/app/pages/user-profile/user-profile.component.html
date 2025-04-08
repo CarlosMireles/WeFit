@@ -8,11 +8,11 @@
     </div>
     <div class="stats">
       <div>
-        <strong>Seguidores</strong>
+        <strong>{{ 'profile.followers' | translate}}</strong>
         <p>110</p>
       </div>
       <div>
-        <strong>Seguidos</strong>
+        <strong>{{ 'profile.followed' | translate}}</strong>
         <p>110</p>
       </div>
     </div>
@@ -24,7 +24,7 @@
   </div>
   <div class="content-container">
     <div class="eventos-container">
-      <h1 class="eventos-text">Eventos creados</h1>
+      <h1 class="eventos-text">{{ 'profile.created-events' | translate}}</h1>
       <hr class="divider" />
       <div class="card-flex">
         <app-event-card></app-event-card>
@@ -36,7 +36,7 @@
       </div>
     </div>
     <div class="eventos-container">
-      <h1 class="eventos-text">Eventos inscritos</h1>
+      <h1 class="eventos-text">{{ 'profile.registered-events' | translate}}</h1>
       <hr class="divider" />
       <div class="card-flex">
         <app-event-card></app-event-card>

@@ -1,13 +1,16 @@
 import { Component, AfterViewInit } from '@angular/core';
 import {EventCardComponent} from '../../components/event-card/event-card.component';
 import {SearchBarComponent} from '../../components/search-bar/search-bar.component';
+import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageService} from '../../services/translate.service';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   imports: [
     EventCardComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    TranslatePipe
   ],
   styleUrls: ['./user-profile.component.css']
 })
@@ -15,6 +18,8 @@ export class UserProfileComponent implements AfterViewInit {
   private isDragging = false;
   private startX: number = 0;
   private scrollLeft: number = 0;
+
+  constructor(private langService: LanguageService) {}
 
 
   ngAfterViewInit() {
@@ -46,5 +51,9 @@ export class UserProfileComponent implements AfterViewInit {
         container.classList.remove('active');
       });
     });
+  }
+
+  switchLang(lang: string) {
+    this.langService.changeLang(lang);
   }
 }
