@@ -1,5 +1,17 @@
 import { Injectable } from '@angular/core';
-import { collection, Firestore, getDocs, addDoc, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+  getDoc,
+  setDoc,
+  arrayUnion,
+} from '@angular/fire/firestore';
+import {UserService} from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +19,7 @@ import { collection, Firestore, getDocs, addDoc, doc, updateDoc, deleteDoc } fro
 export class EventService {
   private eventsCollection;
 
-  constructor(private firestore: Firestore) {
+  constructor(private firestore: Firestore, private userService: UserService) {
     this.eventsCollection = collection(this.firestore, 'eventos');
   }
 
@@ -35,12 +47,27 @@ export class EventService {
     try {
       const docRef = await addDoc(this.eventsCollection, event);
       console.log('Evento creado con ID:', docRef.id);
+
+      const userUid = this.userService.getCurrentUserUid();
+      if (userUid) {
+        const userDocRef = doc(this.firestore, `users/${userUid}`);
+
+        await setDoc(userDocRef, {
+          events_organizing: arrayUnion(docRef.id)
+        }, { merge: true });
+
+        console.log('Evento añadido a los eventos organizando del usuario');
+      } else {
+        console.error('No hay usuario autenticado.');
+      }
+
       return docRef.id;
     } catch (error) {
       console.error('Error al crear el evento:', error);
       throw error;
     }
   }
+
 
 
   async updateEvent(id: string, event: any): Promise<void> {
@@ -64,5 +91,26 @@ export class EventService {
       console.error('Error al borrar el evento:', error);
       throw error;
     }
+  }
+
+  async getEventById(path: string): Promise<any | null> {
+    const eventRef = doc(this.firestore, 'eventos', path);
+    const eventSnap = await getDoc(eventRef);
+    if (eventSnap.exists()) {
+      return eventSnap.data();
+    } else {
+      throw new Error(path);
+    }
+  }
+
+  async getEventsFromPaths(paths: string[]): Promise<any[]> {
+    const events: any[] = [];
+
+    for (const path of paths) {
+      const event = await this.getEventById(path);
+      if (event) events.push(event);
+    }
+
+    return events;
   }
 }
