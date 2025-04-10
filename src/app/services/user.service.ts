@@ -76,7 +76,11 @@ export class UserService {
     }
   }
 
-  getCurrentUserUid(): string | null {
-    return this.auth.currentUser?.uid || null;
+  getCurrentUserUid(): Promise<string | null> {
+    return new Promise((resolve) => {
+      this.auth.onAuthStateChanged(user => {
+        resolve(user ? user.uid : null);
+      });
+    });
   }
 }

@@ -48,7 +48,7 @@ export class EventService {
       const docRef = await addDoc(this.eventsCollection, event);
       console.log('Evento creado con ID:', docRef.id);
 
-      const userUid = this.userService.getCurrentUserUid();
+      const userUid = await this.userService.getCurrentUserUid();
       if (userUid) {
         const userDocRef = doc(this.firestore, `users/${userUid}`);
 

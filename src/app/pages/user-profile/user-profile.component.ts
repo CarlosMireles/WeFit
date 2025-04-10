@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import {EventCardComponent} from '../../components/event-card/event-card.component';
 import {SearchBarComponent} from '../../components/search-bar/search-bar.component';
 import {UserService} from '../../services/user.service';
@@ -15,7 +15,7 @@ import {NgForOf} from '@angular/common';
   ],
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements AfterViewInit {
+export class UserProfileComponent implements OnInit,  AfterViewInit {
   private isDragging = false;
   private startX: number = 0;
   private scrollLeft: number = 0;
@@ -28,21 +28,45 @@ export class UserProfileComponent implements AfterViewInit {
   constructor(private userService: UserService, private eventService: EventService) {}
 
 
+
   async ngOnInit() {
-    const uid = this.userService.getCurrentUserUid();
+
+    const cachedUsername = localStorage.getItem('username');
+    const cachedOrganizing = localStorage.getItem('eventsOrganizing');
+    const cachedAttending = localStorage.getItem('eventsAttending');
+
+    if (cachedUsername && cachedOrganizing && cachedAttending) {
+      this.username = cachedUsername;
+      this.eventsOrganizing = JSON.parse(cachedOrganizing);
+      this.eventsAttending = JSON.parse(cachedAttending);
+    }
+
+
+    const uid = await this.userService.getCurrentUserUid();
     if (!uid) return;
 
     const userData = await this.userService.getUserData(uid);
     if (userData) {
       this.username = userData.username;
-      const organizing = await this.eventService.getEventsFromPaths(userData.events_organizing);
-      const attending = await this.eventService.getEventsFromPaths(userData.events_attending);
+
+      const [organizing, attending] = await Promise.all([
+        this.eventService.getEventsFromPaths(userData.events_organizing),
+        this.eventService.getEventsFromPaths(userData.events_attending)
+      ]);
+
       this.eventsOrganizing = organizing;
-      console.log(organizing);
       this.eventsAttending = attending;
 
+
+      localStorage.setItem('username', this.username);
+      localStorage.setItem('eventsOrganizing', JSON.stringify(this.eventsOrganizing));
+      localStorage.setItem('eventsAttending', JSON.stringify(this.eventsAttending));
     }
+
   }
+
+
+
 
 
   ngAfterViewInit() {
