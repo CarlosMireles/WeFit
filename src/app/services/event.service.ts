@@ -21,7 +21,8 @@ import {UserService} from './user.service';
 
 export interface EventFilters {
   date?: string;             // Ej: '2025-05-15'
-  hour?: string;             // Ej: '18:00'
+  hourMaximum?: string;             // Ej: '18:00'
+  hourMinimum?: string       // Ej: '20:00'
   sport?: string;            // Ej: 'fútbol'
   maxParticipants?: number;  // Ej: 20
   privacy?: string;          // Ej: 'Público' o 'Privado'
@@ -45,17 +46,25 @@ export class EventService {
       const constraints: QueryConstraint[] = [];
 
       if (filters.date) {
-        constraints.push(where('date', '==', filters.date));
+        constraints.push(where('day', '==', filters.date));
       }
-      if (filters.hour) {
-        constraints.push(where('hour', '==', filters.hour));
+      if (filters.hourMinimum && filters.hourMaximum) {
+        // Ambos filtros definidos
+        constraints.push(where('hour', '>=', filters.hourMinimum));
+        constraints.push(where('hour', '<=', filters.hourMaximum));
+      } else if (filters.hourMinimum) {
+        // Solo mínimo definido
+        constraints.push(where('hour', '>=', filters.hourMinimum));
+      } else if (filters.hourMaximum) {
+        // Solo máximo definido
+        constraints.push(where('hour', '<=', filters.hourMaximum));
       }
       if (filters.sport) {
         constraints.push(where('sport', '==', filters.sport));
       }
       // Solo se añade la restricción si maxParticipants NO es null ni undefined
       if (filters.maxParticipants !== null && filters.maxParticipants !== undefined) {
-        constraints.push(where('maxParticipants', '==', filters.maxParticipants));
+        constraints.push(where('maxParticipants', '<=', filters.maxParticipants));
       }
       if (filters.privacy) {
         constraints.push(where('privacy', '==', filters.privacy));

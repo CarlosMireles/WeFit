@@ -27,9 +27,10 @@ export class MapComponent implements OnInit, OnDestroy {
   // Inicialmente sin filtros: se muestran todos los eventos.
   eventFilters: EventFilters = {
     date: '',
-    hour: '',
+    hourMinimum: '',
+    hourMaximum: '',
     sport: '',
-    maxParticipants: undefined,  // O puedes seguir usando null si has actualizado la interfaz
+    maxParticipants: undefined,
     privacy: ''
   };
 

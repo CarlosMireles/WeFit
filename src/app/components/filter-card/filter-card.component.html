@@ -5,8 +5,11 @@
     <label for="date">Fecha:</label>
     <input id="date" type="date" [(ngModel)]="filters.date" class="field" />
 
-    <label for="hour">Hora:</label>
-    <input id="hour" type="time" [(ngModel)]="filters.hour" class="field" />
+    <label for="hourMinimum">Hora inicial:</label>
+    <input id="hourMinimum" type="time" [(ngModel)]="filters.hourMinimum" class="field" />
+
+    <label for="hourMaximum">Hora final:</label>
+    <input id="hourMaximum" type="time" [(ngModel)]="filters.hourMaximum" class="field" />
 
     <label for="sport">Deporte:</label>
     <select id="sport" [(ngModel)]="filters.sport" class="field">

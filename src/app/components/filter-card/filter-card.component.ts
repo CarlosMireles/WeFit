@@ -16,7 +16,8 @@ export class FilterCardComponent {
 
   filters: EventFilters = {
     date: '',
-    hour: '',
+    hourMinimum: '',
+    hourMaximum: '',
     sport: '',
     maxParticipants: undefined,
     privacy: ''
@@ -61,7 +62,8 @@ export class FilterCardComponent {
 
   applyFilters() {
     // Si filters.hour o filters.date son undefined, se asigna '' para evitar el error
-    this.filters.hour = (this.filters.hour || '').replace('.', ':').trim();
+    this.filters.hourMinimum = (this.filters.hourMinimum || '').replace('.', ':').trim();
+    this.filters.hourMaximum = (this.filters.hourMaximum || '').replace('.', ':').trim();
     this.filters.date = (this.filters.date || '').trim();
 
     console.log('Aplicando filtros normalizados:', this.filters);
