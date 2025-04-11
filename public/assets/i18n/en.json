@@ -1,4 +1,11 @@
 {
+  "tooltips": {
+    "social": "Social",
+    "search": "Search",
+    "home": "Home",
+    "diets": "Diets",
+    "profile": "Profile"
+  },
   "login": {
     "mail": "Email",
     "password": "Password",
