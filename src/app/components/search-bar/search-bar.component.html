@@ -4,14 +4,21 @@
   --->
   <footer>
     <div class="footer-container">
-      <button class="nav-button"><img ngSrc="/assets/social-icon.svg" alt="social" height="32" width="32"></button>
-      <button class="nav-button"><img ngSrc="/assets/search-icon.svg" alt="search" height="32" width="32"></button>
-      <button class="nav-button" id="map-container" [routerLink]="['/home']"><img ngSrc="/assets/logo.svg" alt="map" height="32" width="32" id="map"></button>
-      <button class="nav-button"><img ngSrc="/assets/diets-icon.svg" alt="recipe" height="32" width="32"> </button>
-      <button class="nav-button" [routerLink]="['/userProfile']"><img ngSrc="/assets/profile-icon.svg" alt="user" height="32" width="32"></button>
+      <button class="nav-button">
+        <img ngSrc="/assets/social-icon.svg" alt="social" height="32" width="32">
+      </button>
+      <button class="nav-button" [routerLink]="['/user-search']">
+        <img ngSrc="/assets/search-icon.svg" alt="search" height="32" width="32">
+      </button>
+      <button class="nav-button" id="map-container" [routerLink]="['/home']">
+        <img ngSrc="/assets/logo.svg" alt="map" height="32" width="32" id="map">
+      </button>
+      <button class="nav-button">
+        <img ngSrc="/assets/diets-icon.svg" alt="recipe" height="32" width="32">
+      </button>
+      <button class="nav-button" [routerLink]="['/userProfile']">
+        <img ngSrc="/assets/profile-icon.svg" alt="user" height="32" width="32">
+      </button>
     </div>
   </footer>
 </div>
-
-
-

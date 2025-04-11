@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { EventFilters } from './event.service';  // Asegúrate de importar la interfaz de filtros
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,12 @@ export class CommunicationService {
   private mapClickSubject = new Subject<{ lat: number; lon: number }>();
   mapClick$ = this.mapClickSubject.asObservable();
 
-
   private eventCreatedSubject = new BehaviorSubject<boolean>(false);
   eventCreated$ = this.eventCreatedSubject.asObservable();
 
+  // Nuevo canal para filtros aplicados
+  private filterAppliedSubject = new Subject<EventFilters>();
+  filterApplied$ = this.filterAppliedSubject.asObservable();
 
   getEventCreationMode(): boolean {
     return this.eventCreationModeSubject.getValue();
@@ -32,5 +35,10 @@ export class CommunicationService {
 
   notifyEventCreated(value: boolean){
     this.eventCreatedSubject.next(value);
+  }
+
+  // Método para notificar que se aplicaron filtros
+  notifyFiltersApplied(filters: EventFilters) {
+    this.filterAppliedSubject.next(filters);
   }
 }

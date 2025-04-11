@@ -7,7 +7,7 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import { Subscription } from 'rxjs';
 
 import { CommunicationService } from '../../services/CommunicationService';
-import { EventService } from '../../services/event.service';
+import { EventService, EventFilters } from '../../services/event.service';
 import { EventMarkerComponent } from '../event-marker/event-marker.component';
 import { EventViewComponent } from '../event-view/event-view.component';
 
@@ -22,15 +22,20 @@ export class MapComponent implements OnInit, OnDestroy {
   map!: Map;
   eventCreationMode = false;
   selectedEvent: any = null;
-
-  // URL del icono para tu ubicación (archivo en assets)
   myLocationIconUrl: string = '/assets/user-pin.svg';
+
+  // Inicialmente sin filtros: se muestran todos los eventos.
+  eventFilters: EventFilters = {
+    date: '',
+    hour: '',
+    sport: '',
+    maxParticipants: undefined,  // O puedes seguir usando null si has actualizado la interfaz
+    privacy: ''
+  };
 
   private subscriptions: Subscription[] = [];
   private markerComponents: ComponentRef<any>[] = [];
-  // Overlay para la ubicación actual
   private currentLocationOverlay!: Overlay;
-  // Identificador del watchPosition para poder detenerlo
   private geoWatchId: number | null = null;
 
   constructor(
@@ -47,15 +52,21 @@ export class MapComponent implements OnInit, OnDestroy {
     this.checkEventCreationMode();
     this.checkEventCreated();
     this.captureLocationFromClick();
-    this.displayEvents();
+    this.displayFilteredEvents();
+
+    // Suscribirse a filtros aplicados para actualizar los eventos mostrados
+    this.subscriptions.push(
+      this.communicationService.filterApplied$.subscribe((filters: EventFilters) => {
+        console.log('Nuevos filtros recibidos en el mapa:', filters);
+        this.eventFilters = filters;
+        this.displayFilteredEvents();
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
-    this.markerComponents.forEach(componentRef => {
-      componentRef.destroy();
-    });
-    // Detenemos el watchPosition si está activo
+    this.markerComponents.forEach(componentRef => componentRef.destroy());
     if (this.geoWatchId !== null) {
       navigator.geolocation.clearWatch(this.geoWatchId);
     }
@@ -64,7 +75,7 @@ export class MapComponent implements OnInit, OnDestroy {
   private checkEventCreated() {
     this.subscriptions.push(
       this.communicationService.eventCreated$.subscribe(mode => {
-        this.displayEvents();
+        this.displayFilteredEvents();
         console.log('Refresh eventos', mode);
       })
     );
@@ -89,9 +100,8 @@ export class MapComponent implements OnInit, OnDestroy {
     });
   }
 
-  async displayEvents() {
-    const events = await this.eventApi.getEvents();
-    // Eliminamos marcadores previos para evitar duplicados
+  async displayFilteredEvents() {
+    const events = await this.eventApi.getFilteredEvents(this.eventFilters);
     this.markerComponents.forEach(compRef => compRef.destroy());
     this.markerComponents = [];
 
@@ -102,7 +112,7 @@ export class MapComponent implements OnInit, OnDestroy {
         event.title,
         event.privacy || 'Público',
         event.image_url || '',
-        event // Se pasa el objeto completo del evento
+        event
       );
     }
   }
@@ -111,11 +121,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.map = new Map({
       target: 'map',
       controls: [],
-      layers: [
-        new TileLayer({
-          source: new OSM()
-        })
-      ],
+      layers: [new TileLayer({ source: new OSM() })],
       view: new View({
         center: fromLonLat([0, 0]),
         zoom: 2
@@ -125,15 +131,12 @@ export class MapComponent implements OnInit, OnDestroy {
 
   private watchCurrentLocation(): void {
     if ('geolocation' in navigator) {
-      // Utilizamos watchPosition para actualizaciones continuas
       this.geoWatchId = navigator.geolocation.watchPosition(
         (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
-          // Centramos el mapa en la ubicación actual
           this.map.getView().setCenter(fromLonLat([lon, lat]));
           this.map.getView().setZoom(14);
-          // Actualizamos o añadimos el overlay de la ubicación actual
           this.addOrUpdateCurrentLocationMarker(lon, lat);
         },
         (error) => {
@@ -152,17 +155,14 @@ export class MapComponent implements OnInit, OnDestroy {
       this.currentLocationOverlay.setPosition(fromLonLat([lon, lat]));
       return;
     }
-    // Creamos un contenedor para el icono de ubicación
     const element = document.createElement('div');
     element.className = 'current-location-marker';
     const img = document.createElement('img');
     img.src = this.myLocationIconUrl;
-    // Ajusta el tamaño del icono según lo necesites
     img.style.width = '30px';
     img.style.height = '30px';
     element.appendChild(img);
 
-    // Usamos "bottom-center" para que la parte inferior del icono se alinee con la ubicación
     this.currentLocationOverlay = new Overlay({
       element: element,
       position: fromLonLat([lon, lat]),
@@ -181,11 +181,9 @@ export class MapComponent implements OnInit, OnDestroy {
     imagenUrl: string,
     eventData: any
   ): void {
-    // Creamos el componente marcador de evento
     const factory = this.componentFactoryResolver.resolveComponentFactory(EventMarkerComponent);
     const componentRef = factory.create(this.injector);
 
-    // Asignamos las propiedades
     componentRef.instance.title = titulo;
     componentRef.instance.coordinates = { lon, lat };
     componentRef.instance.privacy = privacidad;
@@ -194,12 +192,10 @@ export class MapComponent implements OnInit, OnDestroy {
     componentRef.changeDetectorRef.detectChanges();
     this.applicationRef.attachView(componentRef.hostView);
 
-    // Creamos un contenedor para el marcador
     const element = document.createElement('div');
     element.className = 'event-marker-container';
     element.appendChild(componentRef.location.nativeElement);
 
-    // Creamos un overlay para ubicar el marcador en el mapa
     const overlay = new Overlay({
       element: element,
       position: fromLonLat([lon, lat]),
@@ -210,7 +206,6 @@ export class MapComponent implements OnInit, OnDestroy {
     this.map.addOverlay(overlay);
     this.markerComponents.push(componentRef);
 
-    // Al hacer clic en la chincheta se asigna el objeto completo del evento para mostrar el modal
     componentRef.instance.clicked.subscribe(() => {
       console.log('Marcador clickeado:', eventData);
       this.selectedEvent = eventData;

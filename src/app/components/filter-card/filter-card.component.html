@@ -1,0 +1,31 @@
+<div class="overlay">
+  <div class="modal-window">
+    <h2>Filtrar Eventos</h2>
+
+    <label for="date">Fecha:</label>
+    <input id="date" type="date" [(ngModel)]="filters.date" class="field" />
+
+    <label for="hour">Hora:</label>
+    <input id="hour" type="time" [(ngModel)]="filters.hour" class="field" />
+
+    <label for="sport">Deporte:</label>
+    <select id="sport" [(ngModel)]="filters.sport" class="field">
+      <option value="">Seleccione deporte</option>
+      <option *ngFor="let s of sports" [value]="s">{{ s }}</option>
+    </select>
+
+    <label for="maxParticipants">Máximo de Participantes:</label>
+    <input id="maxParticipants" type="number" [(ngModel)]="filters.maxParticipants" class="field" />
+
+    <label for="privacy">Privacidad:</label>
+    <select id="privacy" [(ngModel)]="filters.privacy" class="field">
+      <option value="">Seleccione privacidad</option>
+      <option *ngFor="let p of privacies" [value]="p">{{ p }}</option>
+    </select>
+
+    <div class="buttons">
+      <button type="button" (click)="cancel()">Cancelar</button>
+      <button type="button" (click)="applyFilters()">Aplicar Filtros</button>
+    </div>
+  </div>
+</div>
