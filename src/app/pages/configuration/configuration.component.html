@@ -1,0 +1,38 @@
+<div class="container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div
+      (click)="goBack()"
+      style="display: flex; flex-direction: row; align-items: center; cursor: pointer; gap: 5px; justify-content: center">
+
+      <svg  xmlns="http://www.w3.org/2000/svg"  width="30"  height="30"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+      <h2 style="text-align: center">Configuración</h2>
+    </div>
+    <hr style="border-color: #4b4b4b">
+    <ul>
+      <li
+        *ngFor="let section of sections"
+        [class.active]="selectedSection === section.key"
+        (click)="selectSection(section.key)"
+        style="display: flex; flex-direction: row; align-items: center; gap: 10px; cursor: pointer;">
+        {{ section.label }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <div *ngIf="selectedSection === 'usuario'">
+      <app-user-configuration></app-user-configuration>
+    </div>
+    <div *ngIf="selectedSection === 'notificaciones'">
+      <h1>Notificaciones</h1>
+      <p>Notificaciones</p>
+    </div>
+    <div *ngIf="selectedSection === 'mejos'">
+      <h1>Mejores amigos</h1>
+      <p>Mejores amigos</p>
+    </div>
+  </div>
+</div>
+
