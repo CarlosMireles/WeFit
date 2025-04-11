@@ -10,6 +10,7 @@ import {LanguageService} from '../../../services/translate.service';
     TranslatePipe
   ],
   templateUrl: './forgot-password.component.html',
+  standalone: true,
   styleUrl: './forgot-password.component.css'
 })
 export class ForgotPasswordComponent {
@@ -24,7 +25,4 @@ export class ForgotPasswordComponent {
     console.log('Correo de recuperacion:', this.user);
   }
 
-  switchLang(lang: string) {
-    this.langService.changeLang(lang);
-  }
 }

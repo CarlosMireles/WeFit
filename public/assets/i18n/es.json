@@ -28,5 +28,18 @@
     "code-button": "Enviar código de recuperación",
     "no-account-text": "¿No tienes cuenta?",
     "register-link": "Regístrate"
+  },
+  "forgot-password-finish": {
+    "notify": "Se ha cambiado correctamente la contraseña.",
+    "notify2": "Ya puedes iniciar sesión con tu nueva contraseña.",
+    "return-text": "Volver a la pantalla de",
+    "redirection": "Inicio de sesión"
+  },
+  "modify-password": {
+    "head-text": "Modifique su contraseña",
+    "order": "Introduce una nueva contraseña",
+    "new-password": "Nueva contraseña",
+    "repeat-password": "Repetir contraseña",
+    "confirm-password": "Confirmar contraseña"
   }
 }

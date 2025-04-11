@@ -28,5 +28,18 @@
     "code-button": "Send recovery code",
     "no-account-text": "No account?",
     "register-link": "Register"
+  },
+  "forgot-password-finish": {
+    "notify": "Password has been successfully changed.",
+    "notify2": "You can now log in with your new password.",
+    "return-text": "Return to",
+    "redirection": "Login."
+  },
+  "modify-password": {
+    "head-text": "Modify your password",
+    "order": "Enter a new password",
+    "new-password": "New password",
+    "repeat-password": "Repeat password",
+    "confirm-password": "Confirm password"
   }
 }

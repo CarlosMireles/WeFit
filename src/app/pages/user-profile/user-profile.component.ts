@@ -12,6 +12,7 @@ import {LanguageService} from '../../services/translate.service';
     SearchBarComponent,
     TranslatePipe
   ],
+  standalone: true,
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements AfterViewInit {
@@ -51,9 +52,5 @@ export class UserProfileComponent implements AfterViewInit {
         container.classList.remove('active');
       });
     });
-  }
-
-  switchLang(lang: string) {
-    this.langService.changeLang(lang);
   }
 }

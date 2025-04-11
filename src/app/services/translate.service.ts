@@ -18,11 +18,4 @@ export class LanguageService {
     return this.translate.currentLang;
   }
 
-  translateKey(key: string): string {
-    return this.translate.instant(key);
-  }
-
-  getTranslation(key: string) {
-    return this.translate.get(key);
-  }
 }
