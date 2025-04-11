@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
-import {doc, Firestore, setDoc} from '@angular/fire/firestore';
-import {Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from '@angular/fire/auth';
+import {doc, Firestore, getDoc, setDoc} from '@angular/fire/firestore';
+import {Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, user, User} from '@angular/fire/auth';
+import {DocumentData} from '@angular/fire/compat/firestore';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private firestore: Firestore, private auth: Auth) {}
+
+  currentUser$: Observable<User | null>;
+
+  constructor(private firestore: Firestore, private auth: Auth) {
+    this.currentUser$ = user(this.auth);
+  }
 
   async registerUser(email: string, password: string, username: string) {
     try {
@@ -39,5 +46,41 @@ export class UserService {
       console.error("Error al iniciar sesión:", error);
       throw error;
     }
+  }
+
+  async getUserData(uid: string | null): Promise<{
+    username: string;
+    events_attending: string[];
+    events_organizing: string[];
+    image_url: string
+  } | null> {
+    try {
+      const userDocRef = doc(this.firestore, `users/${uid}`);
+      const userSnap = await getDoc(userDocRef);
+
+      if (userSnap.exists()) {
+        const data = userSnap.data() as DocumentData;
+        return {
+          username: data['username'] || '',
+          events_attending: data['events_attending'] || [],
+          events_organizing: data['events_organizing'] || [],
+          image_url: data['image_url'] || ''
+        };
+      } else {
+        console.warn('No existe el usuario con UID:', uid);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+      return null;
+    }
+  }
+
+  getCurrentUserUid(): Promise<string | null> {
+    return new Promise((resolve) => {
+      this.auth.onAuthStateChanged(user => {
+        resolve(user ? user.uid : null);
+      });
+    });
   }
 }
