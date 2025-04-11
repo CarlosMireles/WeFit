@@ -28,10 +28,11 @@
       <hr class="divider" />
       <div class="card-flex">
         <app-event-card
-          *ngFor="let event of eventsOrganizing"
+          *ngFor="let event of eventsOrganizing, let i = index"
           [title]="event.title"
           [hour]="event.hour"
           [date]="event.day"
+          [place]="placesOrganizing[i]"
         ></app-event-card>
       </div>
     </div>

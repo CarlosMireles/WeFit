@@ -1,12 +1,14 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
-import {EventCardComponent} from '../../components/event-card/event-card.component';
-import {SearchBarComponent} from '../../components/search-bar/search-bar.component';
-import {UserService} from '../../services/user.service';
-import {EventService} from '../../services/event.service';
-import {NgForOf} from '@angular/common';
+import { EventCardComponent } from '../../components/event-card/event-card.component';
+import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
+import { UserService } from '../../services/user.service';
+import { EventService } from '../../services/event.service';
+import { GeocodingService } from '../../services/geocoding.service';
+import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-user-profile',
+  standalone: true,
   templateUrl: './user-profile.component.html',
   imports: [
     EventCardComponent,
@@ -15,22 +17,25 @@ import {NgForOf} from '@angular/common';
   ],
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit,  AfterViewInit {
+export class UserProfileComponent implements OnInit, AfterViewInit {
   private isDragging = false;
   private startX: number = 0;
   private scrollLeft: number = 0;
+
   username: string = '';
   eventsOrganizing: any[] = [];
   eventsAttending: any[] = [];
 
+  placesOrganizing: string[] = [];
+  placesAttending: string[] = [];
 
-
-  constructor(private userService: UserService, private eventService: EventService) {}
-
-
+  constructor(
+    private userService: UserService,
+    private eventService: EventService,
+    private geocodingService: GeocodingService
+  ) {}
 
   async ngOnInit() {
-
     const cachedUsername = localStorage.getItem('username');
     const cachedOrganizing = localStorage.getItem('eventsOrganizing');
     const cachedAttending = localStorage.getItem('eventsAttending');
@@ -40,7 +45,6 @@ export class UserProfileComponent implements OnInit,  AfterViewInit {
       this.eventsOrganizing = JSON.parse(cachedOrganizing);
       this.eventsAttending = JSON.parse(cachedAttending);
     }
-
 
     const uid = await this.userService.getCurrentUserUid();
     if (!uid) return;
@@ -57,17 +61,33 @@ export class UserProfileComponent implements OnInit,  AfterViewInit {
       this.eventsOrganizing = organizing;
       this.eventsAttending = attending;
 
-
       localStorage.setItem('username', this.username);
       localStorage.setItem('eventsOrganizing', JSON.stringify(this.eventsOrganizing));
       localStorage.setItem('eventsAttending', JSON.stringify(this.eventsAttending));
-    }
 
+
+      this.fetchPlaces(this.eventsOrganizing, this.placesOrganizing);
+      this.fetchPlaces(this.eventsAttending, this.placesAttending);
+    }
   }
 
 
-
-
+  fetchPlaces(events: any[], targetList: string[]) {
+    events.forEach((event, index) => {
+      if (event.latitude && event.longitude) {
+        this.geocodingService.getPlaceFromCoords(event.latitude, event.longitude).subscribe({
+          next: (res) => {
+            targetList[index] = res.display_name || 'Ubicación desconocida';
+          },
+          error: () => {
+            targetList[index] = 'Ubicación no disponible';
+          }
+        });
+      } else {
+        targetList[index] = 'Sin coordenadas';
+      }
+    });
+  }
 
   ngAfterViewInit() {
     const cardContainers = document.querySelectorAll('.card-flex');
@@ -99,5 +119,4 @@ export class UserProfileComponent implements OnInit,  AfterViewInit {
       });
     });
   }
-
 }
