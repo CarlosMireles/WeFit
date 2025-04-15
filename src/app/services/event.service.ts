@@ -56,7 +56,7 @@ export class EventService {
 
       console.log('Eventos a eliminar:', eventsToDelete);
 
-      // Eliminar cada evento usando el método deleteEvent
+      // Eliminar cada evento usando el metodo deleteEvent
       for (const eventDoc of eventsToDelete) {
         const eventId = eventDoc.id; // Obtén el ID del evento
         await this.deleteEvent(eventId); // Llama al método deleteEvent para eliminarlo
