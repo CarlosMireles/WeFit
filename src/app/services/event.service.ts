@@ -39,9 +39,41 @@ export class EventService {
     this.eventsCollection = collection(this.firestore, 'eventos');
   }
 
+  async deleteOldEvents(): Promise<void> {
+    try {
+      const querySnapshot = await getDocs(this.eventsCollection);
+      console.log('Número de documentos obtenidos:', querySnapshot.size);
+
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0]; // formato YYYY-MM-DD
+
+      // Filtrar los eventos anteriores a la fecha de hoy
+      const eventsToDelete = querySnapshot.docs.filter(doc => {
+        const eventData = doc.data();
+        const eventDateStr = eventData['day'];  // Accediendo a 'day' con la notación de corchetes
+        return eventDateStr < todayStr; // Compara las fechas como cadenas
+      });
+
+      console.log('Eventos a eliminar:', eventsToDelete);
+
+      // Eliminar cada evento usando el método deleteEvent
+      for (const eventDoc of eventsToDelete) {
+        const eventId = eventDoc.id; // Obtén el ID del evento
+        await this.deleteEvent(eventId); // Llama al método deleteEvent para eliminarlo
+        console.log(`Evento borrado con ID: ${eventId}`);
+      }
+
+      console.log('Eliminación de eventos anteriores a hoy completada.');
+    } catch (error) {
+      console.error('Error al eliminar eventos anteriores a hoy:', error);
+      throw error;
+    }
+  }
+
   // Obtiene eventos aplicando filtros (si se especifica alguno)
   async getFilteredEvents(filters: EventFilters): Promise<any[]> {
     try {
+      await this.deleteOldEvents();
       // Preparamos un arreglo de restricciones para la consulta
       const constraints: QueryConstraint[] = [];
 
