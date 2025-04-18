@@ -1,28 +1,34 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { CommonModule, NgForOf, NgStyle } from '@angular/common';
 import { EventCardComponent } from '../../components/event-card/event-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { UserService } from '../../services/user.service';
 import { EventService } from '../../services/event.service';
 import { GeocodingService } from '../../services/geocoding.service';
-import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  templateUrl: './user-profile.component.html',
   imports: [
+    CommonModule,
+    NgForOf,
+    NgStyle,
     EventCardComponent,
-    SearchBarComponent,
-    NgForOf
+    SearchBarComponent
   ],
+  templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit, AfterViewInit {
   private isDragging = false;
-  private startX: number = 0;
-  private scrollLeft: number = 0;
+  private startX = 0;
+  private scrollLeft = 0;
 
   username: string = '';
+  description: string = '';
+  image_url: string = '';
+  follows: any[] = [];
+  followers: any[] = [];
   eventsOrganizing: any[] = [];
   eventsAttending: any[] = [];
 
@@ -36,53 +42,60 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   ) {}
 
   async ngOnInit() {
+    // Cargar datos cacheados si existen
     const cachedUsername = localStorage.getItem('username');
+    const cachedDescription = localStorage.getItem('description');
+    const cachedImageUrl = localStorage.getItem('image_url');
     const cachedOrganizing = localStorage.getItem('eventsOrganizing');
     const cachedAttending = localStorage.getItem('eventsAttending');
 
-    if (cachedUsername && cachedOrganizing && cachedAttending) {
-      this.username = cachedUsername;
-      this.eventsOrganizing = JSON.parse(cachedOrganizing);
-      this.eventsAttending = JSON.parse(cachedAttending);
-    }
+    if (cachedUsername) this.username = cachedUsername;
+    if (cachedDescription) this.description = cachedDescription;
+    if (cachedImageUrl) this.image_url = cachedImageUrl;
+    if (cachedOrganizing) this.eventsOrganizing = JSON.parse(cachedOrganizing);
+    if (cachedAttending) this.eventsAttending = JSON.parse(cachedAttending);
 
+    // Obtener usuario actual
     const uid = await this.userService.getCurrentUserUid();
     if (!uid) return;
 
+    // Traer datos del usuario
     const userData = await this.userService.getUserData(uid);
-    if (userData) {
-      this.username = userData.username;
+    if (!userData) return;
 
-      const [organizing, attending] = await Promise.all([
-        this.eventService.getEventsFromPaths(userData.events_organizing),
-        this.eventService.getEventsFromPaths(userData.events_attending)
-      ]);
+    // Asignar datos y actualizar cache
+    this.username = userData.username;
+    this.description = userData.description as string || '';
+    this.image_url = userData.image_url || '';
 
-      this.eventsOrganizing = organizing;
-      this.eventsAttending = attending;
+    localStorage.setItem('username', this.username);
+    localStorage.setItem('description', this.description);
+    localStorage.setItem('image_url', this.image_url);
 
-      localStorage.setItem('username', this.username);
-      localStorage.setItem('eventsOrganizing', JSON.stringify(this.eventsOrganizing));
-      localStorage.setItem('eventsAttending', JSON.stringify(this.eventsAttending));
+    // Cargar eventos
+    const [organizing, attending] = await Promise.all([
+      this.eventService.getEventsFromPaths(userData.events_organizing),
+      this.eventService.getEventsFromPaths(userData.events_attending)
+    ]);
+    this.eventsOrganizing = organizing;
+    this.eventsAttending = attending;
 
+    localStorage.setItem('eventsOrganizing', JSON.stringify(this.eventsOrganizing));
+    localStorage.setItem('eventsAttending', JSON.stringify(this.eventsAttending));
 
-      this.fetchPlaces(this.eventsOrganizing, this.placesOrganizing);
-      this.fetchPlaces(this.eventsAttending, this.placesAttending);
-    }
+    // Obtener lugares
+    this.fetchPlaces(this.eventsOrganizing, this.placesOrganizing);
+    this.fetchPlaces(this.eventsAttending, this.placesAttending);
   }
-
 
   fetchPlaces(events: any[], targetList: string[]) {
     events.forEach((event, index) => {
-      if (event.latitude && event.longitude) {
-        this.geocodingService.getPlaceFromCoords(event.latitude, event.longitude).subscribe({
-          next: (res) => {
-            targetList[index] = res.display_name || 'Ubicación desconocida';
-          },
-          error: () => {
-            targetList[index] = 'Ubicación no disponible';
-          }
-        });
+      if (event.latitude != null && event.longitude != null) {
+        this.geocodingService.getPlaceFromCoords(event.latitude, event.longitude)
+          .subscribe({
+            next: res => targetList[index] = res.display_name || 'Ubicación desconocida',
+            error: () => targetList[index] = 'Ubicación no disponible'
+          });
       } else {
         targetList[index] = 'Sin coordenadas';
       }
@@ -91,7 +104,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     const cardContainers = document.querySelectorAll('.card-flex');
-
     cardContainers.forEach(container => {
       container.addEventListener('mousedown', (e: any) => {
         this.isDragging = true;
@@ -99,20 +111,16 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         this.startX = e.pageX - (container as HTMLElement).offsetLeft;
         this.scrollLeft = container.scrollLeft;
       });
-
       container.addEventListener('mousemove', (e: any) => {
         if (!this.isDragging) return;
         e.preventDefault();
         const x = e.pageX - (container as HTMLElement).offsetLeft;
-        const distance = x - this.startX;
-        container.scrollLeft = this.scrollLeft - distance;
+        container.scrollLeft = this.scrollLeft - (x - this.startX);
       });
-
       container.addEventListener('mouseup', () => {
         this.isDragging = false;
         container.classList.remove('active');
       });
-
       container.addEventListener('mouseleave', () => {
         this.isDragging = false;
         container.classList.remove('active');

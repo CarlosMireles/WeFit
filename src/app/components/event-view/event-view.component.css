@@ -96,11 +96,14 @@ body {
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   font-weight: 500;
   transition: background-color 0.2s ease, color 0.2s ease;
   font-size: 0.95rem;
   font-family: 'Poppins', sans-serif;
+}
+
+.buttons button:not(.btn-disabled) {
+  cursor: pointer;
 }
 
 /* Botón "Modificar evento" */
@@ -115,28 +118,32 @@ body {
 
 /* Botón "Unirse al evento" */
 .btn-join {
-  background-color: #00cc66; /* verde base */
+  background-color: #00a556; /* verde base */
   color: #fff;
 }
 .btn-join:hover {
-  background-color: #00a556; /* verde oscuro al hover */
+  background-color: #00cc66; /* verde oscuro al hover */
 }
 
-/* Botón "Desinscribirse" y "No puedes unirte" */
-.btn-leave,
-.btn-disabled {
-  background-color: #ff0000; /* rojo base */
+/* Botón "Desinscribirse" */
+.btn-leave {
+  background-color: #e60000; /* rojo base */
   color: #fff;
 }
-.btn-leave:hover,
-.btn-disabled:hover {
-  background-color: #e60000; /* rojo intenso al hover */
+.btn-leave:hover {
+  background-color: #ff0000; /* rojo intenso al hover */
 }
 
-/* Cursor bloqueado y menor opacidad en estado disabled */
+/* Botón "No puedes unirte" (disabled) */
 .btn-disabled {
+  background-color: #888888; /* gris base */
+  color: #ccc;
   cursor: not-allowed;
   opacity: 0.6;
+}
+.btn-disabled:hover {
+  background-color: #888888; /* mantiene gris al hover */
+  cursor: not-allowed;
 }
 
 /* Botón "Cerrar" */

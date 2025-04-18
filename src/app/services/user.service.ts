@@ -26,9 +26,12 @@ export class UserService {
         email: user.email,
         username: username,
         image_url: "",
+        description: "",
         events_organizing: [],
         events_attending: [],
-        createdAt: new Date()
+        follows: [],
+        followers: [],
+        createdAt: new Date(),
       });
 
       return user;
@@ -53,6 +56,9 @@ export class UserService {
     events_attending: string[];
     events_organizing: string[];
     image_url: string
+    follows: string[];
+    followers: string[];
+    description: String
   } | null> {
     try {
       const userDocRef = doc(this.firestore, `users/${uid}`);
@@ -64,7 +70,10 @@ export class UserService {
           username: data['username'] || '',
           events_attending: data['events_attending'] || [],
           events_organizing: data['events_organizing'] || [],
-          image_url: data['image_url'] || ''
+          image_url: data['image_url'] || '',
+          follows: data['follows'] || [],
+          followers: data['followers'] || [],
+          description: data['description'] || '',
         };
       } else {
         console.warn('No existe el usuario con UID:', uid);
