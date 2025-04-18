@@ -2,37 +2,43 @@
 
 .create-event-button {
   position: absolute;
-  top: 90px;  /* Ajusta la posición según lo requieras */
+  top: 90px;
   left: 30px;
 
-  background-color: black;
-  color: white;
-
-  /* Tamaño fijo */
   width: 140px;
   height: 44px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
 
-  /* Centrado del texto dentro del botón */
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
   font-family: 'Poppins', sans-serif;
-  font-size: 1.0rem;
-  z-index: 10000;
+  font-size: 1rem;
+  font-weight: 500;
+
+  transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 
-.create-event-button:hover {
+/* Hover solo cuando esté habilitado */
+.create-event-button:not(:disabled):hover {
   background-color: #14d578;
+  cursor: pointer;
 }
 
-.create-event-button.active {
-  background-color: #14d578;
+/* Estado deshabilitado: grisacea y cursor bloqueado */
+.create-event-button:disabled {
+  background-color: #888888;
+  color: #ccc;
+  cursor: not-allowed;
+  /* mantenemos opacity normal para que el texto siga legible */
 }
 
-.create-event-button.active:hover {
-  background-color: red;
+/* Asegura que al pasar por encima NO cambie de color */
+.create-event-button:disabled:hover {
+  background-color: #888888;
+  cursor: not-allowed;
 }

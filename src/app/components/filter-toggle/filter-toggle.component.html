@@ -1,7 +1,19 @@
-<!-- Botón estilo similar al create-event-button -->
-<button class="create-event-button" (click)="toggleFilterCard()">
+<!-- Botón Filtrar -->
+<button
+  class="create-event-button"
+  (click)="toggleFilterCard()"
+  [disabled]="creationMode"
+  [attr.title]="
+    creationMode
+      ? 'Deshabilitado mientras creas un evento'
+      : 'Filtrar eventos'
+  "
+>
   Filtrar
 </button>
 
-<!-- Se muestra la tarjeta de filtros si showFilterCard es true -->
-<app-filter-card *ngIf="showFilterCard" (close)="toggleFilterCard()"></app-filter-card>
+<!-- La tarjeta solo aparece si no estamos en modo creación -->
+<app-filter-card
+  *ngIf="showFilterCard && !creationMode"
+  (close)="toggleFilterCard()"
+></app-filter-card>

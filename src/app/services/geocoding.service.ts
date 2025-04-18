@@ -13,8 +13,7 @@ export class GeocodingService {
 
   getPlaceFromCoords(lat: number, lon: number): Observable<any> {
     const headers = new HttpHeaders({
-      'Accept': 'application/json',
-      'User-Agent': 'WeFit-PS'
+      'Accept': 'application/json'
     });
 
     const url = `${this.baseUrl}?format=jsonv2&lat=${lat}&lon=${lon}`;
