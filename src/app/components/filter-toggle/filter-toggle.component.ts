@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FilterCardComponent } from '../filter-card/filter-card.component';
-import {CommonJsUsageWarnPlugin} from '@angular-devkit/build-angular/src/tools/webpack/plugins';
 import {CommunicationService} from '../../services/CommunicationService';
 
 @Component({
