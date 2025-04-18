@@ -33,6 +33,8 @@
           [hour]="event.hour"
           [date]="event.day"
           [place]="placesOrganizing[i]"
+          [participants]="event.participants?.length"
+          [maxParticipants]="event.maxParticipants ?? 0"
         ></app-event-card>
       </div>
     </div>
@@ -40,10 +42,15 @@
       <h1 class="eventos-text">Eventos inscritos</h1>
       <hr class="divider" />
       <div class="card-flex">
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
+        <app-event-card
+          *ngFor="let event of eventsAttending; let i = index"
+          [title]="event.title"
+          [hour]="event.hour"
+          [date]="event.day"
+          [place]="placesAttending[i]"
+          [participants]="event.participants?.length"
+          [maxParticipants]="event.maxParticipants ?? 0"
+        ></app-event-card>
       </div>
     </div>
   </div>

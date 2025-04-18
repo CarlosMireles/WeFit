@@ -13,11 +13,16 @@ export class EventCardComponent {
   @Input() place: String;
   @Input() date: String;
   @Input() hour: String;
+  @Input() participants: String;
+  @Input() maxParticipants: String;
+
 
   constructor() {
     this.title = '';
     this.place = '';
     this.date = '';
     this.hour = '';
+    this.participants = '';
+    this.maxParticipants = '';
   }
 }

@@ -18,7 +18,7 @@
     </select>
 
     <label for="maxParticipants">Máximo de Participantes:</label>
-    <input id="maxParticipants" type="number" [(ngModel)]="filters.maxParticipants" class="field" />
+    <input id="maxParticipants" type="number" [(ngModel)]="filters.maxParticipants" class="field" min="1"/>
 
     <label for="privacy">Privacidad:</label>
     <select id="privacy" [(ngModel)]="filters.privacy" class="field">

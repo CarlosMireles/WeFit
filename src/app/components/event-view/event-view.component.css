@@ -54,7 +54,6 @@ body {
   margin-top: 0.5rem;
   border-radius: 6px;
 
-
   white-space: pre-wrap;
   word-wrap: break-word;
   word-break: break-word;
@@ -63,7 +62,6 @@ body {
   max-width: 100%;
   box-sizing: border-box;
 }
-
 
 .modal-window input,
 .modal-window select,
@@ -105,22 +103,47 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-/* Botón "Cancelar" */
-.buttons button[type="button"] {
+/* Botón "Modificar evento" */
+.btn-edit {
+  background-color: #555;   /* gris base */
+  color: #fff;
+}
+.btn-edit:hover {
+  background-color: #c0c0c0; /* gris plateado al hover */
+  color: #000;
+}
+
+/* Botón "Unirse al evento" */
+.btn-join {
+  background-color: #00cc66; /* verde base */
+  color: #fff;
+}
+.btn-join:hover {
+  background-color: #00a556; /* verde oscuro al hover */
+}
+
+/* Botón "Desinscribirse" y "No puedes unirte" */
+.btn-leave,
+.btn-disabled {
+  background-color: #ff0000; /* rojo base */
+  color: #fff;
+}
+.btn-leave:hover,
+.btn-disabled:hover {
+  background-color: #e60000; /* rojo intenso al hover */
+}
+
+/* Cursor bloqueado y menor opacidad en estado disabled */
+.btn-disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Botón "Cerrar" */
+.btn-close {
   background-color: #000;
   color: #fff;
 }
-
-.buttons button[type="button"]:hover {
-  background-color: #ff0000; /* Rojo en hover */
-}
-
-/* Botón "Crear Evento" (si lo necesitas) */
-.buttons button[type="button"]:last-child {
-  background-color: #00cc66; /* Verde de acento */
-  color: #fff;
-}
-
-.buttons button[type="button"]:last-child:hover {
-  background-color: #ff0000; /* Verde más vibrante al hover */
+.btn-close:hover {
+  background-color: #ff0000;
 }

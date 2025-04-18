@@ -15,7 +15,8 @@ import {
   DocumentData,
   getDoc,
   arrayUnion,
-  setDoc
+  setDoc,
+  arrayRemove
 } from '@angular/fire/firestore';
 import {UserService} from './user.service';
 
@@ -204,5 +205,49 @@ export class EventService {
     }
 
     return events;
+  }
+
+  async joinEvent(eventId: string, userId: string): Promise<void> {
+    try {
+      const eventRef = doc(this.firestore, `eventos/${eventId}`);
+      const userRef = doc(this.firestore, `users/${userId}`);
+
+      // Añadir el usuario al evento
+      await updateDoc(eventRef, {
+        participants: arrayUnion(userId)
+      });
+
+      // Añadir el evento al usuario
+      await updateDoc(userRef, {
+        events_attending: arrayUnion(eventId)
+      });
+
+      console.log(`Usuario ${userId} inscrito en el evento ${eventId}`);
+    } catch (error) {
+      console.error('Error al inscribirse en el evento:', error);
+      throw error;
+    }
+  }
+
+  async leaveEvent(eventId: string, userId: string): Promise<void> {
+    try {
+      const eventRef = doc(this.firestore, `eventos/${eventId}`);
+      const userRef = doc(this.firestore, `users/${userId}`);
+
+      // Quitar el usuario del array de participantes
+      await updateDoc(eventRef, {
+        participants: arrayRemove(userId)
+      });
+
+      // Quitar el evento del array de eventos a los que asiste el usuario
+      await updateDoc(userRef, {
+        events_attending: arrayRemove(eventId)
+      });
+
+      console.log(`Usuario ${userId} se ha desinscrito del evento ${eventId}`);
+    } catch (error) {
+      console.error('Error al desinscribirse del evento:', error);
+      throw error;
+    }
   }
 }

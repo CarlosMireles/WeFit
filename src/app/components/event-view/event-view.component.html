@@ -24,7 +24,53 @@
     <div class="field">{{ eventData.privacy }}</div>
 
     <div class="buttons">
-      <button type="button" (click)="onClose()">Cerrar</button>
+      <!-- Organizador -->
+      <button
+        *ngIf="eventData.organizerId === currentUserId"
+        type="button"
+        class="btn-edit"
+        (click)="editEvent()"
+      >
+        Modificar evento 🛠️
+      </button>
+
+      <!-- Resto de usuarios -->
+      <ng-container *ngIf="eventData.organizerId !== currentUserId">
+        <!-- Ya inscrito -->
+        <button
+          *ngIf="hasJoined"
+          type="button"
+          class="btn-leave"
+          (click)="leaveEvent()"
+        >
+          Desinscribirse del evento ❌
+        </button>
+
+        <!-- Puede unirse -->
+        <button
+          *ngIf="!hasJoined && canJoin"
+          type="button"
+          class="btn-join"
+          (click)="joinEvent()"
+        >
+          Unirse al evento ➕
+        </button>
+
+        <!-- No puede unirse -->
+        <button
+          *ngIf="!hasJoined && !canJoin"
+          type="button"
+          class="btn-disabled"
+          disabled
+        >
+          No puedes unirte al evento
+        </button>
+      </ng-container>
+
+      <!-- Cerrar -->
+      <button type="button" class="btn-close" (click)="onClose()">
+        Cerrar
+      </button>
     </div>
   </div>
 </div>
