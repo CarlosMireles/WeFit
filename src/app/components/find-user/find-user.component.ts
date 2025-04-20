@@ -1,8 +1,10 @@
-import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { SearchService } from '../../services/search.service';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { SearchService } from '../../services/search.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-find-user',
@@ -11,27 +13,39 @@ import { CommonModule } from '@angular/common';
   templateUrl: './find-user.component.html',
   styleUrls: ['./find-user.component.css']
 })
-export class FindUserComponent implements AfterViewInit {
+export class FindUserComponent implements OnInit, AfterViewInit {
   @ViewChild('searchInput', { static: true }) searchInput!: ElementRef;
-  searchResults: any[] = [];
+  searchResults: Array<{ uid: string; username: string }> = [];
+  selectedUid: string | null = null;
 
-  // Define el username actual; reemplázalo según tu lógica (por ejemplo, de un servicio de autenticación)
   currentUsername: string = 'currentUserName';
+  currentUserId: string | null = null;
 
-  constructor(private searchService: SearchService) {}
+  constructor(
+    private searchService: SearchService,
+    private userService: UserService,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.userService.getCurrentUserUid().then(uid => {
+      this.currentUserId = uid;
+    });
+  }
 
   ngAfterViewInit(): void {
-    // Búsqueda en tiempo real mientras escribes
     fromEvent(this.searchInput.nativeElement, 'input').pipe(
       map((event: any) => event.target.value),
       debounceTime(300),
       distinctUntilChanged()
     ).subscribe((text: string) => {
-      const trimmedText = text.trim();
-      if (trimmedText.length > 0) {
-        this.searchService.searchUsersByUsernamePrefix(trimmedText, this.currentUsername)
+      const term = text.trim();
+      this.selectedUid = null;  // reset selección al escribir
+      if (term) {
+        this.searchService
+          .searchUsersByUsernamePrefix(term, this.currentUsername)
           .then(results => this.searchResults = results)
-          .catch(error => console.error('Error en la búsqueda:', error));
+          .catch(err => console.error(err));
       } else {
         this.searchResults = [];
       }
@@ -39,21 +53,38 @@ export class FindUserComponent implements AfterViewInit {
   }
 
   async onSearchClick() {
-    const text: string = this.searchInput.nativeElement.value;
-    const trimmedText = text.trim();
-    if (trimmedText.length > 0) {
-      try {
-        this.searchResults = await this.searchService.searchUsersByUsernamePrefix(trimmedText, this.currentUsername);
-      } catch (error) {
-        console.error('Error en la búsqueda por click:', error);
-      }
-    } else {
+    const term = this.searchInput.nativeElement.value.trim();
+    if (!term) {
       this.searchResults = [];
+      this.selectedUid = null;
+      return;
+    }
+
+    if (!this.selectedUid) {
+      try {
+        this.searchResults = await this.searchService
+          .searchUsersByUsernamePrefix(term, this.currentUsername);
+        if (this.searchResults.length > 0) {
+          this.selectedUid = this.searchResults[0].uid;
+        }
+      } catch (err) {
+        console.error('Error en búsqueda:', err);
+      }
+    }
+
+    if (!this.selectedUid) return;
+
+    // Navegar según sea tu propio perfil o el de otro
+    if (this.selectedUid === this.currentUserId) {
+      this.router.navigate(['/userProfile']);
+    } else {
+      this.router.navigate(['/profile-search', this.selectedUid]);
     }
   }
 
-  selectUser(user: any) {
+  selectUser(user: { uid: string; username: string }) {
     this.searchInput.nativeElement.value = user.username;
     this.searchResults = [];
+    this.selectedUid = user.uid;
   }
 }

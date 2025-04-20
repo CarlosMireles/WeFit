@@ -1,95 +1,106 @@
 import { Injectable } from '@angular/core';
-import {doc, Firestore, getDoc, setDoc} from '@angular/fire/firestore';
-import {Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, user, User} from '@angular/fire/auth';
-import {DocumentData} from '@angular/fire/compat/firestore';
-import {Observable} from 'rxjs';
+import {
+  Firestore,
+  doc,
+  getDoc,
+  setDoc,
+  DocumentData
+} from '@angular/fire/firestore';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  user as authState,
+  User
+} from '@angular/fire/auth';
+import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
-
   currentUser$: Observable<User | null>;
 
-  constructor(private firestore: Firestore, private auth: Auth) {
-    this.currentUser$ = user(this.auth);
+  constructor(
+    private firestore: Firestore,
+    private auth: Auth
+  ) {
+    this.currentUser$ = authState(this.auth);
   }
 
-  async registerUser(email: string, password: string, username: string) {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
-      const user = userCredential.user;
-      const userRef = doc(this.firestore, `users/${user.uid}`);
-
-      await setDoc(userRef, {
-        uid: user.uid,
-        email: user.email,
-        username: username,
-        image_url: "",
-        description: "",
-        events_organizing: [],
-        events_attending: [],
-        follows: [],
-        followers: [],
-        createdAt: new Date(),
-      });
-
-      return user;
-    } catch (error) {
-      console.error("Error al registrar el usuario:", error);
-      throw error;
-    }
+  async registerUser(
+    email: string,
+    password: string,
+    username: string
+  ): Promise<User> {
+    const credential = await createUserWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+    const u = credential.user;
+    const userRef = doc(this.firestore, `users/${u.uid}`);
+    await setDoc(userRef, {
+      ['uid']: u.uid,
+      ['email']: u.email,
+      ['username']: username,
+      ['image_url']: '',
+      ['description']: '',
+      ['events_organizing']: [],
+      ['events_attending']: [],
+      ['follows']: [],
+      ['followers']: [],
+      ['createdAt']: new Date()
+    });
+    return u;
   }
 
-  async loginUser(email: string, password: string) {
-    try {
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      return userCredential.user;
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      throw error;
-    }
+  async loginUser(email: string, password: string): Promise<User> {
+    const credential = await signInWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+    return credential.user;
   }
 
-  async getUserData(uid: string | null): Promise<{
-    username: string;
-    events_attending: string[];
-    events_organizing: string[];
-    image_url: string
-    follows: string[];
-    followers: string[];
-    description: String
+  async getUserData(
+    uid: string | null
+  ): Promise<{
+    ['username']: string;
+    ['events_attending']: string[];
+    ['events_organizing']: string[];
+    ['image_url']: string;
+    ['follows']: string[];
+    ['followers']: string[];
+    ['description']: string;
   } | null> {
-    try {
-      const userDocRef = doc(this.firestore, `users/${uid}`);
-      const userSnap = await getDoc(userDocRef);
+    if (!uid) return null;
+    const userRef = doc(this.firestore, `users/${uid}`);
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) return null;
+    const data = snap.data() as DocumentData;
+    return {
+      ['username']: data['username'] || '',
+      ['events_attending']: data['events_attending'] || [],
+      ['events_organizing']: data['events_organizing'] || [],
+      ['image_url']: data['image_url'] || '',
+      ['follows']: data['follows'] || [],
+      ['followers']: data['followers'] || [],
+      ['description']: data['description'] || ''
+    };
+  }
 
-      if (userSnap.exists()) {
-        const data = userSnap.data() as DocumentData;
-        return {
-          username: data['username'] || '',
-          events_attending: data['events_attending'] || [],
-          events_organizing: data['events_organizing'] || [],
-          image_url: data['image_url'] || '',
-          follows: data['follows'] || [],
-          followers: data['followers'] || [],
-          description: data['description'] || '',
-        };
-      } else {
-        console.warn('No existe el usuario con UID:', uid);
-        return null;
-      }
-    } catch (error) {
-      console.error('Error al obtener los datos del usuario:', error);
-      return null;
+  async getUserById(uid: string): Promise<DocumentData> {
+    const userRef = doc(this.firestore, `users/${uid}`);
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) {
+      throw new Error(`Usuario ${uid} no encontrado`);
     }
+    return snap.data() as DocumentData;
   }
 
   getCurrentUserUid(): Promise<string | null> {
-    return new Promise((resolve) => {
-      this.auth.onAuthStateChanged(user => {
-        resolve(user ? user.uid : null);
-      });
+    return new Promise(resolve => {
+      this.auth.onAuthStateChanged(u => resolve(u ? u.uid : null));
     });
   }
 }

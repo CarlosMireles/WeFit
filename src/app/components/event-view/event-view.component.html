@@ -17,16 +17,22 @@
     <label>Hora:</label>
     <div class="field">{{ eventData.hour }}</div>
 
-    <label>Número de participantes:</label>
-    <div class="field">{{ eventData.maxParticipants }}</div>
+    <label>Participantes:</label>
+    <div class="participants-count">
+      {{ eventData.participants.length }} / {{ eventData.maxParticipants }}
+    </div>
+    <div class="field participants-container">
+      <ul class="participants-list">
+        <li *ngFor="let name of participantNames">{{ name }}</li>
+      </ul>
+    </div>
 
     <label>Privacidad:</label>
     <div class="field">{{ eventData.privacy }}</div>
 
     <div class="buttons">
-      <!-- Organizador -->
       <button
-        *ngIf="eventData.organizerId === currentUserId"
+        *ngIf="isOwner"
         type="button"
         class="btn-edit"
         (click)="editEvent()"
@@ -34,9 +40,7 @@
         Modificar evento
       </button>
 
-      <!-- Resto de usuarios -->
-      <ng-container *ngIf="eventData.organizerId !== currentUserId">
-        <!-- Ya inscrito -->
+      <ng-container *ngIf="!isOwner">
         <button
           *ngIf="hasJoined"
           type="button"
@@ -45,8 +49,6 @@
         >
           Desinscribirse del evento
         </button>
-
-        <!-- Puede unirse -->
         <button
           *ngIf="!hasJoined && canJoin"
           type="button"
@@ -55,8 +57,6 @@
         >
           Unirse al evento
         </button>
-
-        <!-- No puede unirse -->
         <button
           *ngIf="!hasJoined && !canJoin"
           type="button"
@@ -67,7 +67,6 @@
         </button>
       </ng-container>
 
-      <!-- Cerrar -->
       <button type="button" class="btn-close" (click)="onClose()">
         Cerrar
       </button>

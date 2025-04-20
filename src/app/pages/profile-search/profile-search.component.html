@@ -1,0 +1,74 @@
+<div class="container">
+  <div class="profile-card">
+    <div class="cover-photo">
+      <div
+        class="avatar"
+        [ngStyle]="{
+          'background-image': image_url
+            ? 'url(' + image_url + ')'
+            : 'url(/assets/avatar.jpg)'
+        }"
+      ></div>
+      <h2 class="username">{{ username }}</h2>
+      <hr class="divider-user" />
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div>
+        <strong>Seguidores</strong>
+        <p>{{ followers.length }}</p>
+      </div>
+      <div>
+        <strong>Seguidos</strong>
+        <p>{{ follows.length }}</p>
+      </div>
+    </div>
+
+    <button
+      class="btn-follow"
+      [class.following]="isFollowing"
+      (click)="toggleFollow()"
+    >
+      {{ isFollowing ? 'Siguiendo' : 'Seguir' }}
+    </button>
+
+    <p class="description">{{ description }}</p>
+  </div>
+
+  <div class="content-container">
+    <div class="eventos-container">
+      <h1 class="eventos-text">Eventos creados</h1>
+      <hr class="divider" />
+      <div class="card-flex">
+        <app-event-card
+          *ngFor="let event of eventsOrganizing; let i = index"
+          [title]="event.title"
+          [hour]="event.hour"
+          [date]="event.day"
+          [place]="placesOrganizing[i]"
+          [participants]="event.participants?.length"
+          [maxParticipants]="event.maxParticipants ?? 0"
+        ></app-event-card>
+      </div>
+    </div>
+
+    <div class="eventos-container">
+      <h1 class="eventos-text">Eventos inscritos</h1>
+      <hr class="divider" />
+      <div class="card-flex">
+        <app-event-card
+          *ngFor="let event of eventsAttending; let i = index"
+          [title]="event.title"
+          [hour]="event.hour"
+          [date]="event.day"
+          [place]="placesAttending[i]"
+          [participants]="event.participants?.length"
+          [maxParticipants]="event.maxParticipants ?? 0"
+        ></app-event-card>
+      </div>
+    </div>
+  </div>
+
+  <app-search-bar></app-search-bar>
+</div>

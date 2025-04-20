@@ -9,7 +9,6 @@ import {
   deleteDoc,
   query,
   where,
-  Query,
   QueryConstraint,
   CollectionReference,
   DocumentData,
@@ -18,236 +17,131 @@ import {
   setDoc,
   arrayRemove
 } from '@angular/fire/firestore';
-import {UserService} from './user.service';
+import { UserService } from './user.service';
 
 export interface EventFilters {
-  date?: string;             // Ej: '2025-05-15'
-  hourMaximum?: string;             // Ej: '18:00'
-  hourMinimum?: string       // Ej: '20:00'
-  sport?: string;            // Ej: 'fútbol'
-  maxParticipants?: number;  // Ej: 20
-  privacy?: string;          // Ej: 'Público' o 'Privado'
+  date?: string;
+  hourMaximum?: string;
+  hourMinimum?: string;
+  sport?: string;
+  maxParticipants?: number;
+  privacy?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class EventService {
-  // Especificamos el tipo CollectionReference<DocumentData>
   private eventsCollection: CollectionReference<DocumentData>;
 
-  constructor(private firestore: Firestore, private userService: UserService) {
+  constructor(
+    private firestore: Firestore,
+    private userService: UserService
+  ) {
     this.eventsCollection = collection(this.firestore, 'eventos');
   }
 
-  async deleteOldEvents(): Promise<void> {
-    try {
-      const querySnapshot = await getDocs(this.eventsCollection);
-      console.log('Número de documentos obtenidos:', querySnapshot.size);
-
-      const today = new Date();
-      const todayStr = today.toISOString().split('T')[0]; // formato YYYY-MM-DD
-
-      // Filtrar los eventos anteriores a la fecha de hoy
-      const eventsToDelete = querySnapshot.docs.filter(doc => {
-        const eventData = doc.data();
-        const eventDateStr = eventData['day'];  // Accediendo a 'day' con la notación de corchetes
-        return eventDateStr < todayStr; // Compara las fechas como cadenas
-      });
-
-      console.log('Eventos a eliminar:', eventsToDelete);
-
-      // Eliminar cada evento usando el metodo deleteEvent
-      for (const eventDoc of eventsToDelete) {
-        const eventId = eventDoc.id; // Obtén el ID del evento
-        await this.deleteEvent(eventId); // Llama al método deleteEvent para eliminarlo
-        console.log(`Evento borrado con ID: ${eventId}`);
-      }
-
-      console.log('Eliminación de eventos anteriores a hoy completada.');
-    } catch (error) {
-      console.error('Error al eliminar eventos anteriores a hoy:', error);
-      throw error;
+  private async deleteOldEvents(): Promise<void> {
+    const snapshot = await getDocs(this.eventsCollection);
+    const todayStr = new Date().toISOString().split('T')[0];
+    const toDelete = snapshot.docs.filter(d => {
+      const day = (d.data() as any)['day'] as string;
+      return day < todayStr;
+    });
+    for (const d of toDelete) {
+      await this.deleteEvent(d.id);
     }
   }
 
-  // Obtiene eventos aplicando filtros (si se especifica alguno)
   async getFilteredEvents(filters: EventFilters): Promise<any[]> {
-    try {
-      await this.deleteOldEvents();
-      // Preparamos un arreglo de restricciones para la consulta
-      const constraints: QueryConstraint[] = [];
+    await this.deleteOldEvents();
+    const constraints: QueryConstraint[] = [];
 
-      if (filters.date) {
-        constraints.push(where('day', '==', filters.date));
-      }
-      if (filters.hourMinimum && filters.hourMaximum) {
-        // Ambos filtros definidos
-        constraints.push(where('hour', '>=', filters.hourMinimum));
-        constraints.push(where('hour', '<=', filters.hourMaximum));
-      } else if (filters.hourMinimum) {
-        // Solo mínimo definido
-        constraints.push(where('hour', '>=', filters.hourMinimum));
-      } else if (filters.hourMaximum) {
-        // Solo máximo definido
-        constraints.push(where('hour', '<=', filters.hourMaximum));
-      }
-      if (filters.sport) {
-        constraints.push(where('sport', '==', filters.sport));
-      }
-      // Solo se añade la restricción si maxParticipants NO es null ni undefined
-      if (filters.maxParticipants !== null && filters.maxParticipants !== undefined) {
-        constraints.push(where('maxParticipants', '<=', filters.maxParticipants));
-      }
-      if (filters.privacy) {
-        constraints.push(where('privacy', '==', filters.privacy));
-      }
-
-      // Declaramos q como Query<DocumentData>
-      let q: Query<DocumentData> = this.eventsCollection;
-      if (constraints.length > 0) {
-        q = query(this.eventsCollection, ...constraints);
-      }
-
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    } catch (error) {
-      console.error('Error al obtener eventos filtrados:', error);
-      throw error;
+    if (filters.date) {
+      constraints.push(where('day', '==', filters.date));
     }
+    if (filters.hourMinimum) {
+      constraints.push(where('hour', '>=', filters.hourMinimum));
+    }
+    if (filters.hourMaximum) {
+      constraints.push(where('hour', '<=', filters.hourMaximum));
+    }
+    if (filters.sport) {
+      constraints.push(where('sport', '==', filters.sport));
+    }
+    if (filters.maxParticipants != null) {
+      constraints.push(where('maxParticipants', '<=', filters.maxParticipants));
+    }
+    if (filters.privacy) {
+      constraints.push(where('privacy', '==', filters.privacy));
+    }
+
+    const q = constraints.length
+      ? query(this.eventsCollection, ...constraints)
+      : this.eventsCollection;
+
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...(d.data() as any) }));
   }
 
   async getEvents(): Promise<any[]> {
-    try {
-      const querySnapshot = await getDocs(this.eventsCollection);
-      console.log('Número de documentos obtenidos:', querySnapshot.size);
-
-      const events = querySnapshot.docs.map(doc => {
-        console.log('Documento:', doc.id, doc.data());
-        return { id: doc.id, ...doc.data() };
-      });
-
-      console.log('Eventos obtenidos del servicio:', events);
-      return events;
-    } catch (error) {
-      console.error('Error al obtener los eventos:', error);
-      throw error;
-    }
+    const snap = await getDocs(this.eventsCollection);
+    return snap.docs.map(d => ({ id: d.id, ...(d.data() as any) }));
   }
 
-
-  async createEvent(event: any): Promise<string> {
-    try {
-      const docRef = await addDoc(this.eventsCollection, event);
-      console.log('Evento creado con ID:', docRef.id);
-
-      const userUid = await this.userService.getCurrentUserUid();
-      if (userUid) {
-        const userDocRef = doc(this.firestore, `users/${userUid}`);
-
-        await setDoc(userDocRef, {
-          events_organizing: arrayUnion(docRef.id)
-        }, { merge: true });
-
-        console.log('Evento añadido a los eventos organizando del usuario');
-      } else {
-        console.error('No hay usuario autenticado.');
-      }
-
-      return docRef.id;
-    } catch (error) {
-      console.error('Error al crear el evento:', error);
-      throw error;
-    }
-  }
-
-
-
-  async updateEvent(id: string, event: any): Promise<void> {
-    try {
-      const eventRef = doc(this.firestore, 'eventos', id);  // Referencia al documento del evento
-      await updateDoc(eventRef, event);  // Actualizamos los datos del documento
-      console.log('Evento actualizado con ID:', id);
-    } catch (error) {
-      console.error('Error al modificar el evento:', error);
-      throw error;
-    }
-  }
-
-
-  async deleteEvent(id: string): Promise<void> {
-    try {
-      const eventRef = doc(this.firestore, 'eventos', id);  // Referencia al documento del evento
-      await deleteDoc(eventRef);  // Eliminamos el documento
-      console.log('Evento borrado con ID:', id);
-    } catch (error) {
-      console.error('Error al borrar el evento:', error);
-      throw error;
-    }
-  }
-
-  async getEventById(path: string): Promise<any | null> {
-    const eventRef = doc(this.firestore, 'eventos', path);
-    const eventSnap = await getDoc(eventRef);
-    if (eventSnap.exists()) {
-      return eventSnap.data();
-    } else {
-      throw new Error(path);
-    }
+  async getEventById(id: string): Promise<any> {
+    const ref = doc(this.firestore, 'eventos', id);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) throw new Error('Evento no encontrado');
+    return snap.data();
   }
 
   async getEventsFromPaths(paths: string[]): Promise<any[]> {
     const events: any[] = [];
-
     for (const path of paths) {
-      const event = await this.getEventById(path);
-      if (event) events.push(event);
+      try {
+        const data = await this.getEventById(path);
+        events.push({ id: path, ...data });
+      } catch {
+        // si no existe, lo ignoramos
+      }
     }
-
     return events;
   }
 
-  async joinEvent(eventId: string, userId: string): Promise<void> {
-    try {
-      const eventRef = doc(this.firestore, `eventos/${eventId}`);
-      const userRef = doc(this.firestore, `users/${userId}`);
-
-      // Añadir el usuario al evento
-      await updateDoc(eventRef, {
-        participants: arrayUnion(userId)
-      });
-
-      // Añadir el evento al usuario
-      await updateDoc(userRef, {
-        events_attending: arrayUnion(eventId)
-      });
-
-      console.log(`Usuario ${userId} inscrito en el evento ${eventId}`);
-    } catch (error) {
-      console.error('Error al inscribirse en el evento:', error);
-      throw error;
+  async createEvent(event: any): Promise<string> {
+    const ref = await addDoc(this.eventsCollection, event);
+    const uid = await this.userService.getCurrentUserUid();
+    if (uid) {
+      const userRef = doc(this.firestore, `users/${uid}`);
+      await setDoc(
+        userRef,
+        { ['events_organizing']: arrayUnion(ref.id) },
+        { merge: true }
+      );
     }
+    return ref.id;
+  }
+
+  async updateEvent(id: string, data: any): Promise<void> {
+    const ref = doc(this.firestore, 'eventos', id);
+    await updateDoc(ref, data);
+  }
+
+  async deleteEvent(id: string): Promise<void> {
+    const ref = doc(this.firestore, 'eventos', id);
+    await deleteDoc(ref);
+  }
+
+  async joinEvent(eventId: string, userId: string): Promise<void> {
+    const evRef = doc(this.firestore, `eventos/${eventId}`);
+    const uRef = doc(this.firestore, `users/${userId}`);
+    await updateDoc(evRef, { ['participants']: arrayUnion(userId) });
+    await updateDoc(uRef, { ['events_attending']: arrayUnion(eventId) });
   }
 
   async leaveEvent(eventId: string, userId: string): Promise<void> {
-    try {
-      const eventRef = doc(this.firestore, `eventos/${eventId}`);
-      const userRef = doc(this.firestore, `users/${userId}`);
-
-      // Quitar el usuario del array de participantes
-      await updateDoc(eventRef, {
-        participants: arrayRemove(userId)
-      });
-
-      // Quitar el evento del array de eventos a los que asiste el usuario
-      await updateDoc(userRef, {
-        events_attending: arrayRemove(eventId)
-      });
-
-      console.log(`Usuario ${userId} se ha desinscrito del evento ${eventId}`);
-    } catch (error) {
-      console.error('Error al desinscribirse del evento:', error);
-      throw error;
-    }
+    const evRef = doc(this.firestore, `eventos/${eventId}`);
+    const uRef = doc(this.firestore, `users/${userId}`);
+    await updateDoc(evRef, { ['participants']: arrayRemove(userId) });
+    await updateDoc(uRef, { ['events_attending']: arrayRemove(eventId) });
   }
 }

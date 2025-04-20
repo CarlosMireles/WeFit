@@ -7,7 +7,10 @@
   </div>
   <div class="dropdown" *ngIf="searchResults.length > 0">
     <ul>
-      <li *ngFor="let user of searchResults" (click)="selectUser(user)">
+      <li
+        *ngFor="let user of searchResults"
+        (click)="selectUser(user)"
+      >
         {{ user.username }}
       </li>
     </ul>

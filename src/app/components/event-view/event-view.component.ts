@@ -11,13 +11,25 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./event-view.component.css']
 })
 export class EventViewComponent {
-  @Input() eventData: any;
+  @Input() eventData!: {
+    id: string;
+    title: string;
+    description: string;
+    sport: string;
+    day: string;
+    hour: string;
+    maxParticipants: number;
+    privacy: string;
+    organizerId: string;
+    participants: string[];
+  };
   @Output() close = new EventEmitter<void>();
 
   hasJoined = false;
   canJoin = false;
   currentUserId: string | null = null;
   isOwner = false;
+  participantNames: string[] = [];
 
   constructor(
     private eventService: EventService,
@@ -26,54 +38,54 @@ export class EventViewComponent {
 
   async ngOnInit() {
     this.currentUserId = await this.userService.getCurrentUserUid();
-
     if (this.currentUserId) {
       this.isOwner = this.eventData.organizerId === this.currentUserId;
       this.hasJoined = this.eventData.participants.includes(this.currentUserId);
-      const hasCapacity = this.eventData.participants.length < this.eventData.maxParticipants;
-
-      this.canJoin = !this.isOwner && !this.hasJoined && hasCapacity;
+      this.canJoin =
+        !this.isOwner &&
+        !this.hasJoined &&
+        this.eventData.participants.length < this.eventData.maxParticipants;
     }
+    await this.loadParticipantNames();
+  }
+
+  private async loadParticipantNames() {
+    const ids = this.eventData.participants || [];
+    this.participantNames = await Promise.all(
+      ids.map(async id => {
+        try {
+          const user = await this.userService.getUserById(id);
+          return user['displayName'] || user['username'] || 'Usuario desconocido';
+        } catch {
+          return 'Usuario desconocido';
+        }
+      })
+    );
   }
 
   async joinEvent() {
     if (!this.canJoin || !this.currentUserId) return;
-
-    try {
-      await this.eventService.joinEvent(this.eventData.id, this.currentUserId);
-
-      this.eventData.participants.push(this.currentUserId);
-      this.hasJoined = true;
-      this.canJoin = false;
-
-      console.log('Usuario inscrito con éxito.');
-    } catch (error) {
-      console.error('Error al unirse al evento:', error);
-    }
+    await this.eventService.joinEvent(this.eventData.id, this.currentUserId);
+    this.eventData.participants.push(this.currentUserId);
+    this.hasJoined = true;
+    this.canJoin = false;
+    await this.loadParticipantNames();
   }
 
   async leaveEvent() {
     if (!this.hasJoined || !this.currentUserId) return;
-
-    try {
-      await this.eventService.leaveEvent(this.eventData.id, this.currentUserId);
-
-      this.eventData.participants = this.eventData.participants.filter(
-        (id: string) => id !== this.currentUserId
-      );
-      this.hasJoined = false;
-      this.canJoin = !this.isOwner && this.eventData.participants.length < this.eventData.maxParticipants;
-
-      console.log('Usuario desinscrito con éxito.');
-    } catch (error) {
-      console.error('Error al desinscribirse del evento:', error);
-    }
+    await this.eventService.leaveEvent(this.eventData.id, this.currentUserId);
+    this.eventData.participants = this.eventData.participants.filter(
+      id => id !== this.currentUserId
+    );
+    this.hasJoined = false;
+    this.canJoin =
+      !this.isOwner &&
+      this.eventData.participants.length < this.eventData.maxParticipants;
+    await this.loadParticipantNames();
   }
 
   editEvent() {
-    console.log('Editar evento:', this.eventData.id);
-    // Aquí puedes abrir otro modal o navegar a una ruta con router.navigate
-    // this.router.navigate(['/editar-evento', this.eventData.id]);
   }
 
   onClose(): void {
