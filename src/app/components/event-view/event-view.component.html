@@ -1,76 +1,79 @@
 <div class="overlay" (click)="onClose()">
   <div class="modal-window" (click)="$event.stopPropagation()">
-    <h2>Detalle del Evento</h2>
+    <h2 *ngIf="!isEditing">Detalle del Evento</h2>
+    <h2 *ngIf="isEditing">Editar Evento</h2>
 
+    <!-- Título -->
     <label>Nombre:</label>
-    <div class="field">{{ eventData.title }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.title }}</div>
+    <input *ngIf="isEditing" [(ngModel)]="editData.title" />
 
+    <!-- Descripción -->
     <label>Descripción:</label>
-    <div class="field">{{ eventData.description }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.description }}</div>
+    <textarea *ngIf="isEditing" [(ngModel)]="editData.description"></textarea>
 
+    <!-- Deporte -->
     <label>Deporte:</label>
-    <div class="field">{{ eventData.sport }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.sport }}</div>
+    <input *ngIf="isEditing" [(ngModel)]="editData.sport" />
 
+    <!-- Fecha -->
     <label>Fecha:</label>
-    <div class="field">{{ eventData.day }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.day }}</div>
+    <input *ngIf="isEditing" type="date" [(ngModel)]="editData.day" />
 
+    <!-- Hora -->
     <label>Hora:</label>
-    <div class="field">{{ eventData.hour }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.hour }}</div>
+    <input *ngIf="isEditing" type="text" [(ngModel)]="editData.hour" />
 
+    <!-- Participantes -->
     <label>Número de participantes:</label>
-    <div class="field">{{ eventData.maxParticipants }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.maxParticipants }}</div>
+    <input *ngIf="isEditing" type="number" [(ngModel)]="editData.maxParticipants" min="1" max="200" />
 
+    <!-- Privacidad -->
     <label>Privacidad:</label>
-    <div class="field">{{ eventData.privacy }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.privacy }}</div>
+    <select *ngIf="isEditing" [(ngModel)]="editData.privacy">
+      <option value="Público">Público</option>
+      <option value="Privado">Privado</option>
+    </select>
 
+    <!-- Botones -->
     <div class="buttons">
-      <!-- Organizador -->
-      <button
-        *ngIf="eventData.organizerId === currentUserId"
-        type="button"
-        class="btn-edit"
-        (click)="editEvent()"
-      >
-        Modificar evento
-      </button>
+      <!-- Botones del propietario -->
+      <div *ngIf="isOwner && !isEditing" class="owner-actions">
+        <button type="button" class="btn-edit" (click)="editEvent()">Modificar evento</button>
+      </div>
 
-      <!-- Resto de usuarios -->
-      <ng-container *ngIf="eventData.organizerId !== currentUserId">
-        <!-- Ya inscrito -->
-        <button
-          *ngIf="hasJoined"
-          type="button"
-          class="btn-leave"
-          (click)="leaveEvent()"
-        >
-          Desinscribirse del evento
-        </button>
+      <!-- Botones de edición -->
+      <div *ngIf="isEditing" class="edit-actions">
+        <button type="button" class="btn-save" (click)="showConfirmDialog = true">Guardar cambios</button>
+        <button type="button" class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
+      </div>
 
-        <!-- Puede unirse -->
-        <button
-          *ngIf="!hasJoined && canJoin"
-          type="button"
-          class="btn-join"
-          (click)="joinEvent()"
-        >
-          Unirse al evento
-        </button>
+      <!-- Botones para usuarios que no son propietarios -->
+      <div *ngIf="!isOwner && !isEditing" class="user-actions">
+        <button *ngIf="hasJoined" type="button" class="btn-leave" (click)="leaveEvent()">🚪 Desinscribirse</button>
+        <button *ngIf="!hasJoined && canJoin" type="button" class="btn-join" (click)="joinEvent()">Unirse</button>
+        <button *ngIf="!hasJoined && !canJoin" type="button" class="btn-disabled" disabled>No puedes unirte</button>
+      </div>
 
-        <!-- No puede unirse -->
-        <button
-          *ngIf="!hasJoined && !canJoin"
-          type="button"
-          class="btn-disabled"
-          disabled
-        >
-          No puedes unirte al evento
-        </button>
-      </ng-container>
+      <!-- Botón de cerrar -->
+      <div class="close-action">
+        <button type="button" class="btn-close" (click)="onClose()">Cerrar</button>
+      </div>
 
-      <!-- Cerrar -->
-      <button type="button" class="btn-close" (click)="onClose()">
-        Cerrar
-      </button>
+      <app-confirm-dialog
+        *ngIf="showConfirmDialog"
+        [message]="'¿Deseas guardar los cambios?'"
+        (confirm)="onConfirmSave()"
+        (cancel)="showConfirmDialog = false">
+      </app-confirm-dialog>
+
     </div>
+
   </div>
 </div>

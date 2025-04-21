@@ -174,6 +174,18 @@ export class EventService {
     }
   }
 
+  async updateEventFields(id: string, updatedFields: Partial<any>): Promise<void> {
+    try {
+      const eventRef = doc(this.firestore, 'eventos', id);
+      await updateDoc(eventRef, updatedFields);
+      console.log('Campos actualizados del evento con ID:', id);
+    } catch (error) {
+      console.error('Error al actualizar campos del evento:', error);
+      throw error;
+    }
+  }
+
+
 
   async deleteEvent(id: string): Promise<void> {
     try {
