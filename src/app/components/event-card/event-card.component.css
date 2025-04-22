@@ -13,32 +13,26 @@
   box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 }
-
-.event-card p {
+.event-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.5);
+}
+.event-card .name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+.event-card hr {
+  width: 80%;
+  border: 1px solid black;
+  margin: 5px auto;
+}
+.event-card .place,
+.event-card .participants,
+.event-card .datetime {
   margin: 5px 0;
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-}
-
-.name {
-  margin: 0;
-}
-
-.event-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.5);
-}
-
-.event-card h2 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.event-card hr {
-  width: 80%;
-  border: 1px solid black;
-  margin: 5px auto;
 }

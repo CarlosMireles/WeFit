@@ -101,7 +101,7 @@ export class EventService {
         const data = await this.getEventById(path);
         events.push({ id: path, ...data });
       } catch {
-        // si no existe, lo ignoramos
+        // ignorar si no existe
       }
     }
     return events;

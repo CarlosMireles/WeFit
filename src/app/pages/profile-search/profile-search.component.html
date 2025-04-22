@@ -1,4 +1,6 @@
 <div class="container">
+  <app-search-bar></app-search-bar>
+
   <div class="profile-card">
     <div class="cover-photo">
       <div
@@ -13,7 +15,6 @@
       <hr class="divider-user" />
     </div>
 
-    <!-- Stats -->
     <div class="stats">
       <div>
         <strong>Seguidores</strong>
@@ -21,14 +22,14 @@
       </div>
       <div>
         <strong>Seguidos</strong>
-        <p>{{ follows.length }}</p>
+        <p>{{ followsCount }}</p>
       </div>
     </div>
 
     <button
       class="btn-follow"
-      [class.following]="isFollowing"
-      (click)="toggleFollow()"
+      [ngClass]="{ following: isFollowing }"
+      (click)="onFollow()"
     >
       {{ isFollowing ? 'Siguiendo' : 'Seguir' }}
     </button>
@@ -37,38 +38,46 @@
   </div>
 
   <div class="content-container">
+    <!-- Eventos creados -->
     <div class="eventos-container">
       <h1 class="eventos-text">Eventos creados</h1>
       <hr class="divider" />
-      <div class="card-flex">
+      <div #cardFlex class="card-flex">
         <app-event-card
-          *ngFor="let event of eventsOrganizing; let i = index"
+          *ngFor="let event of eventsOrganizing; let idx = index"
+          [id]="event.id"
           [title]="event.title"
-          [hour]="event.hour"
           [date]="event.day"
-          [place]="placesOrganizing[i]"
+          [hour]="event.hour"
+          [place]="placesOrganizing[idx]"
           [participants]="event.participants?.length"
           [maxParticipants]="event.maxParticipants ?? 0"
+          [latitude]="event.latitude"
+          [longitude]="event.longitude"
+          (selected)="onEventSelected($event)"
         ></app-event-card>
       </div>
     </div>
 
+    <!-- Eventos inscritos -->
     <div class="eventos-container">
       <h1 class="eventos-text">Eventos inscritos</h1>
       <hr class="divider" />
-      <div class="card-flex">
+      <div #cardFlex class="card-flex">
         <app-event-card
-          *ngFor="let event of eventsAttending; let i = index"
+          *ngFor="let event of eventsAttending; let idx = index"
+          [id]="event.id"
           [title]="event.title"
-          [hour]="event.hour"
           [date]="event.day"
-          [place]="placesAttending[i]"
+          [hour]="event.hour"
+          [place]="placesAttending[idx]"
           [participants]="event.participants?.length"
           [maxParticipants]="event.maxParticipants ?? 0"
+          [latitude]="event.latitude"
+          [longitude]="event.longitude"
+          (selected)="onEventSelected($event)"
         ></app-event-card>
       </div>
     </div>
   </div>
-
-  <app-search-bar></app-search-bar>
 </div>

@@ -1,18 +1,25 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
-import { CommonModule, NgForOf, NgStyle } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ElementRef,
+  ViewChildren,
+  QueryList
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { EventCardComponent } from '../../components/event-card/event-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { UserService } from '../../services/user.service';
 import { EventService } from '../../services/event.service';
 import { GeocodingService } from '../../services/geocoding.service';
+import { CommunicationService } from '../../services/CommunicationService';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
   imports: [
     CommonModule,
-    NgForOf,
-    NgStyle,
     EventCardComponent,
     SearchBarComponent
   ],
@@ -20,111 +27,105 @@ import { GeocodingService } from '../../services/geocoding.service';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit, AfterViewInit {
+  username = '';
+  description = '';
+  image_url = '';
+  followers: string[] = [];
+  follows: string[] = [];
+  eventsOrganizing: any[] = [];
+  eventsAttending: any[] = [];
+  placesOrganizing: string[] = [];
+  placesAttending: string[] = [];
+
+  @ViewChildren('cardFlex') cardFlexContainers!: QueryList<ElementRef>;
+
   private isDragging = false;
   private startX = 0;
   private scrollLeft = 0;
 
-  username: string = '';
-  description: string = '';
-  image_url: string = '';
-  follows: any[] = [];
-  followers: any[] = [];
-  eventsOrganizing: any[] = [];
-  eventsAttending: any[] = [];
-
-  placesOrganizing: string[] = [];
-  placesAttending: string[] = [];
-
   constructor(
     private userService: UserService,
     private eventService: EventService,
-    private geocodingService: GeocodingService
+    private geocodingService: GeocodingService,
+    private comm: CommunicationService,
+    private router: Router
   ) {}
 
   async ngOnInit() {
-    // Cargar datos cacheados si existen
-    const cachedUsername = localStorage.getItem('username');
-    const cachedDescription = localStorage.getItem('description');
-    const cachedImageUrl = localStorage.getItem('image_url');
-    const cachedOrganizing = localStorage.getItem('eventsOrganizing');
-    const cachedAttending = localStorage.getItem('eventsAttending');
-
-    if (cachedUsername) this.username = cachedUsername;
-    if (cachedDescription) this.description = cachedDescription;
-    if (cachedImageUrl) this.image_url = cachedImageUrl;
-    if (cachedOrganizing) this.eventsOrganizing = JSON.parse(cachedOrganizing);
-    if (cachedAttending) this.eventsAttending = JSON.parse(cachedAttending);
-
-    // Obtener usuario actual
     const uid = await this.userService.getCurrentUserUid();
     if (!uid) return;
 
-    // Traer datos del usuario
-    const userData = await this.userService.getUserData(uid);
-    if (!userData) return;
+    const data = await this.userService.getUserData(uid);
+    if (!data) return;
 
-    // Asignar datos y actualizar cache
-    this.username = userData.username;
-    this.description = userData.description as string || '';
-    this.image_url = userData.image_url || '';
+    this.username    = data['username']    || '';
+    this.description = data['description'] || '';
+    this.image_url   = data['image_url']   || '';
+    this.followers   = data['followers']   || [];
+    this.follows     = data['follows']     || [];
 
-    localStorage.setItem('username', this.username);
-    localStorage.setItem('description', this.description);
-    localStorage.setItem('image_url', this.image_url);
-
-    // Cargar eventos
-    const [organizing, attending] = await Promise.all([
-      this.eventService.getEventsFromPaths(userData.events_organizing),
-      this.eventService.getEventsFromPaths(userData.events_attending)
+    const [org, att] = await Promise.all([
+      this.eventService.getEventsFromPaths(data['events_organizing'] || []),
+      this.eventService.getEventsFromPaths(data['events_attending']  || [])
     ]);
-    this.eventsOrganizing = organizing;
-    this.eventsAttending = attending;
+    this.eventsOrganizing = org;
+    this.eventsAttending  = att;
 
-    localStorage.setItem('eventsOrganizing', JSON.stringify(this.eventsOrganizing));
-    localStorage.setItem('eventsAttending', JSON.stringify(this.eventsAttending));
-
-    // Obtener lugares
-    this.fetchPlaces(this.eventsOrganizing, this.placesOrganizing);
-    this.fetchPlaces(this.eventsAttending, this.placesAttending);
+    this.fetchPlaces(org, this.placesOrganizing);
+    this.fetchPlaces(att, this.placesAttending);
   }
 
-  fetchPlaces(events: any[], targetList: string[]) {
-    events.forEach((event, index) => {
-      if (event.latitude != null && event.longitude != null) {
-        this.geocodingService.getPlaceFromCoords(event.latitude, event.longitude)
+  private fetchPlaces(events: any[], target: string[]) {
+    events.forEach((e, i) => {
+      if (e.latitude != null && e.longitude != null) {
+        this.geocodingService.getPlaceFromCoords(e.latitude, e.longitude)
           .subscribe({
-            next: res => targetList[index] = res.display_name || 'Ubicación desconocida',
-            error: () => targetList[index] = 'Ubicación no disponible'
+            next: res => target[i] = res.display_name || 'Ubicación desconocida',
+            error: () => target[i] = 'Ubicación no disponible'
           });
       } else {
-        targetList[index] = 'Sin coordenadas';
+        target[i] = 'Sin coordenadas';
       }
     });
   }
 
   ngAfterViewInit() {
-    const cardContainers = document.querySelectorAll('.card-flex');
-    cardContainers.forEach(container => {
-      container.addEventListener('mousedown', (e: any) => {
+    // Configura lógica de arrastre para cada contenedor .card-flex
+    this.cardFlexContainers.forEach(containerRef => {
+      const container = containerRef.nativeElement as HTMLElement;
+
+      container.addEventListener('mousedown', (e: MouseEvent) => {
         this.isDragging = true;
         container.classList.add('active');
-        this.startX = e.pageX - (container as HTMLElement).offsetLeft;
+        this.startX = e.pageX - container.offsetLeft;
         this.scrollLeft = container.scrollLeft;
       });
-      container.addEventListener('mousemove', (e: any) => {
+
+      container.addEventListener('mousemove', (e: MouseEvent) => {
         if (!this.isDragging) return;
         e.preventDefault();
-        const x = e.pageX - (container as HTMLElement).offsetLeft;
+        const x = e.pageX - container.offsetLeft;
         container.scrollLeft = this.scrollLeft - (x - this.startX);
       });
+
       container.addEventListener('mouseup', () => {
         this.isDragging = false;
         container.classList.remove('active');
       });
+
       container.addEventListener('mouseleave', () => {
         this.isDragging = false;
         container.classList.remove('active');
       });
     });
+  }
+
+  onSettings() {
+    this.router.navigate(['/user-settings']);
+  }
+
+  onEventSelected(ev: { id: string; latitude: number; longitude: number }) {
+    this.comm.notifyEventSelected(ev);
+    this.router.navigate(['/home']);
   }
 }

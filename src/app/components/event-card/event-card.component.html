@@ -1,7 +1,14 @@
-<button class="event-card">
+<button
+  class="event-card"
+  (click)="onCardClick()"
+  role="button"
+  [attr.aria-label]="'Ver evento ' + title"
+>
   <h2 class="name">{{ title }}</h2>
   <hr />
-  <p>{{ place }}</p>
-  <p>Participantes: {{ participants }} / {{ maxParticipants }}</p>
-  <p>{{ date }} {{ hour }}</p>
+  <p class="place">{{ place }}</p>
+  <p class="participants">
+    Participantes: {{ participants }} / {{ maxParticipants }}
+  </p>
+  <p class="datetime">{{ date }} {{ hour }}</p>
 </button>
