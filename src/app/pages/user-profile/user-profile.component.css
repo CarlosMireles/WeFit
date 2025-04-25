@@ -135,21 +135,23 @@
   right: 8px;
   width: 24px;
   height: 24px;
-  object-fit: contain;
   cursor: pointer;
   z-index: 5;
+  background: url('/assets/trash.svg') no-repeat center center;
+  background-size: contain;
 }
 
-/* Logout */
+/* Logout (logout.svg) */
 .card-wrapper .icon-logout {
   position: absolute;
   top: 8px;
   right: 8px;
   width: 24px;
   height: 24px;
-  object-fit: contain;
   cursor: pointer;
   z-index: 5;
+  background: url('/assets/logout.svg') no-repeat center center;
+  background-size: contain;
 }
 
 /* Hover ligero */
@@ -157,5 +159,3 @@
 .card-wrapper .icon-logout:hover {
   opacity: 0.8;
 }
-
-/* ------------------------------------------------------------------ */
