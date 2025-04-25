@@ -4,6 +4,7 @@
   background-color: #fffee2;
 }
 
+/* Panel lateral */
 .profile-card {
   width: 25%;
   height: 100vh;
@@ -11,8 +12,7 @@
   color: #f1f1f1;
   padding: 4% 20px 20px;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,14 +32,6 @@
   width: 100%;
 }
 
-.settings-icon {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-}
-
-/* Avatar ahora usa background-image dinámico */
 .avatar {
   width: 150px;
   height: 150px;
@@ -47,7 +39,7 @@
   background-size: cover;
   background-position: center;
   margin: 20px 0;
-  background-color: #2b2b2b; /* fondo mientras carga */
+  background-color: #2b2b2b;
 }
 
 .username {
@@ -59,12 +51,28 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: 10px 0;
 }
 
 .stats div {
   flex: 1;
   text-align: center;
+}
+
+.btn-follow {
+  width: 80%;
+  padding: 0.6rem 0;
+  margin: 0.5rem 0;
+  background-color: #00a556;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-follow.following {
+  background-color: #265a42;
 }
 
 .description {
@@ -73,6 +81,7 @@
   margin-top: 15px;
 }
 
+/* Zona de contenido principal */
 .content-container {
   margin-left: 30%;
   padding: 1% 5% 10%;
@@ -92,15 +101,11 @@
 
 .card-flex {
   display: flex;
-  flex-direction: row;
   gap: 15px;
-  width: 100%;
   overflow-x: scroll;
   white-space: nowrap;
   padding: 4%;
   cursor: grab;
-  -ms-overflow-style: none;  /* IE/Edge */
-  scrollbar-width: none;      /* Firefox */
 }
 
 .card-flex.active {
@@ -112,7 +117,7 @@
 }
 
 .card-flex::-webkit-scrollbar {
-  display: none; /* Chrome/Safari/Opera */
+  display: none;
 }
 
 .eventos-container {

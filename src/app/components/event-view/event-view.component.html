@@ -17,14 +17,59 @@
     <label>Hora:</label>
     <div class="field">{{ eventData.hour }}</div>
 
-    <label>Número de participantes:</label>
-    <div class="field">{{ eventData.maxParticipants }}</div>
+    <label>Participantes:</label>
+    <div class="participants-count">
+      {{ eventData.participants.length }} / {{ eventData.maxParticipants }}
+    </div>
+    <div class="field participants-container">
+      <ul class="participants-list">
+        <li *ngFor="let name of participantNames">{{ name }}</li>
+      </ul>
+    </div>
 
     <label>Privacidad:</label>
     <div class="field">{{ eventData.privacy }}</div>
 
     <div class="buttons">
-      <button type="button" (click)="onClose()">Cerrar</button>
+      <button
+        *ngIf="isOwner"
+        type="button"
+        class="btn-edit"
+        (click)="editEvent()"
+      >
+        Modificar evento
+      </button>
+
+      <ng-container *ngIf="!isOwner">
+        <button
+          *ngIf="hasJoined"
+          type="button"
+          class="btn-leave"
+          (click)="leaveEvent()"
+        >
+          Desinscribirse del evento
+        </button>
+        <button
+          *ngIf="!hasJoined && canJoin"
+          type="button"
+          class="btn-join"
+          (click)="joinEvent()"
+        >
+          Unirse al evento
+        </button>
+        <button
+          *ngIf="!hasJoined && !canJoin"
+          type="button"
+          class="btn-disabled"
+          disabled
+        >
+          No puedes unirte al evento
+        </button>
+      </ng-container>
+
+      <button type="button" class="btn-close" (click)="onClose()">
+        Cerrar
+      </button>
     </div>
   </div>
 </div>

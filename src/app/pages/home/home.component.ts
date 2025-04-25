@@ -5,20 +5,23 @@ import {SearchBarComponent} from "../../components/search-bar/search-bar.compone
 import {CreateEventFormComponent} from '../../components/create-event-form/create-event-form.component';
 import {CommunicationService} from '../../services/CommunicationService';
 import {NgIf} from '@angular/common';
+import {FilterToggleComponent} from '../../components/filter-toggle/filter-toggle.component';
 
 
 @Component({
   selector: 'app-home',
-    imports: [
-        EventToggleComponent,
-        MapComponent,
-        SearchBarComponent,
-        CreateEventFormComponent,
-        NgIf
-    ],
+  imports: [
+    EventToggleComponent,
+    MapComponent,
+    SearchBarComponent,
+    CreateEventFormComponent,
+    NgIf,
+    FilterToggleComponent
+  ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent {
   showForm: boolean = false;
 

@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy, Injector, ApplicationRef, ComponentFactoryResolver, ComponentRef } from '@angular/core';
+// src/app/pages/map/map.component.ts
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Injector,
+  ApplicationRef,
+  ComponentFactoryResolver,
+  ComponentRef
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Map, View, Overlay } from 'ol';
 import TileLayer from 'ol/layer/Tile';
@@ -7,7 +16,7 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import { Subscription } from 'rxjs';
 
 import { CommunicationService } from '../../services/CommunicationService';
-import { EventService } from '../../services/event.service';
+import { EventService, EventFilters } from '../../services/event.service';
 import { EventMarkerComponent } from '../event-marker/event-marker.component';
 import { EventViewComponent } from '../event-view/event-view.component';
 
@@ -22,198 +31,196 @@ export class MapComponent implements OnInit, OnDestroy {
   map!: Map;
   eventCreationMode = false;
   selectedEvent: any = null;
+  myLocationIconUrl = '/assets/user-pin.svg';
 
-  // URL del icono para tu ubicación (archivo en assets)
-  myLocationIconUrl: string = '/assets/user-pin.svg';
+  eventFilters: EventFilters = {
+    date: '',
+    hourMaximum: '',
+    hourMinimum: '',
+    sport: '',
+    maxParticipants: undefined,
+    privacy: ''
+  };
 
-  private subscriptions: Subscription[] = [];
-  private markerComponents: ComponentRef<any>[] = [];
-  // Overlay para la ubicación actual
+  private subs: Subscription[] = [];
+  private markers: ComponentRef<any>[] = [];
   private currentLocationOverlay!: Overlay;
-  // Identificador del watchPosition para poder detenerlo
-  private geoWatchId: number | null = null;
 
   constructor(
-    private communicationService: CommunicationService,
+    private comm: CommunicationService,
     private injector: Injector,
-    private applicationRef: ApplicationRef,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private eventApi: EventService,
+    private appRef: ApplicationRef,
+    private cfr: ComponentFactoryResolver,
+    private eventApi: EventService
   ) {}
 
-  ngOnInit(): void {
+  /* ─────────────────────────────────────────────── */
+
+  async ngOnInit(): Promise<void> {
     this.initMap();
-    this.watchCurrentLocation();
-    this.checkEventCreationMode();
-    this.checkEventCreated();
-    this.captureLocationFromClick();
-    this.displayEvents();
+
+    /* ¿Hay un evento previamente seleccionado? */
+    const last = this.comm.lastSelected;
+
+    /* Dibujamos siempre la chincheta del usuario.
+       Solo centramos en ella si NO hay selección previa.      */
+    this.captureInitialLocation(!last);   // 👈 nuevo parámetro
+
+    /* Si venimos desde una tarjeta o un marcador, abrimos ese evento */
+    if (last) {
+      await this.centerAndOpenEvent(last.id, last.latitude, last.longitude);
+    }
+
+    /* Suscripciones */
+    this.subs.push(
+      this.comm.eventSelected$.subscribe(ev => {
+        if (!ev) return;
+        this.centerAndOpenEvent(ev.id, ev.latitude, ev.longitude);
+      }),
+
+      this.comm.filterApplied$.subscribe(f => {
+        this.eventFilters = f;
+        this.loadMarkers();
+      }),
+
+      this.comm.eventCreationMode$.subscribe(m => (this.eventCreationMode = m)),
+
+      this.comm.eventCreated$.subscribe(() => this.loadMarkers())
+    );
+
+    /* Clic en mapa (modo creación) */
+    this.map.on('click', evt => {
+      if (!this.eventCreationMode) return;
+      const [lon, lat] = toLonLat(evt.coordinate);
+      this.comm.notifyMapClick({ lat, lon });
+    });
+
+    this.loadMarkers();
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-    this.markerComponents.forEach(componentRef => {
-      componentRef.destroy();
-    });
-    // Detenemos el watchPosition si está activo
-    if (this.geoWatchId !== null) {
-      navigator.geolocation.clearWatch(this.geoWatchId);
-    }
+    this.subs.forEach(s => s.unsubscribe());
+    this.markers.forEach(m => m.destroy());
   }
 
-  private checkEventCreated() {
-    this.subscriptions.push(
-      this.communicationService.eventCreated$.subscribe(mode => {
-        this.displayEvents();
-        console.log('Refresh eventos', mode);
-      })
-    );
-  }
+  /* ───────────────────────── Configuración mapa ── */
 
-  private checkEventCreationMode() {
-    this.subscriptions.push(
-      this.communicationService.eventCreationMode$.subscribe(mode => {
-        this.eventCreationMode = mode;
-        console.log('Modo receptivo cambiado a:', mode);
-      })
-    );
-  }
-
-  private captureLocationFromClick() {
-    this.map.on('click', (evt) => {
-      if (this.eventCreationMode) {
-        const coordinates = toLonLat(evt.coordinate);
-        console.log('Clic en mapa detectado en modo receptivo:', coordinates);
-        this.communicationService.notifyMapClick({ lat: coordinates[1], lon: coordinates[0] });
-      }
-    });
-  }
-
-  async displayEvents() {
-    const events = await this.eventApi.getEvents();
-    // Eliminamos marcadores previos para evitar duplicados
-    this.markerComponents.forEach(compRef => compRef.destroy());
-    this.markerComponents = [];
-
-    for (let event of events) {
-      this.addCustomMarker(
-        event.longitude,
-        event.latitude,
-        event.title,
-        event.privacy || 'Público',
-        event.image_url || '',
-        event // Se pasa el objeto completo del evento
-      );
-    }
-  }
-
-  private initMap(): void {
+  private initMap() {
     this.map = new Map({
       target: 'map',
       controls: [],
-      layers: [
-        new TileLayer({
-          source: new OSM()
-        })
-      ],
-      view: new View({
-        center: fromLonLat([0, 0]),
-        zoom: 2
-      })
+      layers: [new TileLayer({ source: new OSM() })],
+      view: new View({ center: fromLonLat([0, 0]), zoom: 2 })
     });
   }
 
-  private watchCurrentLocation(): void {
-    if ('geolocation' in navigator) {
-      // Utilizamos watchPosition para actualizaciones continuas
-      this.geoWatchId = navigator.geolocation.watchPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          // Centramos el mapa en la ubicación actual
-          this.map.getView().setCenter(fromLonLat([lon, lat]));
-          this.map.getView().setZoom(14);
-          // Actualizamos o añadimos el overlay de la ubicación actual
-          this.addOrUpdateCurrentLocationMarker(lon, lat);
-        },
-        (error) => {
-          console.error('Error al obtener la geolocalización:', error);
-        },
-        { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
-      );
-    } else {
-      console.error('Geolocalización no soportada en este navegador.');
-    }
+  /** Localiza al usuario y, opcionalmente, centra el mapa en él */
+  private captureInitialLocation(centerOnUser = true) {
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const lon = pos.coords.longitude;
+        const lat = pos.coords.latitude;
+
+        /* Dibujamos (o actualizamos) la chincheta de “mi ubicación” */
+        this.drawMyLocation(lon, lat);
+
+        /* Solo centramos si se pidió explícitamente */
+        if (centerOnUser) {
+          this.map
+            .getView()
+            .animate({ center: fromLonLat([lon, lat]), zoom: 14, duration: 1000 });
+        }
+      },
+      err => console.error('Error obteniendo ubicación inicial:', err),
+      { enableHighAccuracy: true, timeout: 5000 }
+    );
   }
 
-  private addOrUpdateCurrentLocationMarker(lon: number, lat: number): void {
-    console.log('Actualizando ubicación actual en:', lon, lat);
+  private drawMyLocation(lon: number, lat: number) {
     if (this.currentLocationOverlay) {
       this.currentLocationOverlay.setPosition(fromLonLat([lon, lat]));
       return;
     }
-    // Creamos un contenedor para el icono de ubicación
-    const element = document.createElement('div');
-    element.className = 'current-location-marker';
+
+    const el = document.createElement('div');
+    el.className = 'current-location-marker';
+
     const img = document.createElement('img');
     img.src = this.myLocationIconUrl;
-    // Ajusta el tamaño del icono según lo necesites
     img.style.width = '30px';
     img.style.height = '30px';
-    element.appendChild(img);
+    el.appendChild(img);
 
-    // Usamos "bottom-center" para que la parte inferior del icono se alinee con la ubicación
     this.currentLocationOverlay = new Overlay({
-      element: element,
+      element: el,
       position: fromLonLat([lon, lat]),
       positioning: 'bottom-center',
-      offset: [0, 0],
       stopEvent: false
     });
+
     this.map.addOverlay(this.currentLocationOverlay);
   }
 
-  private addCustomMarker(
-    lon: number,
-    lat: number,
-    titulo: string,
-    privacidad: string,
-    imagenUrl: string,
-    eventData: any
-  ): void {
-    // Creamos el componente marcador de evento
-    const factory = this.componentFactoryResolver.resolveComponentFactory(EventMarkerComponent);
-    const componentRef = factory.create(this.injector);
+  /* ─────────────────────────── Marcadores ───────── */
 
-    // Asignamos las propiedades
-    componentRef.instance.title = titulo;
-    componentRef.instance.coordinates = { lon, lat };
-    componentRef.instance.privacy = privacidad;
-    componentRef.instance.image_url = imagenUrl;
+  private async loadMarkers() {
+    const evs = await this.eventApi.getFilteredEvents(this.eventFilters);
+    this.markers.forEach(m => m.destroy());
+    this.markers = [];
 
-    componentRef.changeDetectorRef.detectChanges();
-    this.applicationRef.attachView(componentRef.hostView);
+    evs.forEach(e => this.addMarker(e));
+  }
 
-    // Creamos un contenedor para el marcador
-    const element = document.createElement('div');
-    element.className = 'event-marker-container';
-    element.appendChild(componentRef.location.nativeElement);
+  private addMarker(eventData: any) {
+    const { id, longitude: lon, latitude: lat, title, privacy, image_url } =
+      eventData;
 
-    // Creamos un overlay para ubicar el marcador en el mapa
-    const overlay = new Overlay({
-      element: element,
-      position: fromLonLat([lon, lat]),
-      positioning: 'bottom-center',
-      offset: [0, 0],
-      stopEvent: true
+    const factory = this.cfr.resolveComponentFactory(EventMarkerComponent);
+    const compRef = factory.create(this.injector);
+
+    compRef.instance.title = title;
+    compRef.instance.coordinates = { lon, lat };
+    compRef.instance.privacy = privacy;
+    compRef.instance.image_url = image_url;
+    compRef.changeDetectorRef.detectChanges();
+    this.appRef.attachView(compRef.hostView);
+
+    const el = document.createElement('div');
+    el.className = 'event-marker-container';
+    el.appendChild(compRef.location.nativeElement);
+
+    this.map.addOverlay(
+      new Overlay({
+        element: el,
+        position: fromLonLat([lon, lat]),
+        positioning: 'bottom-center',
+        stopEvent: true
+      })
+    );
+    this.markers.push(compRef);
+
+    compRef.instance.clicked.subscribe(() => {
+      this.comm.notifyEventSelected({ id, latitude: lat, longitude: lon });
     });
-    this.map.addOverlay(overlay);
-    this.markerComponents.push(componentRef);
+  }
 
-    // Al hacer clic en la chincheta se asigna el objeto completo del evento para mostrar el modal
-    componentRef.instance.clicked.subscribe(() => {
-      console.log('Marcador clickeado:', eventData);
-      this.selectedEvent = eventData;
-    });
+
+  private async centerAndOpenEvent(
+    id: string,
+    latitude: number,
+    longitude: number
+  ) {
+    this.map
+      .getView()
+      .animate({ center: fromLonLat([longitude, latitude]), zoom: 14, duration: 1000 });
+
+    try {
+      const full = await this.eventApi.getEventById(id);
+      this.selectedEvent = { id, ...full };
+    } catch {
+      console.warn('Evento no encontrado:', id);
+    }
   }
 }
