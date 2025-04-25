@@ -1,3 +1,4 @@
+/* src/app/pages/user-profile/user-profile.component.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 .container {
@@ -39,7 +40,7 @@
   cursor: pointer;
 }
 
-/* Avatar ahora usa background-image dinámico */
+/* Avatar dinámico */
 .avatar {
   width: 150px;
   height: 150px;
@@ -47,7 +48,7 @@
   background-size: cover;
   background-position: center;
   margin: 20px 0;
-  background-color: #2b2b2b; /* fondo mientras carga */
+  background-color: #2b2b2b;
 }
 
 .username {
@@ -102,15 +103,12 @@
   -ms-overflow-style: none;  /* IE/Edge */
   scrollbar-width: none;      /* Firefox */
 }
-
 .card-flex.active {
   cursor: grabbing;
 }
-
 .card-flex * {
   user-select: none;
 }
-
 .card-flex::-webkit-scrollbar {
   display: none; /* Chrome/Safari/Opera */
 }
@@ -119,3 +117,45 @@
   margin-bottom: 10px;
   margin-right: 5%;
 }
+
+/* ------------------------------------------------------------------ */
+/* Nuevas reglas para posicionar iconos sobre las tarjetas             */
+/* ------------------------------------------------------------------ */
+
+/* Contenedor que envuelve cada tarjeta y su icono */
+.card-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Papelera (trash.svg) */
+.card-wrapper .icon-trash {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  cursor: pointer;
+  z-index: 5;
+}
+
+/* Logout */
+.card-wrapper .icon-logout {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  cursor: pointer;
+  z-index: 5;
+}
+
+/* Hover ligero */
+.card-wrapper .icon-trash:hover,
+.card-wrapper .icon-logout:hover {
+  opacity: 0.8;
+}
+
+/* ------------------------------------------------------------------ */

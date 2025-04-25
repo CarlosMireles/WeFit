@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+.overlay {
+  position: fixed; top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.7);
+  display:flex; justify-content:center; align-items:center;
+  z-index:9999;
+}
+.modal-window {
+  background:#1f1f1f; color:#fff;
+  padding:2rem; border-radius:12px;
+  width:320px; max-height:90vh; overflow-y:auto;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);
+  border:1px solid #2c2c2c; font-family:'Poppins',sans-serif;
+}
+.modal-window h2 {
+  margin:0 0 1rem; font-size:1.5rem; font-weight:600;
+  text-align:center;
+}
+.modal-window p {
+  margin-bottom:1.5rem; text-align:center;
+}
+.alert-image {
+  text-align:center; margin-bottom:1rem;
+}
+.alert-image img {
+  width:40px; height:40px;
+}
+.buttons {
+  display:flex; justify-content:space-around;
+}
+.buttons button {
+  padding:0.6rem 1.2rem; border:none; border-radius:6px;
+  font:500 0.95rem 'Poppins',sans-serif; cursor:pointer;
+  transition:background-color 0.2s ease;
+}
+.buttons button:first-child {
+  background:#e60000; color:#fff;
+}
+.buttons button:first-child:hover {
+  background:#ff3333;
+}
+.buttons button:last-child {
+  background:#888; color:#fff;
+}
+.buttons button:last-child:hover {
+  background:#aaa;
+}

@@ -36,19 +36,30 @@
       <h1 class="eventos-text">Eventos creados</h1>
       <hr class="divider" />
       <div #cardFlex class="card-flex">
-        <app-event-card
+        <div
+          class="card-wrapper"
           *ngFor="let event of eventsOrganizing; let idx = index"
-          [id]="event.id"
-          [title]="event.title"
-          [date]="event.day"
-          [hour]="event.hour"
-          [place]="placesOrganizing[idx]"
-          [participants]="event.participants?.length"
-          [maxParticipants]="event.maxParticipants ?? 0"
-          [latitude]="event.latitude"
-          [longitude]="event.longitude"
-          (selected)="onEventSelected($event)"
-        ></app-event-card>
+        >
+          <!-- ICONO PAPELERA -->
+          <img
+            src="/assets/trash.svg"
+            class="icon-trash"
+            alt="Eliminar evento"
+            (click)="askDeleteEvent(event)"
+          />
+          <app-event-card
+            [id]="event.id"
+            [title]="event.title"
+            [date]="event.day"
+            [hour]="event.hour"
+            [place]="placesOrganizing[idx]"
+            [participants]="event.participants?.length"
+            [maxParticipants]="event.maxParticipants ?? 0"
+            [latitude]="event.latitude"
+            [longitude]="event.longitude"
+            (selected)="onEventSelected($event)"
+          ></app-event-card>
+        </div>
       </div>
     </div>
 
@@ -56,22 +67,49 @@
       <h1 class="eventos-text">Eventos inscritos</h1>
       <hr class="divider" />
       <div #cardFlex class="card-flex">
-        <app-event-card
+        <div
+          class="card-wrapper"
           *ngFor="let event of eventsAttending; let idx = index"
-          [id]="event.id"
-          [title]="event.title"
-          [date]="event.day"
-          [hour]="event.hour"
-          [place]="placesAttending[idx]"
-          [participants]="event.participants?.length"
-          [maxParticipants]="event.maxParticipants ?? 0"
-          [latitude]="event.latitude"
-          [longitude]="event.longitude"
-          (selected)="onEventSelected($event)"
-        ></app-event-card>
+        >
+          <!-- ICONO LOGOUT -->
+          <img
+            src="/assets/logout.svg"
+            class="icon-logout"
+            alt="Abandonar evento"
+            (click)="askLeaveEvent(event)"
+          />
+          <app-event-card
+            [id]="event.id"
+            [title]="event.title"
+            [date]="event.day"
+            [hour]="event.hour"
+            [place]="placesAttending[idx]"
+            [participants]="event.participants?.length"
+            [maxParticipants]="event.maxParticipants ?? 0"
+            [latitude]="event.latitude"
+            [longitude]="event.longitude"
+            (selected)="onEventSelected($event)"
+          ></app-event-card>
+        </div>
       </div>
     </div>
   </div>
 
   <app-search-bar></app-search-bar>
+
+  <!-- Alerta BORRAR EVENTO -->
+  <delete-event-alert
+    *ngIf="showDeleteEventAlert"
+    [eventTitle]="eventToDelete?.title || ''"
+    (accept)="onDeleteEventConfirm()"
+    (cancel)="onDeleteEventCancel()"
+  ></delete-event-alert>
+
+  <!-- Alerta ABANDONAR EVENTO -->
+  <leave-event-alert
+    *ngIf="showLeaveEventAlert"
+    [eventTitle]="eventToLeave?.title || ''"
+    (accept)="onLeaveEventConfirm()"
+    (cancel)="onLeaveEventCancel()"
+  ></leave-event-alert>
 </div>
