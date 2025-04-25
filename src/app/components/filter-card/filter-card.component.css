@@ -110,22 +110,23 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-/* Botón "Cancelar" */
-.buttons button[type="button"] {
-  background-color: #000;
-  color: #fff;
-}
-
-.buttons button[type="button"]:hover {
-  background-color: #ff0000;
-}
 
 /* Botón "Aplicar Filtros" */
-.buttons button[type="button"]:last-child {
+.buttons button[type="button"] {
   background-color: #00cc66;
   color: #fff;
 }
 
-.buttons button[type="button"]:last-child:hover {
+.buttons button[type="button"]:hover {
   background-color: #00ff66;
+}
+
+/* Botón "Cancelar" */
+.buttons button[type="button"]:last-child {
+  background-color: #000;
+  color: #fff;
+}
+
+.buttons button[type="button"]:hover:last-child {
+  background-color: #ff0000;
 }

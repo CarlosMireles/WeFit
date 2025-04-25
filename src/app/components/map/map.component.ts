@@ -85,8 +85,16 @@ export class MapComponent implements OnInit, OnDestroy {
 
       this.comm.eventCreationMode$.subscribe(m => (this.eventCreationMode = m)),
 
-      this.comm.eventCreated$.subscribe(() => this.loadMarkers())
-    );
+      this.comm.eventCreated$.subscribe(() => this.loadMarkers()),
+
+      this.comm.eventModified$.subscribe(modified => {
+        if (modified) {
+          this.loadMarkers();
+          this.comm.notifyEventModified(false); // Reseteamos el flag a false
+        }
+      })
+  );
+
 
     /* Clic en mapa (modo creación) */
     this.map.on('click', evt => {

@@ -21,6 +21,17 @@ export class CommunicationService {
     new BehaviorSubject<{ id: string; latitude: number; longitude: number } | null>(null);
   eventSelected$ = this.eventSelectedSubject.asObservable();
 
+  private modifyEventSubject = new BehaviorSubject<boolean>(false);
+  modifyEvent$ = this.modifyEventSubject.asObservable();
+
+  private eventModifiedSubject = new BehaviorSubject<boolean>(false);
+  eventModified$ = this.eventModifiedSubject.asObservable();
+
+  notifyEventModified(modified = true) {
+    this.eventModifiedSubject.next(modified);
+  }
+
+
   get lastSelected() {
     return this.eventSelectedSubject.getValue();
   }

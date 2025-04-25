@@ -87,7 +87,7 @@
   background-color: #555; color: #fff;
 }
 .btn-edit:hover {
-  background-color: #c0c0c0; color: #000;
+  background-color: #00cc66;
 }
 
 .btn-join {
@@ -113,5 +113,54 @@
   background-color: #000; color: #fff;
 }
 .btn-close:hover {
+  background-color: #ff0000;
+}
+
+/* Modo edición */
+
+.modal-window input[type="text"],
+.modal-window input[type="date"],
+.modal-window input[type="number"],
+.modal-window select,
+.modal-window textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #00cc66;
+  border-radius: 6px;
+  background-color: #2b2b2b;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+}
+
+.modal-window input:focus,
+.modal-window select:focus,
+.modal-window textarea:focus {
+  outline: none;
+  border-color: #00ff88;
+  box-shadow: 0 0 5px #00cc66;
+}
+
+.modal-window textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Botones del modo edición */
+
+.btn-save {
+  background-color: #888; color: #ccc;
+}
+.btn-save:hover {
+  background-color: #00cc66;
+}
+
+.btn-cancel {
+  background-color: #555;
+  color: white;
+  margin-left: 8px;
+}
+.btn-cancel:hover {
   background-color: #ff0000;
 }

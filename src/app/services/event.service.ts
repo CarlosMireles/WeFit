@@ -121,9 +121,15 @@ export class EventService {
     return ref.id;
   }
 
-  async updateEvent(id: string, data: any): Promise<void> {
-    const ref = doc(this.firestore, 'eventos', id);
-    await updateDoc(ref, data);
+  async updateEvent(id: string, event: any): Promise<void> {
+    try {
+      const eventRef = doc(this.firestore, 'eventos', id);  // Referencia al documento del evento
+      await updateDoc(eventRef, event);  // Actualizamos los datos del documento
+      console.log('Evento actualizado con ID:', id);
+    } catch (error) {
+      console.error('Error al modificar el evento:', error);
+      throw error;
+    }
   }
 
   async deleteEvent(id: string): Promise<void> {
