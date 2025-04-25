@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ConfirmationQuestionComponent } from '../../../../components/confirmation-question/confirmation-question.component';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmationQuestionComponent],
   templateUrl: './edit-profile.component.html',
   styleUrl: './edit-profile.component.css'
 })
 export class EditProfileComponent implements OnInit {
+  @Output() backClicked = new EventEmitter<void>();
+
   profileData = {
     username: 'usuario_ejemplo',
     description: 'Esta es una descripción de ejemplo para el perfil.',
@@ -18,11 +21,37 @@ export class EditProfileComponent implements OnInit {
 
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
+  maxDescriptionLength = 150;
+
+  // Control de visibilidad y tipo de pop-up
+  showConfirmation: boolean = false;
+  confirmationType: 'save' | 'exit' = 'save';
+
+  // Textos para el pop-up según el tipo
+  confirmationTexts = {
+    save: {
+      title: 'Guardar cambios',
+      message: '¿Estás seguro de que quieres guardar los cambios en tu perfil?',
+      confirmText: 'Guardar',
+      cancelText: 'Cancelar'
+    },
+    exit: {
+      title: 'Descartar cambios',
+      message: 'Si sales ahora, los cambios no guardados se perderán. ¿Deseas continuar?',
+      confirmText: 'Sí, salir',
+      cancelText: 'No, continuar editando'
+    }
+  };
 
   constructor() { }
 
   ngOnInit(): void {
     this.previewUrl = this.profileData.profilePicture;
+
+    // Asegurar que la descripción inicial no exceda el máximo
+    if (this.profileData.description.length > this.maxDescriptionLength) {
+      this.profileData.description = this.profileData.description.substring(0, this.maxDescriptionLength);
+    }
   }
 
   onFileSelected(event: any): void {
@@ -38,8 +67,70 @@ export class EditProfileComponent implements OnInit {
   }
 
   saveChanges(): void {
-    // Aquí iría la lógica para guardar los cambios en un servicio
-    console.log('Guardando cambios:', this.profileData);
-    alert('Perfil actualizado correctamente');
+    this.confirmationType = 'save';
+    this.showConfirmation = true;
+  }
+
+  goBack(): void {
+    this.confirmationType = 'exit';
+    this.showConfirmation = true;
+  }
+
+  // Método para manejar la confirmación
+  onConfirm(): void {
+    if (this.confirmationType === 'save') {
+      // Lógica para guardar cambios
+      console.log('Guardando cambios:', this.profileData);
+      alert('Perfil actualizado correctamente');
+      this.backClicked.emit(); // Volver atrás después de guardar
+    } else {
+      // Lógica para salir sin guardar
+      console.log('Saliendo sin guardar cambios');
+      this.backClicked.emit();
+    }
+    this.showConfirmation = false;
+  }
+
+  // Método para manejar la cancelación
+  onCancel(): void {
+    console.log('Operación cancelada por el usuario');
+    this.showConfirmation = false;
+  }
+
+  onDescriptionInput(): void {
+    if (this.profileData.description.length > this.maxDescriptionLength) {
+      this.profileData.description = this.profileData.description.substring(0, this.maxDescriptionLength);
+    }
+  }
+
+  getDescriptionLength(): number {
+    return this.profileData.description ? this.profileData.description.length : 0;
+  }
+
+  onUsernameInput(): void {
+    if (this.profileData.username) {
+      const filteredUsername = this.profileData.username.replace(/[\s\n\r]/g, '');
+
+      if (filteredUsername !== this.profileData.username) {
+        this.profileData.username = filteredUsername;
+      }
+    }
+  }
+
+  // Métodos para obtener el texto correcto según el tipo de confirmación
+  getConfirmationTitle(): string {
+    return this.confirmationTexts[this.confirmationType].title;
+  }
+
+  getConfirmationMessage(): string {
+    return this.confirmationTexts[this.confirmationType].message;
+  }
+
+  getConfirmText(): string {
+    return this.confirmationTexts[this.confirmationType].confirmText;
+  }
+
+  getCancelText(): string {
+    return this.confirmationTexts[this.confirmationType].cancelText;
   }
 }

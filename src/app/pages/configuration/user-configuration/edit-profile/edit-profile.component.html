@@ -1,6 +1,14 @@
 <div class="edit-profile-container">
   <div class="edit-profile-header">
-    <h1>Editar perfil</h1>
+    <div class="back-button" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M5 12l14 0" />
+        <path d="M5 12l6 6" />
+        <path d="M5 12l6 -6" />
+      </svg>
+      <h1>Editar perfil</h1>
+    </div>
   </div>
 
   <form (ngSubmit)="saveChanges()" class="edit-profile-form">
@@ -17,29 +25,50 @@
 
     <div class="form-group">
       <label for="username">Nombre de usuario</label>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        [(ngModel)]="profileData.username"
-        placeholder="Nombre de usuario">
-      <span class="field-info">
-        Ayuda a las personas a descubrir tu cuenta usando el nombre que te identifica: tu nombre completo, apodo o nombre comercial.
-      </span>
+      <div class="input-container">
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="profileData.username"
+          (input)="onUsernameInput()"
+          placeholder="Nombre de usuario">
+        <span class="field-info">
+          Ayuda a las personas a descubrir tu cuenta usando el nombre que te identifica: tu nombre completo, apodo o nombre comercial.
+        </span>
+      </div>
     </div>
 
     <div class="form-group">
       <label for="description">Descripción</label>
-      <textarea
-        id="description"
-        name="description"
-        [(ngModel)]="profileData.description"
-        placeholder="Descripción"
-        rows="4"></textarea>
+      <div class="input-container">
+        <textarea
+          id="description"
+          name="description"
+          [(ngModel)]="profileData.description"
+          (input)="onDescriptionInput()"
+          placeholder="Descripción"
+          maxlength="150"
+          rows="4"></textarea>
+        <span class="field-info">
+          {{ getDescriptionLength() }}/{{ maxDescriptionLength }}
+        </span>
+      </div>
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="save-button">Guardar</button>
+      <button type="submit" class="save-button">Enviar</button>
     </div>
   </form>
+
+  <!-- Componente de confirmación con textos dinámicos -->
+  <app-confirmation-question
+    [title]="getConfirmationTitle()"
+    [message]="getConfirmationMessage()"
+    [confirmText]="getConfirmText()"
+    [cancelText]="getCancelText()"
+    [visible]="showConfirmation"
+    (confirm)="onConfirm()"
+    (cancel)="onCancel()">
+  </app-confirmation-question>
 </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-user-configuration',
@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './user-configuration.component.css'
 })
 export class UserConfigurationComponent {
+  @Output() editProfile = new EventEmitter<void>();
 
+  onEditProfileClick(): void {
+    this.editProfile.emit();
+  }
 }
