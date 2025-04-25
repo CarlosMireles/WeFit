@@ -7,7 +7,7 @@ import { provideStorage, getStorage } from '@angular/fire/storage';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app/app.routes';
@@ -34,15 +34,7 @@ bootstrapApplication(AppComponent, {
     provideStorage(() => getStorage()),
     provideHttpClient(),
     importProvidersFrom(
-      TranslateModule.forRoot({
-        defaultLanguage: 'es',
-        loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
-        }
-      })
-    ),
+      TranslateModule.forRoot()),
     provideRouter(routes)
   ]
 });

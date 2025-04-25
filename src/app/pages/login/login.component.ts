@@ -13,6 +13,7 @@ import {TranslatePipe} from '@ngx-translate/core';
     RouterLink,
     TranslatePipe
   ],
+  standalone: true,
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
@@ -22,6 +23,11 @@ export class LoginComponent {
   };
 
   constructor(private userService: UserService, private router: Router, private langService: LanguageService) {}
+
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
 
   async onSubmit(form: any) {
     this.user.email = form.value.email;
