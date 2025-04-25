@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {Router} from '@angular/router';
 import {NgForOf, NgIf} from '@angular/common';
 import {UserConfigurationComponent} from './user-configuration/user-configuration.component';
 import {EditProfileComponent} from './user-configuration/edit-profile/edit-profile.component';
@@ -19,6 +20,8 @@ export class ConfigurationComponent {
   selectedSection = 'usuario';
   showEditProfile = false;
 
+  constructor(private router: Router) {}
+
   sections = [
     { key: 'usuario', label: 'Configuración de Usuario'},
     { key: 'notificaciones', label: 'Notificaciones'},
@@ -31,10 +34,7 @@ export class ConfigurationComponent {
   }
 
   goBack() {
-    // Si estamos en edit profile, volvemos a la configuración del usuario
-    if (this.showEditProfile) {
-      this.showEditProfile = false;
-    }
+    this.router.navigate(['/userProfile']);
   }
 
   onEditProfileClicked(): void {
