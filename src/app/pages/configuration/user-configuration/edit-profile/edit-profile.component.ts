@@ -2,6 +2,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationQuestionComponent } from '../../../../components/confirmation-question/confirmation-question.component';
+import { UserService } from '../../../../services/user.service';
+
 
 @Component({
   selector: 'app-edit-profile',
@@ -19,9 +21,8 @@ export class EditProfileComponent implements OnInit {
   @Output() backClicked = new EventEmitter<void>();
 
   profileData = {
-    username: 'usuario_ejemplo',
-    description: 'Esta es una descripción de ejemplo para el perfil.',
-    profilePicture: 'https://via.placeholder.com/150'
+    username: '',
+    description: ''
   };
 
   selectedFile: File | null = null;
@@ -50,10 +51,10 @@ export class EditProfileComponent implements OnInit {
 
   usernameAvailabilityMessage: string = ''; // Mensaje de disponibilidad del nombre de usuario
 
-  constructor() { }
+  constructor(private userService: UserService) {  }
 
   ngOnInit(): void {
-    this.previewUrl = this.profileData.profilePicture;
+    this.getProfileData();
 
     // Asegurar que la descripción inicial no exceda el máximo
     if (this.profileData.description.length > this.maxDescriptionLength) {
@@ -76,6 +77,7 @@ export class EditProfileComponent implements OnInit {
   saveChanges(): void {
     this.confirmationType = 'save';
     this.showConfirmation = true;
+    this.uploadChanges();
   }
 
   goBack(): void {
@@ -154,6 +156,30 @@ export class EditProfileComponent implements OnInit {
 
   getCancelText(): string {
     return this.confirmationTexts[this.confirmationType].cancelText;
+  }
+
+  private async getProfileData() {
+    const userId = await this.userService.getCurrentUserUid();
+    if (!userId) return;
+
+    this.userService.getUserData(userId).then(r => {
+      if (r) {
+        this.profileData.username = r['username'];
+        this.profileData.description = r['description'];
+        this.previewUrl = r['image_url'];
+      }
+    });
+  }
+
+  private uploadChanges() {
+    this.userService.updateUsername(this.profileData.username).then();
+    this.userService.updateDescription(this.profileData.description).then();
+
+    if (typeof this.previewUrl === 'string') {
+      this.userService.updateProfilePicture(this.previewUrl).then();
+    } else {
+      console.warn('La URL de imagen no es válida');
+    }
   }
 }
 

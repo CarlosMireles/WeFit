@@ -96,4 +96,28 @@ export class UserService {
     await updateDoc(meRef,   { follows:   arrayRemove(targetUid) });
     await updateDoc(targetRef,{ followers: arrayRemove(me)         });
   }
+
+  async updateUsername(newUsername: string): Promise<void> {
+    const uid = await this.getCurrentUserUid();
+    if (!uid) throw new Error('No hay usuario autenticado');
+
+    const userRef = doc(this.firestore, `users/${uid}`);
+    await updateDoc(userRef, { username: newUsername });
+  }
+
+  async updateProfilePicture(newImageUrl: string): Promise<void> {
+    const uid = await this.getCurrentUserUid();
+    if (!uid) throw new Error('No hay usuario autenticado');
+
+    const userRef = doc(this.firestore, `users/${uid}`);
+    await updateDoc(userRef, { image_url: newImageUrl });
+  }
+
+  async updateDescription(newDescription: string): Promise<void> {
+    const uid = await this.getCurrentUserUid();
+    if (!uid) throw new Error('No hay usuario autenticado');
+
+    const userRef = doc(this.firestore, `users/${uid}`);
+    await updateDoc(userRef, { description: newDescription });
+  }
 }
