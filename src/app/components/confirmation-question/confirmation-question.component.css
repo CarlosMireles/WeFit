@@ -17,7 +17,7 @@
   width: 300px;
   text-align: center;
   overflow: hidden;
-  padding: 24px 24px 0 24px; /* espacio en todos los lados, excepto abajo */
+  padding: 24px 24px 7px 24px; /* espacio en todos los lados, excepto abajo */
 }
 
 .animate {
@@ -48,11 +48,6 @@
   font-size: 16px;
 }
 
-.confirmation-divider {
-  height: 1px;
-  background-color: #333; /* Línea oscura */
-}
-
 .confirmation-actions {
   display: flex;
   flex-direction: column;
@@ -67,4 +62,11 @@
   font-weight: bold;
   cursor: pointer;
   width: 100%;
+}
+
+.confirmation-divider {
+  width: 100%;
+  background-color: #222222;
+  height: 1px;
+  border: none;
 }

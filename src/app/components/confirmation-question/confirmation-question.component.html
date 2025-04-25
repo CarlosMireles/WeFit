@@ -5,7 +5,9 @@
       <p class="confirmation-message">{{ message }}</p>
 
       <div class="confirmation-actions">
+        <hr class="confirmation-divider">
         <button class="btn-confirm" (click)="onConfirm()">{{ confirmText }}</button>
+        <hr class="confirmation-divider">
         <button class="btn-cancel" (click)="onCancel()">{{ cancelText }}</button>
       </div>
     </div>
