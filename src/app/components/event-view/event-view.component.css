@@ -61,13 +61,25 @@
   margin: 0;
 }
 
-.participants-list li {
+/* NUEVAS reglas para cada fila con papelera */
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0.25rem 0;
   border-top: 1px solid #2c2c2c;
 }
-
-.participants-list li:first-child {
+.participant-item:first-child {
   border-top: none;
+}
+
+/* Ícono de papelera */
+.trash-icon {
+  cursor: pointer;
+  transition: stroke 0.2s ease;
+}
+.trash-icon:hover {
+  stroke: #ff4d4d;
 }
 
 .buttons {

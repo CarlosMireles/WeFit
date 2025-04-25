@@ -4,12 +4,18 @@ import { FormsModule } from '@angular/forms';
 import { EventService } from '../../services/event.service';
 import { UserService } from '../../services/user.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import {CommunicationService} from '../../services/CommunicationService';
+import { DeleteUserAlertComponent } from '../delete-user-alert/delete-user-alert.component';
+import { CommunicationService } from '../../services/CommunicationService';
 
 @Component({
   selector: 'app-event-view',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmDialogComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ConfirmDialogComponent,
+    DeleteUserAlertComponent
+  ],
   templateUrl: './event-view.component.html',
   styleUrls: ['./event-view.component.css']
 })
@@ -34,7 +40,16 @@ export class EventViewComponent implements OnInit {
   isOwner = false;
   isEditing = false;
   showConfirmDialog = false;
+
+  // **Mantenemos la lista de nombres para otras partes de tu lógica**
   participantNames: string[] = [];
+
+  // **Nueva lista con id y name para la papelera**
+  participantList: Array<{ id: string; name: string }> = [];
+
+  // **Control de la alerta de borrado**
+  showDeleteAlert = false;
+  participantToDelete: { id: string; name: string } | null = null;
 
   editData = {
     title: '',
@@ -47,36 +62,12 @@ export class EventViewComponent implements OnInit {
   };
 
   sports: string[] = [
-    "Atletismo",
-    "Artes marciales",
-    "Bádminton",
-    "Baloncesto",
-    "Balonmano",
-    "Béisbol",
-    "Boxeo",
-    "Críquet",
-    "Ciclismo",
-    "Equitación",
-    "Escalada deportiva",
-    "Esgrima",
-    "Esquí",
-    "Fútbol",
-    "Fútbol americano",
-    "Fútbol sala",
-    "Golf",
-    "Gimnasia",
-    "Hockey sobre césped",
-    "Hockey sobre hielo",
-    "Lucha libre",
-    "Natación",
-    "Padel",
-    "Remo",
-    "Rugby",
-    "Skateboarding",
-    "Snowboard",
-    "Surf",
-    "Tenis",
-    "Voleibol"
+    /* tu array de deportes */
+    "Atletismo","Artes marciales","Bádminton","Baloncesto","Balonmano","Béisbol",
+    "Boxeo","Críquet","Ciclismo","Equitación","Escalada deportiva","Esgrima",
+    "Esquí","Fútbol","Fútbol americano","Fútbol sala","Golf","Gimnasia",
+    "Hockey sobre césped","Hockey sobre hielo","Lucha libre","Natación","Padel",
+    "Remo","Rugby","Skateboarding","Snowboard","Surf","Tenis","Voleibol"
   ];
 
   constructor(
@@ -96,6 +87,7 @@ export class EventViewComponent implements OnInit {
     }
 
     await this.loadParticipantNames();
+    await this.loadParticipantList();
   }
 
   private async loadParticipantNames() {
@@ -112,6 +104,24 @@ export class EventViewComponent implements OnInit {
     );
   }
 
+  /** Construye también una lista con {id,name} para la papelera */
+  private async loadParticipantList() {
+    const ids = this.eventData.participants || [];
+    this.participantList = await Promise.all(
+      ids.map(async id => {
+        try {
+          const user = await this.userService.getUserById(id);
+          return {
+            id,
+            name: user['displayName'] || user['username'] || 'Usuario desconocido'
+          };
+        } catch {
+          return { id, name: 'Usuario desconocido' };
+        }
+      })
+    );
+  }
+
   async joinEvent() {
     if (!this.canJoin || !this.currentUserId) return;
 
@@ -121,6 +131,7 @@ export class EventViewComponent implements OnInit {
       this.hasJoined = true;
       this.canJoin = false;
       await this.loadParticipantNames();
+      await this.loadParticipantList();
       console.log('Usuario inscrito con éxito.');
     } catch (error) {
       console.error('Error al unirse al evento:', error);
@@ -139,6 +150,7 @@ export class EventViewComponent implements OnInit {
       this.canJoin = !this.isOwner &&
         this.eventData.participants.length < this.eventData.maxParticipants;
       await this.loadParticipantNames();
+      await this.loadParticipantList();
       console.log('Usuario desinscrito con éxito.');
     } catch (error) {
       console.error('Error al desinscribirse del evento:', error);
@@ -158,17 +170,6 @@ export class EventViewComponent implements OnInit {
     this.isEditing = true;
   }
 
-  async saveEvent() {
-    try {
-      await this.eventService.updateEvent(this.eventData.id, this.editData);
-      this.eventData = { ...this.eventData, ...this.editData };
-      this.isEditing = false;
-      console.log('Evento actualizado con éxito.');
-    } catch (error) {
-      console.error('Error al actualizar el evento:', error);
-    }
-  }
-
   cancelEdit() {
     this.isEditing = false;
   }
@@ -184,6 +185,33 @@ export class EventViewComponent implements OnInit {
     } catch (error) {
       console.error('Error al actualizar el evento:', error);
     }
+  }
+
+  /** Abre la alerta de borrado */
+  askDeleteParticipant(p: { id: string; name: string }) {
+    this.participantToDelete = p;
+    this.showDeleteAlert = true;
+  }
+
+  /** Borra al participante si confirman */
+  async onAlertAccept() {
+    if (!this.participantToDelete) return;
+    const id = this.participantToDelete.id;
+    try {
+      await this.eventService.leaveEvent(this.eventData.id, id);
+      this.eventData.participants = this.eventData.participants.filter(pid => pid !== id);
+      await this.loadParticipantNames();
+      await this.loadParticipantList();
+      this.showDeleteAlert = false;
+      this.participantToDelete = null;
+    } catch (error) {
+      console.error('Error al eliminar participante:', error);
+    }
+  }
+
+  onAlertCancel() {
+    this.showDeleteAlert = false;
+    this.participantToDelete = null;
   }
 
   onClose(): void {
