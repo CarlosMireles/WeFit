@@ -7,7 +7,7 @@ import {
   QueryList
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import { EventCardComponent } from '../../components/event-card/event-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { UserService } from '../../services/user.service';
@@ -121,7 +121,8 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   }
 
   onSettings() {
-    this.router.navigate(['/user-settings']);
+    console.log("Settings clicked");
+    this.router.navigate(['/configuration']);
   }
 
   onEventSelected(ev: { id: string; latitude: number; longitude: number }) {
