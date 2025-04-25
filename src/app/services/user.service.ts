@@ -13,6 +13,7 @@ import {
   Auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendEmailVerification,
   user as authState,
   User
 } from '@angular/fire/auth';
@@ -38,6 +39,7 @@ export class UserService {
   ): Promise<User> {
     const credential = await createUserWithEmailAndPassword(this.auth, email, password);
     const u = credential.user;
+    await sendEmailVerification(u);
     const userRef = doc(this.firestore, `users/${u.uid}`);
     await setDoc(userRef, {
       uid: u.uid,

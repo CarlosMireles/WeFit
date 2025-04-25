@@ -70,3 +70,10 @@ button:hover {
   color: blue;
   text-decoration: none;
 }
+
+
+.resend-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
