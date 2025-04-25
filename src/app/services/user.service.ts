@@ -13,6 +13,7 @@ import {
   Auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendEmailVerification,
   user as authState,
   User
 } from '@angular/fire/auth';
@@ -38,6 +39,7 @@ export class UserService {
   ): Promise<User> {
     const credential = await createUserWithEmailAndPassword(this.auth, email, password);
     const u = credential.user;
+    await sendEmailVerification(u);
     const userRef = doc(this.firestore, `users/${u.uid}`);
     await setDoc(userRef, {
       uid: u.uid,
@@ -95,5 +97,29 @@ export class UserService {
     const targetRef = doc(this.firestore, `users/${targetUid}`);
     await updateDoc(meRef,   { follows:   arrayRemove(targetUid) });
     await updateDoc(targetRef,{ followers: arrayRemove(me)         });
+  }
+
+  async updateUsername(newUsername: string): Promise<void> {
+    const uid = await this.getCurrentUserUid();
+    if (!uid) throw new Error('No hay usuario autenticado');
+
+    const userRef = doc(this.firestore, `users/${uid}`);
+    await updateDoc(userRef, { username: newUsername });
+  }
+
+  async updateProfilePicture(newImageUrl: string): Promise<void> {
+    const uid = await this.getCurrentUserUid();
+    if (!uid) throw new Error('No hay usuario autenticado');
+
+    const userRef = doc(this.firestore, `users/${uid}`);
+    await updateDoc(userRef, { image_url: newImageUrl });
+  }
+
+  async updateDescription(newDescription: string): Promise<void> {
+    const uid = await this.getCurrentUserUid();
+    if (!uid) throw new Error('No hay usuario autenticado');
+
+    const userRef = doc(this.firestore, `users/${uid}`);
+    await updateDoc(userRef, { description: newDescription });
   }
 }

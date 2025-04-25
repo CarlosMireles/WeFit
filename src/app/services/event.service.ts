@@ -15,9 +15,10 @@ import {
   getDoc,
   arrayUnion,
   setDoc,
-  arrayRemove
+  arrayRemove, collectionData
 } from '@angular/fire/firestore';
 import { UserService } from './user.service';
+import {Observable} from 'rxjs';
 
 export interface EventFilters {
   date?: string;
@@ -80,6 +81,36 @@ export class EventService {
 
     const snap = await getDocs(q);
     return snap.docs.map(d => ({ id: d.id, ...(d.data() as any) }));
+  }
+
+  async getFilteredEventsRealtime(filters: EventFilters): Promise<Observable<any[]>> {
+    await this.deleteOldEvents();
+    const constraints: QueryConstraint[] = [];
+
+    if (filters.date) {
+      constraints.push(where('day', '==', filters.date));
+    }
+    if (filters.hourMinimum) {
+      constraints.push(where('hour', '>=', filters.hourMinimum));
+    }
+    if (filters.hourMaximum) {
+      constraints.push(where('hour', '<=', filters.hourMaximum));
+    }
+    if (filters.sport) {
+      constraints.push(where('sport', '==', filters.sport));
+    }
+    if (filters.maxParticipants != null) {
+      constraints.push(where('maxParticipants', '<=', filters.maxParticipants));
+    }
+    if (filters.privacy) {
+      constraints.push(where('privacy', '==', filters.privacy));
+    }
+
+    const q = constraints.length
+      ? query(this.eventsCollection, ...constraints)
+      : this.eventsCollection;
+
+    return collectionData(q, { idField: 'id' });
   }
 
   async getEvents(): Promise<any[]> {
