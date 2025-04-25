@@ -1,4 +1,3 @@
-// src/app/find-user/find-user.component.ts
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
@@ -35,7 +34,6 @@ export class FindUserComponent implements OnInit, AfterViewInit {
   ) {}
 
   async ngOnInit() {
-    // precarga el UID
     this.currentUserId = await this.userService.getCurrentUserUid();
   }
 
@@ -50,15 +48,16 @@ export class FindUserComponent implements OnInit, AfterViewInit {
         this.searchResults = [];
         return;
       }
-      // Aseguro tener el UID
       if (!this.currentUserId) {
         this.currentUserId = await this.userService.getCurrentUserUid();
         if (!this.currentUserId) return;
       }
-      // Llamo al servicio
       try {
-        this.searchResults = await this.searchService
-          .searchUsersByUsernamePrefix(term, this.currentUsername, this.currentUserId);
+        this.searchResults = await this.searchService.searchUsersByUsernamePrefix(
+          term,
+          this.currentUsername,
+          this.currentUserId!
+        );
       } catch (err) {
         console.error(err);
       }
@@ -78,8 +77,11 @@ export class FindUserComponent implements OnInit, AfterViewInit {
     }
     if (!this.selectedUid) {
       try {
-        this.searchResults = await this.searchService
-          .searchUsersByUsernamePrefix(term, this.currentUsername, this.currentUserId);
+        this.searchResults = await this.searchService.searchUsersByUsernamePrefix(
+          term,
+          this.currentUsername,
+          this.currentUserId!
+        );
         this.selectedUid = this.searchResults[0]?.uid || null;
       } catch (err) {
         console.error('Error en búsqueda:', err);
@@ -95,6 +97,13 @@ export class FindUserComponent implements OnInit, AfterViewInit {
   }
 
   selectUser(user: any) {
+    // ——— Guardo en historial ———
+    const raw = localStorage.getItem('search_counts');
+    const map: Record<string, number> = raw ? JSON.parse(raw) : {};
+    map[user.uid] = (map[user.uid] || 0) + 1;
+    localStorage.setItem('search_counts', JSON.stringify(map));
+    // ————————————————
+
     this.searchInput.nativeElement.value = user.username;
     this.searchResults = [];
     this.selectedUid = user.uid;
