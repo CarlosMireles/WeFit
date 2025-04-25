@@ -6,6 +6,7 @@
   justify-content: center;
   height: 100vh;
   font-family: Arial, sans-serif;
+  background-color: #fffee2;
 }
 
 /* Logo y título */
@@ -58,6 +59,7 @@ button {
 
 button:hover {
   background-color: #14d578;
+  transition:all 200ms ease;
 }
 
 .login-text {
