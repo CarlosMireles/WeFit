@@ -1,3 +1,4 @@
+/* src/app/find-user/find-user.component.css */
 .search-container {
   position: relative;
   width: 400px;
@@ -35,18 +36,17 @@
   border-radius: 100px;
 }
 
-/* Estilos para el desplegable oscuro y redondeado */
 .dropdown {
   position: absolute;
   top: 52px;
   left: 10px;
   width: 100%;
-  background: black; /* Fondo oscuro */
+  background: black;
   color: white;
   border: 1px solid white;
   border-top: none;
   border-radius: 0 0 25px 25px;
-  max-height: 200px;
+  max-height: 300px;
   overflow-y: auto;
   z-index: 100;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -59,6 +59,8 @@
 }
 
 .dropdown li {
+  display: flex;
+  align-items: center;
   padding: 8px 12px;
   cursor: pointer;
   border-bottom: 1px solid white;
@@ -68,7 +70,28 @@
   border-bottom: none;
 }
 
-
 .dropdown li:hover {
   background-color: #14d578;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.common-followers {
+  font-size: 12px;
+  color: #ccc;
 }
