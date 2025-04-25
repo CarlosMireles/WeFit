@@ -36,6 +36,9 @@
         <span class="field-info">
           Ayuda a las personas a descubrir tu cuenta usando el nombre que te identifica: tu nombre completo, apodo o nombre comercial.
         </span>
+        <span class="field-info" *ngIf="usernameAvailabilityMessage">
+          {{ usernameAvailabilityMessage }}
+        </span>
       </div>
     </div>
 
@@ -72,3 +75,4 @@
     (cancel)="onCancel()">
   </app-confirmation-question>
 </div>
+

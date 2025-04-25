@@ -11,6 +11,11 @@ import { ConfirmationQuestionComponent } from '../../../../components/confirmati
   styleUrl: './edit-profile.component.css'
 })
 export class EditProfileComponent implements OnInit {
+  // **Importante** Este código implementa una función para comprobar en tiempo
+  //                real que el nombre de usuario no esté ya en uso mediante la
+  //                función checkUsernameAvailability. Esta función no ha sido
+  //                probado todavía ya que espera a la conexión a un servidor
+
   @Output() backClicked = new EventEmitter<void>();
 
   profileData = {
@@ -42,6 +47,8 @@ export class EditProfileComponent implements OnInit {
       cancelText: 'No, continuar editando'
     }
   };
+
+  usernameAvailabilityMessage: string = ''; // Mensaje de disponibilidad del nombre de usuario
 
   constructor() { }
 
@@ -115,6 +122,21 @@ export class EditProfileComponent implements OnInit {
         this.profileData.username = filteredUsername;
       }
     }
+    this.checkUsernameAvailability(); // Llamar a la función de comprobación
+  }
+
+  checkUsernameAvailability(): void {
+    // Por ahora no realiza ninguna comprobación
+    // En el futuro, aquí se puede implementar la lógica para verificar si el nombre de usuario ya está en uso
+    const username = this.profileData.username;
+
+    if (!username) {
+      this.usernameAvailabilityMessage = '';
+      return;
+    }
+
+    // Ejemplo de mensaje (esto se reemplazará con la lógica real)
+    this.usernameAvailabilityMessage = 'Comprobando disponibilidad...';
   }
 
   // Métodos para obtener el texto correcto según el tipo de confirmación
@@ -134,3 +156,4 @@ export class EditProfileComponent implements OnInit {
     return this.confirmationTexts[this.confirmationType].cancelText;
   }
 }
+
