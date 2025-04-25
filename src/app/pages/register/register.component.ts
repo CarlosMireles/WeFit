@@ -4,9 +4,11 @@ import { UserService } from '../../services/user.service';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
+import { User, sendEmailVerification } from 'firebase/auth';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
   imports: [
     FormsModule,
     NgIf,
@@ -25,9 +27,13 @@ export class RegisterComponent {
     usernameError: '',
     emailError: '',
     passwordError: '',
-    homeRoute:''
+    homeRoute: '',
+    awaitingVerification: false,
+    canResend: true
   };
 
+  private currentUser: User | null = null;
+  private verificationInterval: any;
 
   constructor(private userService: UserService, private router: Router) {}
 
@@ -69,14 +75,54 @@ export class RegisterComponent {
 
     this.user.successMessage = '';
     this.user.errorMessage = '';
+    this.user.awaitingVerification = false;
 
-    if (!this.validateForm()) {
-      return;
+    if (!this.validateForm()) return;
+
+    try {
+      const newUser: User = await this.userService.registerUser(
+        this.user.email,
+        this.user.password,
+        this.user.username
+      );
+
+      this.currentUser = newUser;
+      this.user.successMessage = '¡Registro exitoso! Revisa tu correo para verificar la cuenta.';
+      this.user.awaitingVerification = true;
+
+      // Verificación periódica
+      this.verificationInterval = setInterval(async () => {
+        await newUser.reload();
+        if (newUser.emailVerified) {
+          clearInterval(this.verificationInterval);
+          this.user.successMessage = 'Correo verificado correctamente. Redirigiendo...';
+          this.user.awaitingVerification = false;
+          await new Promise(res => setTimeout(res, 1000));
+          this.router.navigate(['/home']);
+        }
+      }, 3000);
+
+    } catch (error: any) {
+      this.user.errorMessage = error.message || 'Error al registrar.';
+      this.user.successMessage = '';
     }
+  }
 
-    this.userService.registerUser(this.user.email, this.user.password, this.user.username)
-      .then(user => console.log('Usuario registrado:', user))
-      .then(() => {this.router.navigate(['/home']);})
-      .catch(error => console.error('Error:', error));
+  async resendVerificationEmail() {
+    if (this.currentUser && this.user.canResend) {
+      try {
+        await sendEmailVerification(this.currentUser);
+        this.user.successMessage = 'Correo de verificación reenviado. Revisa tu bandeja de entrada.';
+        this.user.canResend = false;
+
+        // Espera 30 segundos para volver a permitir
+        setTimeout(() => {
+          this.user.canResend = true;
+        }, 30000);
+
+      } catch (err: any) {
+        this.user.errorMessage = err.message || 'Error al reenviar el correo.';
+      }
+    }
   }
 }
