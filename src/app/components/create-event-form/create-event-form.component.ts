@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '../../services/event.service';
 import { CommunicationService } from '../../services/CommunicationService';
+import {LanguageService} from '../../services/translate.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-event-form',
   standalone: true, // Marca el componente como standalone
-  imports: [CommonModule, FormsModule], // Importa los módulos necesarios
+  imports: [CommonModule, FormsModule, TranslatePipe], // Importa los módulos necesarios
   templateUrl: './create-event-form.component.html',
   styleUrls: ['./create-event-form.component.css']
 })
@@ -27,41 +29,41 @@ export class CreateEventFormComponent {
   longitude: number | null = null;
 
   sports: string[] = [
-    "Atletismo",
-    "Artes marciales",
-    "Bádminton",
-    "Baloncesto",
-    "Balonmano",
-    "Béisbol",
-    "Boxeo",
-    "Críquet",
-    "Ciclismo",
-    "Equitación",
-    "Escalada deportiva",
-    "Esgrima",
-    "Esquí",
-    "Fútbol",
-    "Fútbol americano",
-    "Fútbol sala",
-    "Golf",
-    "Gimnasia",
-    "Hockey sobre césped",
-    "Hockey sobre hielo",
-    "Lucha libre",
-    "Natación",
-    "Padel",
-    "Remo",
-    "Rugby",
-    "Skateboarding",
-    "Snowboard",
-    "Surf",
-    "Tenis",
-    "Voleibol"
+    "event-form.Athletics",
+    "event-form.MartialArts",
+    "event-form.Badminton",
+    "event-form.Basketball",
+    "event-form.Handball",
+    "event-form.Baseball",
+    "event-form.Boxing",
+    "event-form.Cricket",
+    "event-form.Cycling",
+    "event-form.SportClimbing",
+    "event-form.Fencing",
+    "event-form.Skiing",
+    "event-form.Football",
+    "event-form.AmericanFootball",
+    "event-form.Futsal",
+    "event-form.Golf",
+    "event-form.Gymnastics",
+    "event-form.FieldHockey",
+    "event-form.IceHockey",
+    "event-form.Wrestling",
+    "event-form.Swimming",
+    "event-form.Padel",
+    "event-form.Rowing",
+    "event-form.Rugby",
+    "event-form.Skateboarding",
+    "event-form.Snowboarding",
+    "event-form.Surfing",
+    "event-form.Tennis",
+    "event-form.Volleyball",
+    "event-form.HorseRiding"
   ];
 
-  privacies: string[] = ['Privado', 'Público', 'Mejores amigos'];
+  privacies: string[] = ['event-form.private', 'event-form.public', 'event-form.close-friends'];
 
-  constructor(private eventApi: EventService, private communicationService: CommunicationService) {}
+  constructor(private eventApi: EventService, private communicationService: CommunicationService, private langService: LanguageService) {}
 
   ngOnInit() {
     this.communicationService.mapClick$.subscribe(data => {
@@ -70,6 +72,12 @@ export class CreateEventFormComponent {
       this.isOpen = true; // Abre el formulario cuando se haga clic en el mapa
       this.resetForm(); // Resetea el formulario
     });
+    this.initializeLanguage();
+  }
+
+  async initializeLanguage() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
   }
 
   closeForm(): void {

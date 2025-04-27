@@ -16,4 +16,9 @@ import {TranslatePipe} from '@ngx-translate/core';
 export class ForgotPasswordFinishComponent {
 
   constructor(private langService: LanguageService) {}
+
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
 }

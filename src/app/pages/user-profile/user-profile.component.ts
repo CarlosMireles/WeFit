@@ -22,6 +22,11 @@ export class UserProfileComponent implements AfterViewInit {
 
   constructor(private langService: LanguageService) {}
 
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
+
 
   ngAfterViewInit() {
     const cardContainers = document.querySelectorAll('.card-flex');

@@ -42,4 +42,5 @@ export class LoginComponent {
     this.langService.changeLang(lang);
   }
 
+
 }

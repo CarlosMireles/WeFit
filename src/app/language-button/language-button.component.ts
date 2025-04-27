@@ -16,7 +16,7 @@ export class LanguageButtonComponent {
   constructor(private langService: LanguageService) {}
 
   get currentLang(): string {
-    return this.langService.currentLang;
+    return this.langService.currentLangOrDefault;
   }
 
   get availableLangs(): string[] {

@@ -11,31 +11,31 @@ export class LanguageService {
   constructor(private translate: TranslateService, private firestore: Firestore, private http: HttpClient) {
     this.translate.addLangs(['es', 'en']);
     this.translate.setDefaultLang('es');
-    this.translate.use('fr');
+    this.translate.use('es');
   }
 
-  async changeLang(lang: string) {
-    let json = await this.getJSONFromFirestore(lang);
+    async changeLang(lang: string) {
+      let json = await this.getJSONFromFirestore(lang);
 
-    if (!json) {
-      const baseJson = await this.getJSONFromFirestore('es');
-      if (!baseJson) {
-        console.warn('No se encontró traducción base en español');
-        return;
+      if (!json) {
+        const baseJson = await this.getJSONFromFirestore('es');
+        if (!baseJson) {
+          console.warn('No se encontró traducción base en español');
+          return;
+        }
+
+        try {
+          json = await this.translateViaBackend(baseJson, lang);
+          await this.saveTranslationToFirestore(lang, json);
+        } catch (error) {
+          console.error('Error traduciendo:', error);
+          return;
+        }
       }
 
-      try {
-        json = await this.translateViaBackend(baseJson, lang);
-        await this.saveTranslationToFirestore(lang, json);
-      } catch (error) {
-        console.error('Error traduciendo:', error);
-        return;
-      }
+      this.setTranslation(lang, json, true);
+      this.translate.use(lang);
     }
-
-    this.setTranslation(lang, json, true);
-    this.translate.use(lang);
-  }
 
   translateViaBackend(json: any, targetLang: string): Promise<any> {
     return lastValueFrom(
@@ -51,10 +51,6 @@ export class LanguageService {
     await setDoc(ref, data);
   }
 
-  get currentLang(): string {
-    return this.translate.currentLang;
-  }
-
   async getJSONFromFirestore(lang: string): Promise<any | null> {
     const ref = doc(this.firestore, 'translations', lang);
     const snapshot = await getDoc(ref);
@@ -64,4 +60,10 @@ export class LanguageService {
   setTranslation(lang: string, json: any, boolean: boolean) {
     this.translate.setTranslation(lang, json, boolean);
   }
-}
+
+  get currentLang(): string {
+    return this.translate.currentLang;
+  }
+
+
+  }

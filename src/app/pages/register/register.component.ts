@@ -34,6 +34,11 @@ export class RegisterComponent {
 
   constructor(private userService: UserService, private router: Router, private langService: LanguageService) {}
 
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
+
   validateForm() {
     this.user.usernameError = '';
     this.user.emailError = '';
@@ -83,7 +88,4 @@ export class RegisterComponent {
       .catch(error => console.error('Error:', error));
   }
 
-  switchLang(lang: string) {
-    this.langService.changeLang(lang);
-  }
 }

@@ -18,6 +18,11 @@ export class ModifyPasswordComponent {
 
   constructor(private langService: LanguageService) {}
 
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
+
   onSubmit(form: any) {
     this.user.password = form.value.password;
     this.user.confirmPassword = form.value.confirmPassword;

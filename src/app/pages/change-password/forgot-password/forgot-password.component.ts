@@ -20,6 +20,11 @@ export class ForgotPasswordComponent {
 
   constructor(private langService: LanguageService) {}
 
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
+
   onSubmit(form: any) {
     this.user.email = form.value.email;
     console.log('Correo de recuperacion:', this.user);

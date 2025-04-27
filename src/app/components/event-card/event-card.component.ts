@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {LanguageService} from '../../services/translate.service';
 
 @Component({
     selector: 'app-event-card',
@@ -8,5 +9,12 @@ import { Component } from '@angular/core';
     styleUrl: './event-card.component.css'
 })
 export class EventCardComponent {
+
+  constructor(private langService: LanguageService) {}
+
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
 
 }

@@ -1,12 +1,12 @@
 <div *ngIf="isOpen" class="overlay">
   <div class="modal-window">
-    <h2>Crear Evento</h2>
+    <h2>{{ 'event-form.create-event' | translate }}</h2>
 
     <!-- Formulario sin formGroup ni ngSubmit -->
     <form>
       <!-- Título del evento -->
       <div>
-        <label for="title">Título del evento:</label>
+        <label for="title">{{ 'event-form.event-title' | translate }}</label>
         <input
           id="title"
           type="text"
@@ -18,23 +18,23 @@
 
       <!-- Deporte -->
       <div>
-        <label for="sport">Deporte:</label>
+        <label for="sport">{{ 'event-form.sport' | translate }}</label>
         <select
           id="sport"
           [(ngModel)]="sport"
           name="sport"
           required
         >
-          <option value="" disabled>Seleccione un deporte</option>
+          <option value="" disabled>{{ 'event-form.select-sport' | translate }}</option>
           <option *ngFor="let d of sports" [value]="d">
-            {{ d }}
+            {{ d | translate }}
           </option>
         </select>
       </div>
 
       <!-- Descripción -->
       <div>
-        <label for="description">Descripción:</label>
+        <label for="description">{{ 'event-form.description' | translate }}</label>
         <textarea
           id="description"
           [(ngModel)]="description"
@@ -45,7 +45,7 @@
 
       <!-- Fecha -->
       <div>
-        <label for="day">Fecha:</label>
+        <label for="day">{{ 'event-form.date' | translate }}</label>
         <input
           id="day"
           type="date"
@@ -57,7 +57,7 @@
 
       <!-- Hora -->
       <div>
-        <label for="hour">Hora (00:00):</label>
+        <label for="hour">{{ 'event-form.time' | translate }}</label>
         <input
           id="hour"
           type="text"
@@ -70,7 +70,7 @@
 
       <!-- Número máximo de participantes -->
       <div>
-        <label for="maxParticipants">Número máximo de participantes:</label>
+        <label for="maxParticipants">{{ 'event-form.max-participants' | translate }}</label>
         <input
           id="maxParticipants"
           type="number"
@@ -85,24 +85,24 @@
 
       <!-- Privacidad -->
       <div>
-        <label for="privacy">Privacidad:</label>
+        <label for="privacy">{{ 'event-form.privacy' | translate }}</label>
         <select
           id="privacy"
           [(ngModel)]="privacy"
           name="privacy"
           required
         >
-          <option value="" disabled>Seleccione la privacidad</option>
+          <option value="" disabled>{{ 'event-form.select-privacy' | translate }}</option>
           <option *ngFor="let p of privacies" [value]="p">
-            {{ p }}
+            {{ p | translate }}
           </option>
         </select>
       </div>
 
       <!-- Botones -->
       <div class="buttons">
-        <button type="button" (click)="closeForm()">Cancelar</button>
-        <button type="button" (click)="createEvent()">Crear Evento</button>
+        <button type="button" (click)="closeForm()">{{ 'event-form.cancel-button' | translate }}</button>
+        <button type="button" (click)="createEvent()">{{ 'event-form.create-event' | translate }}</button>
       </div>
     </form>
   </div>
