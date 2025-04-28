@@ -5,7 +5,7 @@
 
     <!-- Título -->
     <label>Nombre:</label>
-    <div class="field"  *ngIf="!isEditing">{{ eventData.title }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.title }}</div>
     <input *ngIf="isEditing" type="text" [(ngModel)]="editData.title" />
 
     <!-- Descripción -->
@@ -77,6 +77,16 @@
 
     <!-- Botones -->
     <div class="buttons">
+      <!-- Reportar (si no eres owner) -->
+      <button
+        *ngIf="!isOwner"
+        type="button"
+        class="btn-report"
+        (click)="onReport()"
+      >
+        Reportar
+      </button>
+
       <!-- Propietario - Ver -->
       <div *ngIf="isOwner && !isEditing" class="owner-actions">
         <button type="button" class="btn-edit" (click)="editEvent()">Modificar evento</button>
@@ -99,15 +109,15 @@
       <div class="close-action">
         <button type="button" class="btn-close" (click)="onClose()">Cerrar</button>
       </div>
-
-      <!-- Diálogo de confirmación de guardado -->
-      <app-confirm-dialog
-        *ngIf="showConfirmDialog"
-        [message]="'¿Deseas guardar los cambios?'"
-        (confirm)="onConfirmSave()"
-        (cancel)="showConfirmDialog = false">
-      </app-confirm-dialog>
     </div>
+
+    <!-- Diálogo de confirmación de guardado -->
+    <app-confirm-dialog
+      *ngIf="showConfirmDialog"
+      [message]="'¿Deseas guardar los cambios?'"
+      (confirm)="onConfirmSave()"
+      (cancel)="showConfirmDialog = false">
+    </app-confirm-dialog>
 
     <!-- ALERTA DE BORRADO -->
     <delete-user-alert

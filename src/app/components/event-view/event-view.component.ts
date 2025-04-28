@@ -6,6 +6,7 @@ import { UserService } from '../../services/user.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DeleteUserAlertComponent } from '../delete-user-alert/delete-user-alert.component';
 import { CommunicationService } from '../../services/CommunicationService';
+import {ReportService} from '../../services/report.service.service';
 
 @Component({
   selector: 'app-event-view',
@@ -70,10 +71,14 @@ export class EventViewComponent implements OnInit {
     "Remo","Rugby","Skateboarding","Snowboard","Surf","Tenis","Voleibol"
   ];
 
+  // **ENLACE mailto para reportar**
+  reportLink: string = '';
+
   constructor(
     private eventService: EventService,
     private userService: UserService,
-    private communicationService: CommunicationService
+    private communicationService: CommunicationService,
+    private reportService: ReportService    // <-- inyectado
   ) {}
 
   async ngOnInit() {
@@ -88,6 +93,16 @@ export class EventViewComponent implements OnInit {
 
     await this.loadParticipantNames();
     await this.loadParticipantList();
+
+    // SOLO si no eres el owner, preparamos el mailto
+    if (!this.isOwner) {
+      const creator = await this.userService.getUserById(this.eventData.organizerId);
+      const creatorUsername = creator['username'] || creator['displayName'] || '';
+      this.reportLink = this.reportService.generateMailToLink(
+        creatorUsername,
+        this.eventData.title
+      );
+    }
   }
 
   private async loadParticipantNames() {
@@ -216,5 +231,10 @@ export class EventViewComponent implements OnInit {
 
   onClose(): void {
     this.close.emit();
+  }
+
+  // **Método para abrir el cliente de correo**
+  onReport() {
+    window.location.href = this.reportLink;
   }
 }
