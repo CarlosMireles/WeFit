@@ -72,5 +72,5 @@ python src/app/services/translate.py
 ```
 
 ```bash
- npm install concurrently --save-dev
+npm install concurrently --save-dev
 ```
