@@ -15,7 +15,7 @@ import {
   signInWithEmailAndPassword,
   sendEmailVerification,
   user as authState,
-  User
+  User, sendPasswordResetEmail
 } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 
@@ -59,6 +59,10 @@ export class UserService {
   async loginUser(email: string, password: string): Promise<User> {
     const credential = await signInWithEmailAndPassword(this.auth, email, password);
     return credential.user;
+  }
+
+  async resetPassword(email: string): Promise<void> {
+    await sendPasswordResetEmail(this.auth, email);
   }
 
   async getUserData(uid: string | null): Promise<DocumentData | null> {

@@ -7,6 +7,7 @@ import { UserSearchComponent } from './pages/user-search/user-search.component';
 // Importa tu nuevo componente de búsqueda de perfil
 import { ProfileSearchComponent } from './pages/profile-search/profile-search.component';
 import {ConfigurationComponent} from './pages/configuration/configuration.component';
+import {ForgotPasswordComponent} from './pages/change-password/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -17,5 +18,6 @@ export const routes: Routes = [
   { path: 'user-search', component: UserSearchComponent },
   // Nueva ruta para profile-search recibiendo el UID o username
   { path: 'profile-search/:profileUid', component: ProfileSearchComponent },
-  { path: 'configuration', component: ConfigurationComponent }
+  { path: 'configuration', component: ConfigurationComponent },
+  { path: 'forgotPassword', component: ForgotPasswordComponent },
 ];
