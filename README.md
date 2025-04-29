@@ -70,3 +70,7 @@ pip install flask googletrans==4.0.0-rc1 --user
 ```bash
 python src/app/services/translate.py
 ```
+
+```bash
+ npm install concurrently --save-dev
+```
