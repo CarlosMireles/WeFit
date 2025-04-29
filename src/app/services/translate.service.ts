@@ -9,12 +9,13 @@ import {lastValueFrom} from 'rxjs';
 })
 export class LanguageService {
   constructor(private translate: TranslateService, private firestore: Firestore, private http: HttpClient) {
-    this.translate.addLangs(['es', 'en']);
+    this.translate.addLangs(['es', 'en', 'fr', 'it', 'pt']);
     this.translate.setDefaultLang('es');
-    this.translate.use('es');
+    this.translate.use('tr');
   }
 
     async changeLang(lang: string) {
+
       let json = await this.getJSONFromFirestore(lang);
 
       if (!json) {
@@ -65,5 +66,4 @@ export class LanguageService {
     return this.translate.currentLang;
   }
 
-
-  }
+}
