@@ -10,6 +10,7 @@
 }
 
 .modal-window {
+  position: relative;
   background-color: #1f1f1f;
   color: #ffffff;
   padding: 2rem;
@@ -34,12 +35,6 @@
   font-weight: 500;
 }
 
-.participants-count {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 0.25rem;
-}
-
 .field {
   border: 1px solid #00cc66;
   padding: 0.5rem;
@@ -50,7 +45,13 @@
   overflow-wrap: break-word;
 }
 
-.field.participants-container {
+.participants-count {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.participants-container {
   margin-top: 0.5rem;
   padding: 0.75rem;
 }
@@ -61,7 +62,6 @@
   margin: 0;
 }
 
-/* NUEVAS reglas para cada fila con papelera */
 .participant-item {
   display: flex;
   align-items: center;
@@ -73,7 +73,13 @@
   border-top: none;
 }
 
-/* Ícono de papelera */
+/* Quita subrayado y pone el nombre en blanco */
+.participant-name {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .trash-icon {
   cursor: pointer;
   transition: stroke 0.2s ease;
@@ -84,7 +90,11 @@
 
 .buttons {
   margin-top: 1.5rem;
-  display: flex; justify-content: flex-end; gap: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .buttons button {
@@ -93,6 +103,16 @@
   font-weight: 500;
   font-family: 'Poppins', sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
+  margin: 0.25rem 0;
+}
+
+.btn-report {
+  margin-right: auto;
+  background-color: #e60000;
+  color: #fff;
+}
+.btn-report:hover {
+  background-color: #ff0000;
 }
 
 .btn-edit {
@@ -128,8 +148,6 @@
   background-color: #ff0000;
 }
 
-/* Modo edición */
-
 .modal-window input[type="text"],
 .modal-window input[type="date"],
 .modal-window input[type="number"],
@@ -142,7 +160,6 @@
   border-radius: 6px;
   background-color: #2b2b2b;
   color: #ffffff;
-  font-family: 'Poppins', sans-serif;
   font-size: 1rem;
 }
 
@@ -158,8 +175,6 @@
   resize: vertical;
   min-height: 80px;
 }
-
-/* Botones del modo edición */
 
 .btn-save {
   background-color: #888; color: #ccc;

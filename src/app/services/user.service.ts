@@ -49,6 +49,7 @@ export class UserService {
       description: '',
       follows: [],
       followers: [],
+      best_friends: [],
       events_organizing: [],
       events_attending: [],
       createdAt: new Date()

@@ -5,7 +5,7 @@
 
     <!-- Título -->
     <label>Nombre:</label>
-    <div class="field"  *ngIf="!isEditing">{{ eventData.title }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.title }}</div>
     <input *ngIf="isEditing" type="text" [(ngModel)]="editData.title" />
 
     <!-- Descripción -->
@@ -39,7 +39,12 @@
       <div class="participants-container">
         <ul class="participants-list">
           <li *ngFor="let p of participantList" class="participant-item">
-            <span>{{ p.name }}</span>
+            <span
+              class="participant-name"
+              (click)="goToProfile(p.id)"
+            >
+              {{ p.name }}
+            </span>
             <svg
               *ngIf="isOwner && p.id !== currentUserId"
               (click)="askDeleteParticipant(p)"
@@ -77,39 +82,42 @@
 
     <!-- Botones -->
     <div class="buttons">
-      <!-- Propietario - Ver -->
+      <button
+        *ngIf="!isOwner"
+        type="button"
+        class="btn-report"
+        (click)="onReport()"
+      >
+        Reportar
+      </button>
+
       <div *ngIf="isOwner && !isEditing" class="owner-actions">
         <button type="button" class="btn-edit" (click)="editEvent()">Modificar evento</button>
       </div>
 
-      <!-- Modo edición -->
       <div *ngIf="isEditing" class="edit-actions">
         <button type="button" class="btn-save" (click)="showConfirmDialog = true">Guardar cambios</button>
         <button type="button" class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
       </div>
 
-      <!-- Usuario no propietario -->
       <div *ngIf="!isOwner && !isEditing" class="user-actions">
         <button *ngIf="hasJoined" type="button" class="btn-leave" (click)="leaveEvent()">🚪 Desinscribirse del evento</button>
         <button *ngIf="!hasJoined && canJoin" type="button" class="btn-join" (click)="joinEvent()">Unirse al evento</button>
         <button *ngIf="!hasJoined && !canJoin" type="button" class="btn-disabled" disabled>No puedes unirte al evento</button>
       </div>
 
-      <!-- Botón de cerrar -->
       <div class="close-action">
         <button type="button" class="btn-close" (click)="onClose()">Cerrar</button>
       </div>
-
-      <!-- Diálogo de confirmación de guardado -->
-      <app-confirm-dialog
-        *ngIf="showConfirmDialog"
-        [message]="'¿Deseas guardar los cambios?'"
-        (confirm)="onConfirmSave()"
-        (cancel)="showConfirmDialog = false">
-      </app-confirm-dialog>
     </div>
 
-    <!-- ALERTA DE BORRADO -->
+    <app-confirm-dialog
+      *ngIf="showConfirmDialog"
+      [message]="'¿Deseas guardar los cambios?'"
+      (confirm)="onConfirmSave()"
+      (cancel)="showConfirmDialog = false">
+    </app-confirm-dialog>
+
     <delete-user-alert
       *ngIf="showDeleteAlert"
       [userName]="participantToDelete?.name || ''"

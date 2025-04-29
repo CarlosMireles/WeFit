@@ -1,0 +1,23 @@
+<div class="history-card">
+  <h3>Recomendados</h3>
+  <ul>
+    <li *ngFor="let u of users" (click)="goTo(u)">
+      <img class="profile-img" [src]="u.photoURL" alt="{{ u.username }}">
+      <div class="info">
+        <span class="username">{{ u.username }}</span>
+        <span class="common">
+          Seguidores en común:
+          <ng-container *ngIf="u.commonFollowersSample.length > 0">
+            {{ u.commonFollowersSample.join(', ') }}
+          </ng-container>
+          <ng-container *ngIf="u.commonFollowersRest > 0">
+            y {{ u.commonFollowersRest }} más
+          </ng-container>
+          <ng-container *ngIf="u.commonFollowersSample.length === 0">
+            0
+          </ng-container>
+        </span>
+      </div>
+    </li>
+  </ul>
+</div>

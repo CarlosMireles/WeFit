@@ -1,11 +1,13 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { EventService } from '../../services/event.service';
 import { UserService } from '../../services/user.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DeleteUserAlertComponent } from '../delete-user-alert/delete-user-alert.component';
 import { CommunicationService } from '../../services/CommunicationService';
+import { ReportService } from '../../services/report.service';
 
 @Component({
   selector: 'app-event-view',
@@ -41,13 +43,9 @@ export class EventViewComponent implements OnInit {
   isEditing = false;
   showConfirmDialog = false;
 
-  // **Mantenemos la lista de nombres para otras partes de tu lógica**
   participantNames: string[] = [];
-
-  // **Nueva lista con id y name para la papelera**
   participantList: Array<{ id: string; name: string }> = [];
 
-  // **Control de la alerta de borrado**
   showDeleteAlert = false;
   participantToDelete: { id: string; name: string } | null = null;
 
@@ -62,7 +60,6 @@ export class EventViewComponent implements OnInit {
   };
 
   sports: string[] = [
-    /* tu array de deportes */
     "Atletismo","Artes marciales","Bádminton","Baloncesto","Balonmano","Béisbol",
     "Boxeo","Críquet","Ciclismo","Equitación","Escalada deportiva","Esgrima",
     "Esquí","Fútbol","Fútbol americano","Fútbol sala","Golf","Gimnasia",
@@ -70,10 +67,14 @@ export class EventViewComponent implements OnInit {
     "Remo","Rugby","Skateboarding","Snowboard","Surf","Tenis","Voleibol"
   ];
 
+  reportLink: string = '';
+
   constructor(
+    private router: Router,
     private eventService: EventService,
     private userService: UserService,
-    private communicationService: CommunicationService
+    private communicationService: CommunicationService,
+    private reportService: ReportService
   ) {}
 
   async ngOnInit() {
@@ -88,6 +89,15 @@ export class EventViewComponent implements OnInit {
 
     await this.loadParticipantNames();
     await this.loadParticipantList();
+
+    if (!this.isOwner) {
+      const creatorData = await this.userService.getUserById(this.eventData.organizerId);
+      const creatorUsername = creatorData['username'] || creatorData['displayName'] || '';
+      this.reportLink = await this.reportService.generateMailToLink(
+        creatorUsername,
+        this.eventData.title
+      );
+    }
   }
 
   private async loadParticipantNames() {
@@ -95,8 +105,8 @@ export class EventViewComponent implements OnInit {
     this.participantNames = await Promise.all(
       ids.map(async id => {
         try {
-          const user = await this.userService.getUserById(id);
-          return user['displayName'] || user['username'] || 'Usuario desconocido';
+          const data = await this.userService.getUserById(id);
+          return data['displayName'] || data['username'] || 'Usuario desconocido';
         } catch {
           return 'Usuario desconocido';
         }
@@ -104,17 +114,13 @@ export class EventViewComponent implements OnInit {
     );
   }
 
-  /** Construye también una lista con {id,name} para la papelera */
   private async loadParticipantList() {
     const ids = this.eventData.participants || [];
     this.participantList = await Promise.all(
       ids.map(async id => {
         try {
-          const user = await this.userService.getUserById(id);
-          return {
-            id,
-            name: user['displayName'] || user['username'] || 'Usuario desconocido'
-          };
+          const data = await this.userService.getUserById(id);
+          return { id, name: data['displayName'] || data['username'] || 'Usuario desconocido' };
         } catch {
           return { id, name: 'Usuario desconocido' };
         }
@@ -122,9 +128,17 @@ export class EventViewComponent implements OnInit {
     );
   }
 
+  goToProfile(userId: string) {
+    if (userId === this.currentUserId) {
+      this.router.navigate(['/userProfile']);
+    } else {
+      this.router.navigate(['/profile-search', userId]);
+    }
+    this.close.emit();
+  }
+
   async joinEvent() {
     if (!this.canJoin || !this.currentUserId) return;
-
     try {
       await this.eventService.joinEvent(this.eventData.id, this.currentUserId);
       this.eventData.participants.push(this.currentUserId);
@@ -132,7 +146,6 @@ export class EventViewComponent implements OnInit {
       this.canJoin = false;
       await this.loadParticipantNames();
       await this.loadParticipantList();
-      console.log('Usuario inscrito con éxito.');
     } catch (error) {
       console.error('Error al unirse al evento:', error);
     }
@@ -140,18 +153,13 @@ export class EventViewComponent implements OnInit {
 
   async leaveEvent() {
     if (!this.hasJoined || !this.currentUserId) return;
-
     try {
       await this.eventService.leaveEvent(this.eventData.id, this.currentUserId);
-      this.eventData.participants = this.eventData.participants.filter(
-        id => id !== this.currentUserId
-      );
+      this.eventData.participants = this.eventData.participants.filter(id => id !== this.currentUserId);
       this.hasJoined = false;
-      this.canJoin = !this.isOwner &&
-        this.eventData.participants.length < this.eventData.maxParticipants;
+      this.canJoin = !this.isOwner && this.eventData.participants.length < this.eventData.maxParticipants;
       await this.loadParticipantNames();
       await this.loadParticipantList();
-      console.log('Usuario desinscrito con éxito.');
     } catch (error) {
       console.error('Error al desinscribirse del evento:', error);
     }
@@ -181,19 +189,16 @@ export class EventViewComponent implements OnInit {
       this.eventData = { ...this.eventData, ...this.editData };
       this.isEditing = false;
       this.communicationService.notifyEventModified(true);
-      console.log('Evento actualizado con éxito.');
     } catch (error) {
       console.error('Error al actualizar el evento:', error);
     }
   }
 
-  /** Abre la alerta de borrado */
   askDeleteParticipant(p: { id: string; name: string }) {
     this.participantToDelete = p;
     this.showDeleteAlert = true;
   }
 
-  /** Borra al participante si confirman */
   async onAlertAccept() {
     if (!this.participantToDelete) return;
     const id = this.participantToDelete.id;
@@ -214,7 +219,11 @@ export class EventViewComponent implements OnInit {
     this.participantToDelete = null;
   }
 
-  onClose(): void {
+  onClose() {
     this.close.emit();
+  }
+
+  onReport() {
+    window.location.href = this.reportLink;
   }
 }
