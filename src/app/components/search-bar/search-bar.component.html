@@ -2,12 +2,12 @@
   <footer>
     <div class="footer-container">
       <!-- Social -->
-      <button class="nav-button">
+      <button class="nav-button" [attr.title]="'tooltips.social' | translate">
         <img ngSrc="/assets/social-icon.svg" alt="social" height="32" width="32" />
       </button>
 
       <!-- Buscar usuarios -->
-      <button class="nav-button" [routerLink]="['/user-search']">
+      <button class="nav-button" [routerLink]="['/user-search']" [attr.title]="'tooltips.search'">
         <img ngSrc="/assets/search-icon.svg" alt="search" height="32" width="32" />
       </button>
 
@@ -17,19 +17,23 @@
         id="map-container"
         (click)="goHome()"
         [routerLink]="['/home']"
+        [attr.title]="'tooltips.home' | translate"
       >
         <img ngSrc="/assets/logo.svg" alt="map" height="32" width="32" id="map" />
       </button>
 
       <!-- Dietas -->
-      <button class="nav-button">
+      <button class="nav-button" [attr.title]="'tooltips.diets' | translate">
         <img ngSrc="/assets/diets-icon.svg" alt="recipe" height="32" width="32" />
       </button>
 
       <!-- Perfil -->
-      <button class="nav-button" [routerLink]="['/userProfile']">
+      <button class="nav-button" [routerLink]="['/userProfile']" [attr.title]="'tooltips.profile' | translate">
         <img ngSrc="/assets/profile-icon.svg" alt="user" height="32" width="32" />
       </button>
     </div>
   </footer>
 </div>
+
+
+

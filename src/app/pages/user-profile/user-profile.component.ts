@@ -16,6 +16,9 @@ import { GeocodingService } from '../../services/geocoding.service';
 import { CommunicationService } from '../../services/CommunicationService';
 import { DeleteEventAlertComponent } from '../../components/delete-event-alert/delete-event-alert.component';
 import { LeaveEventAlertComponent } from '../../components/leave-event-alert/leave-event-alert.component';
+import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageService} from '../../services/translate.service';
+
 
 @Component({
   selector: 'app-user-profile',
@@ -24,6 +27,7 @@ import { LeaveEventAlertComponent } from '../../components/leave-event-alert/lea
     CommonModule,
     EventCardComponent,
     SearchBarComponent,
+    TranslatePipe,
     DeleteEventAlertComponent,
     LeaveEventAlertComponent
   ],
@@ -61,10 +65,13 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     private eventService: EventService,
     private geocodingService: GeocodingService,
     private comm: CommunicationService,
-    private router: Router
+    private router: Router,
+    private langService: LanguageService
   ) {}
 
   async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
     const uid = await this.userService.getCurrentUserUid();
     if (!uid) return;
     this.currentUserId = uid;
@@ -118,10 +125,12 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         const x = e.pageX - container.offsetLeft;
         container.scrollLeft = this.scrollLeft - (x - this.startX);
       });
+
       container.addEventListener('mouseup', () => {
         this.isDragging = false;
         container.classList.remove('active');
       });
+
       container.addEventListener('mouseleave', () => {
         this.isDragging = false;
         container.classList.remove('active');

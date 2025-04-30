@@ -8,15 +8,17 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { DeleteUserAlertComponent } from '../delete-user-alert/delete-user-alert.component';
 import { CommunicationService } from '../../services/CommunicationService';
 import { ReportService } from '../../services/report.service';
+import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageService} from '../../services/translate.service';
 
 @Component({
   selector: 'app-event-view',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [CommonModule,
     FormsModule,
     ConfirmDialogComponent,
-    DeleteUserAlertComponent
+    DeleteUserAlertComponent,
+    TranslatePipe
   ],
   templateUrl: './event-view.component.html',
   styleUrls: ['./event-view.component.css']
@@ -75,13 +77,16 @@ export class EventViewComponent implements OnInit {
     private eventService: EventService,
     private userService: UserService,
     private communicationService: CommunicationService,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private langService: LanguageService
   ) {}
 
   async ngOnInit() {
     this.currentUserId = await this.userService.getCurrentUserUid();
 
     if (this.currentUserId) {
+      const lang = this.langService.currentLang;
+      await this.langService.changeLang(lang);
       this.isOwner = this.eventData.organizerId === this.currentUserId;
       this.hasJoined = this.eventData.participants.includes(this.currentUserId);
       const hasCapacity = this.eventData.participants.length < this.eventData.maxParticipants;

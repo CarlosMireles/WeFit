@@ -1,37 +1,37 @@
 <div class="overlay" (click)="onClose()">
   <div class="modal-window" (click)="$event.stopPropagation()">
-    <h2 *ngIf="!isEditing">Detalle del Evento</h2>
-    <h2 *ngIf="isEditing">Editar Evento</h2>
+    <h2 *ngIf="!isEditing">{{ 'event.view.details' | translate }}</h2>
+    <h2 *ngIf="isEditing">{{ 'event.view.edit' | translate }}</h2>
 
     <!-- Título -->
-    <label>Nombre:</label>
+    <label>{{ 'event.view.name' | translate }}</label>
     <div class="field" *ngIf="!isEditing">{{ eventData.title }}</div>
     <input *ngIf="isEditing" type="text" [(ngModel)]="editData.title" />
 
     <!-- Descripción -->
-    <label>Descripción:</label>
+    <label>{{ 'event.view.description' | translate }}</label>
     <div class="field" *ngIf="!isEditing">{{ eventData.description }}</div>
     <textarea *ngIf="isEditing" [(ngModel)]="editData.description"></textarea>
 
     <!-- Deporte -->
-    <label>Deporte:</label>
+    <label>{{ 'event.view.sport' | translate }}</label>
     <div class="field" *ngIf="!isEditing">{{ eventData.sport }}</div>
     <select *ngIf="isEditing" [(ngModel)]="editData.sport">
       <option *ngFor="let sport of sports" [value]="sport">{{ sport }}</option>
     </select>
 
     <!-- Fecha -->
-    <label>Fecha:</label>
+    <label>{{ 'event.view.date' | translate }}</label>
     <div class="field" *ngIf="!isEditing">{{ eventData.day }}</div>
     <input *ngIf="isEditing" type="date" [(ngModel)]="editData.day" />
 
     <!-- Hora -->
-    <label>Hora:</label>
+    <label>{{ 'event.view.time' | translate }}</label>
     <div class="field" *ngIf="!isEditing">{{ eventData.hour }}</div>
     <input *ngIf="isEditing" type="text" [(ngModel)]="editData.hour" />
 
     <!-- Participantes -->
-    <label>Participantes:</label>
+    <label>{{ 'event.view.participants' | translate }}</label>
     <div class="field" *ngIf="!isEditing">
       <div class="participants-count">
         {{ eventData.participants.length }} / {{ eventData.maxParticipants }}
@@ -72,7 +72,7 @@
     <input *ngIf="isEditing" type="number" [(ngModel)]="editData.maxParticipants" min="1" max="200" />
 
     <!-- Privacidad -->
-    <label>Privacidad:</label>
+    <label>{{ 'event.view.privacy' | translate }}</label>
     <div class="field" *ngIf="!isEditing">{{ eventData.privacy }}</div>
     <select *ngIf="isEditing" [(ngModel)]="editData.privacy">
       <option value="Público">Público</option>
@@ -80,7 +80,6 @@
       <option value="Mejores amigos">Mejores amigos</option>
     </select>
 
-    <!-- Botones -->
     <div class="buttons">
       <button
         *ngIf="!isOwner"
@@ -88,26 +87,26 @@
         class="btn-report"
         (click)="onReport()"
       >
-        Reportar
+        {{ 'event.view.report' | translate }}
       </button>
 
       <div *ngIf="isOwner && !isEditing" class="owner-actions">
-        <button type="button" class="btn-edit" (click)="editEvent()">Modificar evento</button>
+        <button type="button" class="btn-edit" (click)="editEvent()">{{ 'event.view.modify' | translate }}</button>
       </div>
 
       <div *ngIf="isEditing" class="edit-actions">
-        <button type="button" class="btn-save" (click)="showConfirmDialog = true">Guardar cambios</button>
-        <button type="button" class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
+        <button type="button" class="btn-save" (click)="showConfirmDialog = true">{{ 'event.view.save' | translate }}</button>
+        <button type="button" class="btn-cancel" (click)="cancelEdit()">{{ 'event.view.cancel' | translate }}</button>
       </div>
 
       <div *ngIf="!isOwner && !isEditing" class="user-actions">
-        <button *ngIf="hasJoined" type="button" class="btn-leave" (click)="leaveEvent()">🚪 Desinscribirse del evento</button>
-        <button *ngIf="!hasJoined && canJoin" type="button" class="btn-join" (click)="joinEvent()">Unirse al evento</button>
-        <button *ngIf="!hasJoined && !canJoin" type="button" class="btn-disabled" disabled>No puedes unirte al evento</button>
+        <button *ngIf="hasJoined" type="button" class="btn-leave" (click)="leaveEvent()">🚪 {{ 'event.view.leave' | translate }}</button>
+        <button *ngIf="!hasJoined && canJoin" type="button" class="btn-join" (click)="joinEvent()">{{ 'event.view.join' | translate }}</button>
+        <button *ngIf="!hasJoined && !canJoin" type="button" class="btn-disabled" disabled>{{ 'event.view.event-full' | translate }}</button>
       </div>
 
       <div class="close-action">
-        <button type="button" class="btn-close" (click)="onClose()">Cerrar</button>
+        <button type="button" class="btn-close" (click)="onClose()">{{ 'event.view.close' | translate }}</button>
       </div>
     </div>
 

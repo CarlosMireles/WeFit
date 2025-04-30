@@ -25,8 +25,8 @@
     </div>
 
     <div class="stats">
-      <div><strong>Seguidores</strong><p>{{ followers.length }}</p></div>
-      <div><strong>Seguidos</strong><p>{{ follows.length }}</p></div>
+      <div><strong>{{ 'profile.followers' | translate}}</strong><p>{{ followers.length }}</p></div>
+      <div><strong>{{ 'profile.followed' | translate}}</strong><p>{{ follows.length }}</p></div>
     </div>
 
     <p class="description">{{ description }}</p>
@@ -34,7 +34,7 @@
 
   <div class="content-container">
     <div class="eventos-container">
-      <h1 class="eventos-text">Eventos creados</h1>
+      <h1 class="eventos-text">{{ 'profile.created-events' | translate}}</h1>
       <hr class="divider" />
       <div #cardFlex class="card-flex">
         <div class="card-wrapper" *ngFor="let event of eventsOrganizing; let idx = index">
@@ -62,7 +62,7 @@
     </div>
 
     <div class="eventos-container">
-      <h1 class="eventos-text">Eventos inscritos</h1>
+      <h1 class="eventos-text">{{ 'profile.registered-events' | translate}}</h1>
       <hr class="divider" />
       <div #cardFlex class="card-flex">
         <div class="card-wrapper" *ngFor="let event of eventsAttending; let idx = index">

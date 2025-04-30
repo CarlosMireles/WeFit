@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '../../services/event.service';
 import { CommunicationService } from '../../services/CommunicationService';
+import {LanguageService} from '../../services/translate.service';
+import {TranslatePipe} from '@ngx-translate/core';
 import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-create-event-form',
   standalone: true, // Marca el componente como standalone
-  imports: [CommonModule, FormsModule], // Importa los módulos necesarios
+  imports: [CommonModule, FormsModule, TranslatePipe], // Importa los módulos necesarios
   templateUrl: './create-event-form.component.html',
   styleUrls: ['./create-event-form.component.css']
 })
@@ -61,9 +63,9 @@ export class CreateEventFormComponent {
   ];
 
   privacies: string[] = ['Privado', 'Público', 'Mejores amigos'];
-  private organizerId: string | null = null;
 
-  constructor(private eventApi: EventService, private userService: UserService, private communicationService: CommunicationService) {}
+  constructor(private eventApi: EventService, private communicationService: CommunicationService,private langService: LanguageService, private userService: UserService) {}
+  private organizerId: string | null = null;
 
   async ngOnInit() {
     this.communicationService.mapClick$.subscribe(async data => {
@@ -73,6 +75,12 @@ export class CreateEventFormComponent {
       this.resetForm();
       this.organizerId = await this.userService.getCurrentUserUid();
     });
+    this.initializeLanguage();
+  }
+
+  async initializeLanguage() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
   }
 
   closeForm(): void {
