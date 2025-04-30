@@ -1,14 +1,22 @@
 <button
-  class="event-card"
+  class="event-card-modern"
   (click)="onCardClick()"
   role="button"
   [attr.aria-label]="'Ver evento ' + title"
 >
-  <h2 class="name">{{ title }}</h2>
-  <hr />
-  <p class="place">{{ place }}</p>
-  <p class="participants">
-    Participantes: {{ participants }} / {{ maxParticipants }}
+  <div class="card-header">
+    <h2 class="event-title">{{ title }}</h2>
+  </div>
+
+  <p class="event-location">
+    <i class="fas fa-map-marker-alt"></i> {{ place }}
   </p>
-  <p class="datetime">{{ date }} {{ hour }}</p>
+
+  <p class="event-participants">
+    <i class="fas fa-user-friends"></i> {{ participants }} / {{ maxParticipants }} participantes
+  </p>
+
+  <p class="event-date">
+    <i class="fas fa-calendar-alt"></i> {{ date }} <i class="fas fa-clock"></i> {{ hour }}
+  </p>
 </button>

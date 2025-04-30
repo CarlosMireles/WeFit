@@ -1,38 +1,57 @@
-.event-card {
-  width: 250px;
-  height: 250px;
-  background: linear-gradient(to bottom right, #37cc8d, #44d3c8);
+.event-card-modern {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #38ef7d, #11998e);
+  color: #fff;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  font-family: 'Segoe UI', sans-serif;
   border: none;
-  border-radius: 20px;
-  color: #2b2b2b;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 1%;
+  width: 300px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+  text-align: left;
+  position: relative;
   overflow: hidden;
 }
-.event-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.5);
+
+.event-card-modern:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
-.event-card .name {
-  margin: 0;
-  font-size: 20px;
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-title {
+  font-size: 1.4rem;
   font-weight: bold;
-}
-.event-card hr {
-  width: 80%;
-  border: 1px solid black;
-  margin: 5px auto;
-}
-.event-card .place,
-.event-card .participants,
-.event-card .datetime {
-  margin: 5px 0;
-  word-wrap: break-word;
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal;
+  white-space: nowrap;
+}
+
+.delete-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.event-location,
+.event-participants,
+.event-date {
+  margin: 0.6rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
