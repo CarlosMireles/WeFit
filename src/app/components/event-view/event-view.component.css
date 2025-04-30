@@ -1,22 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-body {
-  font-family: 'Poppins', sans-serif;
-}
-
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex; justify-content: center; align-items: center;
   z-index: 9999;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
 }
 
 .modal-window {
@@ -28,15 +18,13 @@ body {
   width: 400px;
   max-height: 90vh;
   overflow-y: auto;
-  box-sizing: border-box;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   border: 1px solid #2c2c2c;
   font-family: 'Poppins', sans-serif;
 }
 
 .modal-window h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem;
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -47,44 +35,57 @@ body {
   font-weight: 500;
 }
 
-/* Campo con borde verde */
 .field {
   border: 1px solid #00cc66;
   padding: 0.5rem;
   margin-top: 0.5rem;
   border-radius: 6px;
-
-
   white-space: pre-wrap;
   word-wrap: break-word;
-  word-break: break-word;
   overflow-wrap: break-word;
-
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
+.participants-count {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
 
-.modal-window input,
-.modal-window select,
-.modal-window textarea {
-  width: 100%;
+.participants-container {
   margin-top: 0.5rem;
-  padding: 0.6rem 0.8rem;
-  background-color: #2b2b2b;
-  border: 1px solid #3b3b3b;
-  border-radius: 6px;
-  color: #fff;
-  box-sizing: border-box;
-  font-size: 0.95rem;
-  transition: border-color 0.2s ease;
+  padding: 0.75rem;
 }
 
-.modal-window input:focus,
-.modal-window select:focus,
-.modal-window textarea:focus {
-  border-color: #00cc66;
-  outline: none;
+.participants-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  border-top: 1px solid #2c2c2c;
+}
+.participant-item:first-child {
+  border-top: none;
+}
+
+/* Quita subrayado y pone el nombre en blanco */
+.participant-name {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.trash-icon {
+  cursor: pointer;
+  transition: stroke 0.2s ease;
+}
+.trash-icon:hover {
+  stroke: #ff4d4d;
 }
 
 .buttons {
@@ -92,35 +93,101 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .buttons button {
   padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  border: none; border-radius: 6px;
   font-weight: 500;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  font-size: 0.95rem;
   font-family: 'Poppins', sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin: 0.25rem 0;
 }
 
-/* Botón "Cancelar" */
-.buttons button[type="button"] {
-  background-color: #000;
+.btn-report {
+  margin-right: auto;
+  background-color: #e60000;
   color: #fff;
 }
-
-.buttons button[type="button"]:hover {
-  background-color: #ff0000; /* Rojo en hover */
+.btn-report:hover {
+  background-color: #ff0000;
 }
 
-/* Botón "Crear Evento" (si lo necesitas) */
-.buttons button[type="button"]:last-child {
-  background-color: #00cc66; /* Verde de acento */
-  color: #fff;
+.btn-edit {
+  background-color: #555; color: #fff;
+}
+.btn-edit:hover {
+  background-color: #00cc66;
 }
 
-.buttons button[type="button"]:last-child:hover {
-  background-color: #ff0000; /* Verde más vibrante al hover */
+.btn-join {
+  background-color: #00a556; color: #fff;
+}
+.btn-join:hover {
+  background-color: #00cc66;
+}
+
+.btn-leave {
+  background-color: #e60000; color: #fff;
+}
+.btn-leave:hover {
+  background-color: #ff0000;
+}
+
+.btn-disabled {
+  background-color: #888; color: #ccc;
+  cursor: not-allowed; opacity: 0.6;
+}
+
+.btn-close {
+  background-color: #000; color: #fff;
+}
+.btn-close:hover {
+  background-color: #ff0000;
+}
+
+.modal-window input[type="text"],
+.modal-window input[type="date"],
+.modal-window input[type="number"],
+.modal-window select,
+.modal-window textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #00cc66;
+  border-radius: 6px;
+  background-color: #2b2b2b;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.modal-window input:focus,
+.modal-window select:focus,
+.modal-window textarea:focus {
+  outline: none;
+  border-color: #00ff88;
+  box-shadow: 0 0 5px #00cc66;
+}
+
+.modal-window textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.btn-save {
+  background-color: #888; color: #ccc;
+}
+.btn-save:hover {
+  background-color: #00cc66;
+}
+
+.btn-cancel {
+  background-color: #555;
+  color: white;
+  margin-left: 8px;
+}
+.btn-cancel:hover {
+  background-color: #ff0000;
 }

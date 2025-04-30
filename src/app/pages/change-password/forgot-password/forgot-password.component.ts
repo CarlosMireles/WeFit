@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormsModule} from "@angular/forms";
+import {UserService} from '../../../services/user.service';
+import {Router} from '@angular/router';
 import {TranslatePipe} from '@ngx-translate/core';
 import {LanguageService} from '../../../services/translate.service';
 
@@ -18,7 +20,9 @@ export class ForgotPasswordComponent {
     email: ''
   };
 
-  constructor(private langService: LanguageService) {}
+  userService: UserService = inject(UserService);
+
+  constructor(private router: Router, private langService: LanguageService) {}
 
   async ngOnInit() {
     const lang = this.langService.currentLang;
@@ -27,7 +31,8 @@ export class ForgotPasswordComponent {
 
   onSubmit(form: any) {
     this.user.email = form.value.email;
-    console.log('Correo de recuperacion:', this.user);
+    this.userService.resetPassword(this.user.email);
+    form.resetFields();
+    this.router.navigate(['/login']);
   }
-
 }

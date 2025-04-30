@@ -1,0 +1,83 @@
+<div class="container">
+  <app-search-bar></app-search-bar>
+
+  <div class="profile-card">
+    <div class="cover-photo">
+      <div
+        class="avatar"
+        [ngStyle]="{
+          'background-image': image_url
+            ? 'url(' + image_url + ')'
+            : 'url(/assets/avatar.jpg)'
+        }"
+      ></div>
+      <h2 class="username">{{ username }}</h2>
+      <hr class="divider-user" />
+    </div>
+
+    <div class="stats">
+      <div>
+        <strong>Seguidores</strong>
+        <p>{{ followers.length }}</p>
+      </div>
+      <div>
+        <strong>Seguidos</strong>
+        <p>{{ followsCount }}</p>
+      </div>
+    </div>
+
+    <button
+      class="btn-follow"
+      [ngClass]="{ following: isFollowing }"
+      (click)="onFollow()"
+    >
+      {{ isFollowing ? 'Siguiendo' : 'Seguir' }}
+    </button>
+
+    <p class="description">{{ description }}</p>
+  </div>
+
+  <div class="content-container">
+    <!-- Eventos creados -->
+    <div class="eventos-container">
+      <h1 class="eventos-text">Eventos creados</h1>
+      <hr class="divider" />
+      <div #cardFlex class="card-flex">
+        <app-event-card
+          *ngFor="let event of eventsOrganizing; let idx = index"
+          [id]="event.id"
+          [title]="event.title"
+          [date]="event.day"
+          [hour]="event.hour"
+          [place]="placesOrganizing[idx]"
+          [participants]="event.participants?.length"
+          [maxParticipants]="event.maxParticipants ?? 0"
+          [latitude]="event.latitude"
+          [longitude]="event.longitude"
+          (selected)="onEventSelected($event)"
+        ></app-event-card>
+      </div>
+    </div>
+
+    <!-- Eventos inscritos -->
+    <div class="eventos-container">
+      <h1 class="eventos-text">Eventos inscritos</h1>
+      <hr class="divider" />
+      <div #cardFlex class="card-flex">
+        <app-event-card
+          *ngFor="let event of eventsAttending; let idx = index"
+          [id]="event.id"
+          [title]="event.title"
+          [date]="event.day"
+          [hour]="event.hour"
+          [place]="placesAttending[idx]"
+          [participants]="event.participants?.length"
+          [maxParticipants]="event.maxParticipants ?? 0"
+          [latitude]="event.latitude"
+          [longitude]="event.longitude"
+          (selected)="onEventSelected($event)"
+        ></app-event-card>
+      </div>
+    </div>
+  </div>
+</div>

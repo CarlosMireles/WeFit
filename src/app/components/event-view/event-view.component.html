@@ -1,30 +1,127 @@
 <div class="overlay" (click)="onClose()">
   <div class="modal-window" (click)="$event.stopPropagation()">
-    <h2>{{ 'event.view.details' | translate }}</h2>
+    <h2 *ngIf="!isEditing">{{ 'event.view.details' | translate }}</h2>
+    <h2 *ngIf="isEditing">{{ 'event.view.edit' | translate }}</h2>
 
+    <!-- Título -->
     <label>{{ 'event.view.name' | translate }}</label>
-    <div class="field">{{ eventData.title }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.title }}</div>
+    <input *ngIf="isEditing" type="text" [(ngModel)]="editData.title" />
 
+    <!-- Descripción -->
     <label>{{ 'event.view.description' | translate }}</label>
-    <div class="field">{{ eventData.description }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.description }}</div>
+    <textarea *ngIf="isEditing" [(ngModel)]="editData.description"></textarea>
 
+    <!-- Deporte -->
     <label>{{ 'event.view.sport' | translate }}</label>
-    <div class="field">{{ eventData.sport }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.sport }}</div>
+    <select *ngIf="isEditing" [(ngModel)]="editData.sport">
+      <option *ngFor="let sport of sports" [value]="sport">{{ sport }}</option>
+    </select>
 
+    <!-- Fecha -->
     <label>{{ 'event.view.date' | translate }}</label>
-    <div class="field">{{ eventData.day }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.day }}</div>
+    <input *ngIf="isEditing" type="date" [(ngModel)]="editData.day" />
 
+    <!-- Hora -->
     <label>{{ 'event.view.time' | translate }}</label>
-    <div class="field">{{ eventData.hour }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.hour }}</div>
+    <input *ngIf="isEditing" type="text" [(ngModel)]="editData.hour" />
 
+    <!-- Participantes -->
     <label>{{ 'event.view.participants' | translate }}</label>
-    <div class="field">{{ eventData.maxParticipants }}</div>
+    <div class="field" *ngIf="!isEditing">
+      <div class="participants-count">
+        {{ eventData.participants.length }} / {{ eventData.maxParticipants }}
+      </div>
+      <div class="participants-container">
+        <ul class="participants-list">
+          <li *ngFor="let p of participantList" class="participant-item">
+            <span
+              class="participant-name"
+              (click)="goToProfile(p.id)"
+            >
+              {{ p.name }}
+            </span>
+            <svg
+              *ngIf="isOwner && p.id !== currentUserId"
+              (click)="askDeleteParticipant(p)"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24" height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="trash-icon"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M4 7l16 0"/>
+              <path d="M10 11l0 6"/>
+              <path d="M14 11l0 6"/>
+              <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+              <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+            </svg>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <input *ngIf="isEditing" type="number" [(ngModel)]="editData.maxParticipants" min="1" max="200" />
 
+    <!-- Privacidad -->
     <label>{{ 'event.view.privacy' | translate }}</label>
-    <div class="field">{{ eventData.privacy }}</div>
+    <div class="field" *ngIf="!isEditing">{{ eventData.privacy }}</div>
+    <select *ngIf="isEditing" [(ngModel)]="editData.privacy">
+      <option value="Público">Público</option>
+      <option value="Privado">Privado</option>
+      <option value="Mejores amigos">Mejores amigos</option>
+    </select>
 
     <div class="buttons">
-      <button type="button" (click)="onClose()">{{ 'event.view.close' | translate }}</button>
+      <button
+        *ngIf="!isOwner"
+        type="button"
+        class="btn-report"
+        (click)="onReport()"
+      >
+        {{ 'event.view.report' | translate }}
+      </button>
+
+      <div *ngIf="isOwner && !isEditing" class="owner-actions">
+        <button type="button" class="btn-edit" (click)="editEvent()">{{ 'event.view.modify' | translate }}</button>
+      </div>
+
+      <div *ngIf="isEditing" class="edit-actions">
+        <button type="button" class="btn-save" (click)="showConfirmDialog = true">{{ 'event.view.save' | translate }}</button>
+        <button type="button" class="btn-cancel" (click)="cancelEdit()">{{ 'event.view.cancel' | translate }}</button>
+      </div>
+
+      <div *ngIf="!isOwner && !isEditing" class="user-actions">
+        <button *ngIf="hasJoined" type="button" class="btn-leave" (click)="leaveEvent()">🚪 {{ 'event.view.leave' | translate }}</button>
+        <button *ngIf="!hasJoined && canJoin" type="button" class="btn-join" (click)="joinEvent()">{{ 'event.view.join' | translate }}</button>
+        <button *ngIf="!hasJoined && !canJoin" type="button" class="btn-disabled" disabled>{{ 'event.view.event-full' | translate }}</button>
+      </div>
+
+      <div class="close-action">
+        <button type="button" class="btn-close" (click)="onClose()">{{ 'event.view.close' | translate }}</button>
+      </div>
     </div>
+
+    <app-confirm-dialog
+      *ngIf="showConfirmDialog"
+      [message]="'¿Deseas guardar los cambios?'"
+      (confirm)="onConfirmSave()"
+      (cancel)="showConfirmDialog = false">
+    </app-confirm-dialog>
+
+    <delete-user-alert
+      *ngIf="showDeleteAlert"
+      [userName]="participantToDelete?.name || ''"
+      (accept)="onAlertAccept()"
+      (cancel)="onAlertCancel()">
+    </delete-user-alert>
   </div>
 </div>

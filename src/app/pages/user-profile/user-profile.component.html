@@ -1,51 +1,110 @@
+<!-- src/app/pages/user-profile/user-profile.component.html -->
 <div class="container">
   <div class="profile-card">
-    <svg class="settings-icon" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+    <svg class="settings-icon" (click)="onSettings()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066
+               c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572
+               c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573
+               c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065
+               c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066
+               c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572
+               c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573
+               c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/>
+      <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/>
+    </svg>
+
     <div class="cover-photo">
-      <div class="avatar"></div>
-      <h2 class="username">Nombre_usuario</h2>
+      <div class="avatar"
+           [ngStyle]="{'background-image': image_url ? 'url(' + image_url + ')' : 'url(/assets/avatar.jpg)'}">
+      </div>
+      <h2 class="username">{{ username }}</h2>
       <hr class="divider-user" />
     </div>
+
     <div class="stats">
-      <div>
-        <strong>{{ 'profile.followers' | translate}}</strong>
-        <p>110</p>
-      </div>
-      <div>
-        <strong>{{ 'profile.followed' | translate}}</strong>
-        <p>110</p>
-      </div>
+      <div><strong>{{ 'profile.followers' | translate}}</strong><p>{{ followers.length }}</p></div>
+      <div><strong>{{ 'profile.followed' | translate}}</strong><p>{{ follows.length }}</p></div>
     </div>
-    <p class="description">
-      Esto es un texto de descripción <br />
-      blablablablablablablablablabla <br />
-      blablablablablablablablablabla <br />
-    </p>
+
+    <p class="description">{{ description }}</p>
   </div>
+
   <div class="content-container">
     <div class="eventos-container">
       <h1 class="eventos-text">{{ 'profile.created-events' | translate}}</h1>
       <hr class="divider" />
-      <div class="card-flex">
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
+      <div #cardFlex class="card-flex">
+        <div class="card-wrapper" *ngFor="let event of eventsOrganizing; let idx = index">
+          <!-- Usamos <img> con ruta relativa para trash.svg -->
+          <img
+            src="assets/trash.svg"
+            class="icon-trash"
+            alt="Eliminar evento"
+            (click)="askDeleteEvent(event)"
+          />
+          <app-event-card
+            [id]="event.id"
+            [title]="event.title"
+            [date]="event.day"
+            [hour]="event.hour"
+            [place]="placesOrganizing[idx]"
+            [participants]="event.participants?.length"
+            [maxParticipants]="event.maxParticipants ?? 0"
+            [latitude]="event.latitude"
+            [longitude]="event.longitude"
+            (selected)="onEventSelected($event)"
+          ></app-event-card>
+        </div>
       </div>
     </div>
+
     <div class="eventos-container">
       <h1 class="eventos-text">{{ 'profile.registered-events' | translate}}</h1>
       <hr class="divider" />
-      <div class="card-flex">
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
-        <app-event-card></app-event-card>
+      <div #cardFlex class="card-flex">
+        <div class="card-wrapper" *ngFor="let event of eventsAttending; let idx = index">
+          <!-- Logout sigue igual -->
+          <img
+            src="assets/logout.svg"
+            class="icon-logout"
+            alt="Abandonar evento"
+            (click)="askLeaveEvent(event)"
+          />
+          <app-event-card
+            [id]="event.id"
+            [title]="event.title"
+            [date]="event.day"
+            [hour]="event.hour"
+            [place]="placesAttending[idx]"
+            [participants]="event.participants?.length"
+            [maxParticipants]="event.maxParticipants ?? 0"
+            [latitude]="event.latitude"
+            [longitude]="event.longitude"
+            (selected)="onEventSelected($event)"
+          ></app-event-card>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<app-search-bar></app-search-bar>
 
+  <app-search-bar></app-search-bar>
+
+  <!-- Alerta BORRAR EVENTO -->
+  <delete-event-alert
+    *ngIf="showDeleteEventAlert"
+    [eventTitle]="eventToDelete?.title || ''"
+    (accept)="onDeleteEventConfirm()"
+    (cancel)="onDeleteEventCancel()"
+  ></delete-event-alert>
+
+  <!-- Alerta ABANDONAR EVENTO -->
+  <leave-event-alert
+    *ngIf="showLeaveEventAlert"
+    [eventTitle]="eventToLeave?.title || ''"
+    (accept)="onLeaveEventConfirm()"
+    (cancel)="onLeaveEventCancel()"
+  ></leave-event-alert>
+</div>

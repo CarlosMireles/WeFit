@@ -1,0 +1,30 @@
+<div class="search-container">
+  <div class="search-bar">
+    <input type="text" placeholder="Buscar..." #searchInput>
+    <button (click)="onSearchClick()">
+      <img src="/assets/search-icon.svg" alt="search icon" height="32" width="32">
+    </button>
+  </div>
+  <div class="dropdown" *ngIf="searchResults.length > 0">
+    <ul>
+      <li *ngFor="let user of searchResults" (click)="selectUser(user)">
+        <img class="profile-img" [src]="user.photoURL" alt="{{ user.username }}">
+        <div class="user-info">
+          <span class="username">{{ user.username }}</span>
+          <span class="common-followers">
+            Seguidores en común:
+            <ng-container *ngIf="user.commonFollowersSample.length > 0">
+              {{ user.commonFollowersSample.join(', ') }}
+            </ng-container>
+            <ng-container *ngIf="user.commonFollowersRest > 0">
+              y {{ user.commonFollowersRest }} más
+            </ng-container>
+            <ng-container *ngIf="user.commonFollowersSample.length === 0">
+              0
+            </ng-container>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="overlay" (click)="onOverlayClick($event)">
+  <div class="modal-window" (click)="$event.stopPropagation()">
+    <div class="alert-image">
+      <img src="assets/alert-triangle.svg" alt="Alerta" />
+    </div>
+    <h2>Salir del evento</h2>
+    <p>¿Seguro que deseas abandonar el evento <strong>"{{ eventTitle }}"</strong>?</p>
+    <div class="buttons">
+      <button type="button" (click)="onAccept($event)">Aceptar</button>
+      <button type="button" (click)="onCancel($event)">Cancelar</button>
+    </div>
+  </div>
+</div>

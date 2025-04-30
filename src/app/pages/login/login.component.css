@@ -58,6 +58,7 @@ button {
 
 button:hover {
   background-color: #14d578;
+  transition:all 200ms ease;
 }
 
 .register-text {

@@ -40,12 +40,23 @@
     <button type="submit">{{ 'register.register-button' | translate }}</button>
   </form>
 
+  <!-- Mensaje de éxito -->
   <div *ngIf="user.successMessage" class="alert alert-success">
     {{ user.successMessage }}
   </div>
 
+  <!-- Mensaje de error -->
   <div *ngIf="user.errorMessage" class="alert alert-danger">
     {{ user.errorMessage }}
+  </div>
+
+  <!-- Esperando verificación -->
+  <div *ngIf="user.awaitingVerification" class="alert alert-info">
+    Esperando verificación de correo electrónico...
+    <br />
+    <div class="resend-container" *ngIf="user.awaitingVerification">
+      <button type="button" (click)="resendVerificationEmail()">Reenviar correo</button>
+    </div>
   </div>
 
   <p class="login-text">

@@ -1,3 +1,6 @@
+/* src/app/pages/user-profile/user-profile.component.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
 .container {
   background-color: #fffee2;
 }
@@ -9,15 +12,13 @@
   color: #f1f1f1;
   padding: 4% 20px 20px;
   position: fixed;
-  left: 0;
   top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-
   justify-content: flex-start;
   gap: 10%;
-
   border-top-right-radius: 30px;
   box-shadow: 5px 0 25px rgba(0, 0, 0, 0.8);
 }
@@ -32,8 +33,6 @@
   width: 100%;
 }
 
-
-/* Ícono de Configuración */
 .settings-icon {
   position: absolute;
   top: 10px;
@@ -41,24 +40,22 @@
   cursor: pointer;
 }
 
-/* Avatar */
+/* Avatar dinámico */
 .avatar {
   width: 150px;
   height: 150px;
-  background-image: url("/assets/ronaldo.png");
+  border-radius: 50%;
   background-size: cover;
   background-position: center;
-  border-radius: 50%;
   margin: 20px 0;
+  background-color: #2b2b2b;
 }
 
-/* Nombre de usuario */
 .username {
   font-size: 20px;
   margin-bottom: 15px;
 }
 
-/* Estadísticas */
 .stats {
   display: flex;
   justify-content: space-between;
@@ -67,11 +64,10 @@
 }
 
 .stats div {
-  text-align: center;
   flex: 1;
+  text-align: center;
 }
 
-/* Descripción */
 .description {
   font-size: 14px;
   text-align: center;
@@ -102,27 +98,64 @@
   width: 100%;
   overflow-x: scroll;
   white-space: nowrap;
-  height: fit-content;
-  -ms-overflow-style: none;  /* IE y Edge */
-  scrollbar-width: none;  /* Firefox */
   padding: 4%;
   cursor: grab;
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;      /* Firefox */
 }
-
 .card-flex.active {
   cursor: grabbing;
 }
-
 .card-flex * {
   user-select: none;
 }
-
-/* Chrome, Safari y Opera */
 .card-flex::-webkit-scrollbar {
-  display: none;
+  display: none; /* Chrome/Safari/Opera */
 }
 
 .eventos-container {
   margin-bottom: 10px;
   margin-right: 5%;
+}
+
+/* ------------------------------------------------------------------ */
+/* Nuevas reglas para posicionar iconos sobre las tarjetas             */
+/* ------------------------------------------------------------------ */
+
+/* Contenedor que envuelve cada tarjeta y su icono */
+.card-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Papelera (trash.svg) */
+.card-wrapper .icon-trash {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  z-index: 5;
+  background: url('/assets/trash.svg') no-repeat center center;
+  background-size: contain;
+}
+
+/* Logout (logout.svg) */
+.card-wrapper .icon-logout {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  z-index: 5;
+  background: url('/assets/logout.svg') no-repeat center center;
+  background-size: contain;
+}
+
+/* Hover ligero */
+.card-wrapper .icon-trash:hover,
+.card-wrapper .icon-logout:hover {
+  opacity: 0.8;
 }

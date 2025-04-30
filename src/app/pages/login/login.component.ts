@@ -37,10 +37,4 @@ export class LoginComponent {
       .then(() => {this.router.navigate(['/home']);})
       .catch(error => console.error('Error:', error));
   }
-
-  switchLang(lang: string) {
-    this.langService.changeLang(lang);
-  }
-
-
 }

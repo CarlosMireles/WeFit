@@ -5,6 +5,7 @@ import { EventService } from '../../services/event.service';
 import { CommunicationService } from '../../services/CommunicationService';
 import {LanguageService} from '../../services/translate.service';
 import {TranslatePipe} from '@ngx-translate/core';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-create-event-form',
@@ -29,48 +30,49 @@ export class CreateEventFormComponent {
   longitude: number | null = null;
 
   sports: string[] = [
-    "event-form.Athletics",
-    "event-form.MartialArts",
-    "event-form.Badminton",
-    "event-form.Basketball",
-    "event-form.Handball",
-    "event-form.Baseball",
-    "event-form.Boxing",
-    "event-form.Cricket",
-    "event-form.Cycling",
-    "event-form.SportClimbing",
-    "event-form.Fencing",
-    "event-form.Skiing",
-    "event-form.Football",
-    "event-form.AmericanFootball",
-    "event-form.Futsal",
-    "event-form.Golf",
-    "event-form.Gymnastics",
-    "event-form.FieldHockey",
-    "event-form.IceHockey",
-    "event-form.Wrestling",
-    "event-form.Swimming",
-    "event-form.Padel",
-    "event-form.Rowing",
-    "event-form.Rugby",
-    "event-form.Skateboarding",
-    "event-form.Snowboarding",
-    "event-form.Surfing",
-    "event-form.Tennis",
-    "event-form.Volleyball",
-    "event-form.HorseRiding"
+    "Atletismo",
+    "Artes marciales",
+    "Bádminton",
+    "Baloncesto",
+    "Balonmano",
+    "Béisbol",
+    "Boxeo",
+    "Críquet",
+    "Ciclismo",
+    "Equitación",
+    "Escalada deportiva",
+    "Esgrima",
+    "Esquí",
+    "Fútbol",
+    "Fútbol americano",
+    "Fútbol sala",
+    "Golf",
+    "Gimnasia",
+    "Hockey sobre césped",
+    "Hockey sobre hielo",
+    "Lucha libre",
+    "Natación",
+    "Padel",
+    "Remo",
+    "Rugby",
+    "Skateboarding",
+    "Snowboard",
+    "Surf",
+    "Tenis",
+    "Voleibol"
   ];
 
-  privacies: string[] = ['event-form.private', 'event-form.public', 'event-form.close-friends'];
+  privacies: string[] = ['Privado', 'Público', 'Mejores amigos'];
 
-  constructor(private eventApi: EventService, private communicationService: CommunicationService, private langService: LanguageService) {}
+  constructor(private eventApi: EventService, private communicationService: CommunicationService,private langService: LanguageService, private userService: UserService) {}
 
-  ngOnInit() {
-    this.communicationService.mapClick$.subscribe(data => {
+  async ngOnInit() {
+    this.communicationService.mapClick$.subscribe(async data => {
       this.latitude = data.lat;
       this.longitude = data.lon;
-      this.isOpen = true; // Abre el formulario cuando se haga clic en el mapa
-      this.resetForm(); // Resetea el formulario
+      this.isOpen = true;
+      this.resetForm();
+      this.organizerId = await this.userService.getCurrentUserUid();
     });
     this.initializeLanguage();
   }
@@ -95,19 +97,29 @@ export class CreateEventFormComponent {
     this.privacy = '';
   }
 
-  createEvent(): void {
+  async createEvent(): Promise<void> {
     if (this.latitude === null || this.longitude === null) {
       console.error("No se puede crear el evento sin ubicación.");
       return;
+    }
+
+    if (!this.organizerId) {
+      this.organizerId = await this.userService.getCurrentUserUid();
+      if (!this.organizerId) {
+        console.error("No se pudo obtener el ID del organizador.");
+        return;
+      }
     }
 
     const newEvent = {
       title: this.title,
       sport: this.sport,
       description: this.description,
+      organizerId: this.organizerId,
       day: this.day,
       hour: this.hour,
       maxParticipants: this.maxParticipants,
+      participants: [this.organizerId],
       privacy: this.privacy,
       latitude: this.latitude,
       longitude: this.longitude

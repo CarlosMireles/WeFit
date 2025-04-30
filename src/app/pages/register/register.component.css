@@ -58,6 +58,7 @@ button {
 
 button:hover {
   background-color: #14d578;
+  transition:all 200ms ease;
 }
 
 .login-text {
@@ -67,4 +68,11 @@ button:hover {
 .login-text a {
   color: blue;
   text-decoration: none;
+}
+
+
+.resend-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }

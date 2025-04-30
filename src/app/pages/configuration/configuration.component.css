@@ -1,0 +1,60 @@
+:host {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  color: white;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: #121212;
+}
+
+.sidebar {
+  width: 250px;
+  padding: 10px;
+  background-color: #121212;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+}
+
+.sidebar li:hover,
+.sidebar li.active {
+  background-color: #14d578;
+  color: #121212;
+  border-radius: 4px;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 30px;
+  background-color: #1e1e1e;
+  margin: 15px 15px 15px 0;
+  border-radius: 8px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+p {
+  color: #ccc;
+}
+
+.back_profile:hover {
+  opacity: 0.7;
+}

@@ -1,36 +1,66 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import type { EventFilters } from './event.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CommunicationService {
+  /* ─── Subjects ─────────────────────────────────────────── */
   private eventCreationModeSubject = new BehaviorSubject<boolean>(false);
   eventCreationMode$ = this.eventCreationModeSubject.asObservable();
 
   private mapClickSubject = new Subject<{ lat: number; lon: number }>();
   mapClick$ = this.mapClickSubject.asObservable();
 
-
   private eventCreatedSubject = new BehaviorSubject<boolean>(false);
   eventCreated$ = this.eventCreatedSubject.asObservable();
 
+  private filterAppliedSubject = new Subject<EventFilters>();
+  filterApplied$ = this.filterAppliedSubject.asObservable();
+
+  private eventSelectedSubject =
+    new BehaviorSubject<{ id: string; latitude: number; longitude: number } | null>(null);
+  eventSelected$ = this.eventSelectedSubject.asObservable();
+
+  private modifyEventSubject = new BehaviorSubject<boolean>(false);
+  modifyEvent$ = this.modifyEventSubject.asObservable();
+
+  private eventModifiedSubject = new BehaviorSubject<boolean>(false);
+  eventModified$ = this.eventModifiedSubject.asObservable();
+
+  notifyEventModified(modified = true) {
+    this.eventModifiedSubject.next(modified);
+  }
+
+
+  get lastSelected() {
+    return this.eventSelectedSubject.getValue();
+  }
 
   getEventCreationMode(): boolean {
     return this.eventCreationModeSubject.getValue();
   }
 
-  setEventCreationMode(value: boolean) {
-    this.eventCreationModeSubject.next(value);
+  setEventCreationMode(v: boolean) {
+    this.eventCreationModeSubject.next(v);
   }
 
-  notifyMapClick(data: { lat: number; lon: number }) {
-    if (this.getEventCreationMode()) {
-      this.mapClickSubject.next(data);
-    }
+  notifyMapClick(coords: { lat: number; lon: number }) {
+    if (this.getEventCreationMode()) this.mapClickSubject.next(coords);
   }
 
-  notifyEventCreated(value: boolean){
-    this.eventCreatedSubject.next(value);
+  notifyEventCreated(created = true) {
+    this.eventCreatedSubject.next(created);
+  }
+
+  notifyFiltersApplied(f: EventFilters) {
+    this.filterAppliedSubject.next(f);
+  }
+
+  notifyEventSelected(d: { id: string; latitude: number; longitude: number }) {
+    this.eventSelectedSubject.next(d);
+  }
+
+  clearLastSelected() {
+    this.eventSelectedSubject.next(null);
   }
 }
