@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* Contenedor principal */
+.view-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #1f1f1f;
+  border: 1px solid #2c2c2c;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+}
+
+/* Header: título o input título */
+.header {
+  margin-bottom: 1.5rem;
+}
+.header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+.header input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  background: #2b2b2b;
+  border: 1px solid #3b3b3b;
+  border-radius: 6px;
+  color: #fff;
+  transition: border-color 0.2s ease;
+}
+.header input:focus {
+  border-color: #00cc66;
+  outline: none;
+}
+
+/* Secciones */
+.section {
+  margin-top: 1.5rem;
+}
+.section label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.section p {
+  margin: 0;
+  line-height: 1.5;
+}
+.section textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.6rem 0.8rem;
+  background: #2b2b2b;
+  border: 1px solid #3b3b3b;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+.section textarea:focus {
+  border-color: #00cc66;
+  outline: none;
+}
+
+/* Cabecera de comidas */
+.meals-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.meals-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.btn-add {
+  padding: 0.5rem 1rem;
+  background: #00cc66;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.btn-add:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+.btn-add:not(:disabled):hover {
+  background: #00e676;
+}
+
+/* Grid de comidas */
+.meals {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Tarjeta de cada comida */
+.meal-card {
+  background: #2b2b2b;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Parte superior: nombre y eliminar */
+.meal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+.meal-top h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.btn-remove {
+  background: transparent;
+  border: none;
+  color: #e60000;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.btn-remove:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-remove:not(:disabled):hover {
+  color: #ff4d4d;
+}
+
+/* Descripción y macros */
+.meal-card p {
+  margin: 0 0 0.75rem;
+  line-height: 1.4;
+}
+.macros {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+}
+.macros li {
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Imagen de comida */
+.meal-img {
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+/* Inputs en modo edición */
+.meal-card input[type="text"],
+.meal-card input[type="number"],
+.meal-card textarea {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.8rem;
+  background: #343434;
+  border: 1px solid #3b3b3b;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.meal-card input:focus,
+.meal-card textarea:focus {
+  border-color: #00cc66;
+  outline: none;
+}
+
+/* Filas de inputs nutricionales */
+.inputs-row {
+  display: flex;
+  gap: 0.75rem;
+}
+.inputs-row input {
+  flex: 1;
+}
+
+/* Selector de archivo */
+.file-input {
+  margin: 0.5rem 0;
+}
+.file-input label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+.file-input input {
+  display: block;
+}
+
+/* Botones al pie */
+.buttons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.buttons button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* Editar */
+.btn-edit {
+  background: #007bff;
+  color: #fff;
+}
+.btn-edit:hover {
+  background: #0069d9;
+}
+
+/* Guardar */
+.btn-save {
+  background: #00cc66;
+  color: #fff;
+}
+.btn-save:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+.btn-save:not(:disabled):hover {
+  background: #00e676;
+}
+
+/* Eliminar */
+.btn-delete {
+  background: #dc3545;
+  color: #fff;
+}
+.btn-delete:hover {
+  background: #c82333;
+}
+
+/* Cancelar / Cerrar */
+.btn-cancel {
+  background: #343a40;
+  color: #fff;
+}
+.btn-cancel:hover {
+  background: #495057;
+}

@@ -1,0 +1,137 @@
+<div class="new-diet-container">
+  <h1>Nueva Dieta</h1>
+
+  <!-- FORMULARIO DE CREACIÓN -->
+  <form (ngSubmit)="saveDiet()" #f="ngForm" novalidate>
+    <!-- TÍTULO -->
+    <label for="title">Título:</label>
+    <input
+      id="title"
+      name="title"
+      [(ngModel)]="model.title"
+      required
+    />
+
+    <!-- DESCRIPCIÓN -->
+    <label for="desc1">Descripción:</label>
+    <textarea
+      id="desc1"
+      name="description1"
+      [(ngModel)]="model.description1"
+      required
+    ></textarea>
+
+    <!-- AÑADIR COMIDA -->
+    <button
+      type="button"
+      class="btn-add-meal"
+      (click)="addMeal()"
+      [disabled]="model.meals.length >= 10"
+    >
+      Añadir comida ({{ model.meals.length }}/10)
+    </button>
+
+    <!-- BLOQUES DE COMIDA -->
+    <div *ngFor="let meal of model.meals; let i = index" class="meal-block">
+      <button
+        type="button"
+        class="remove-meal"
+        (click)="removeMeal(i)"
+        [disabled]="model.meals.length <= 1"
+      >
+        ×
+      </button>
+
+      <h3>Comida {{ i + 1 }}</h3>
+
+      <label for="lunch-{{i}}">Comida del dia:</label>
+      <input
+        id="lunch-{{i}}"
+        name="lunch-{{i}}"
+        [(ngModel)]="meal.lunch"
+        required
+      />
+
+      <label for="desc2-{{i}}">Contenido y preparación de la dieta:</label>
+      <textarea
+        id="desc2-{{i}}"
+        name="desc2-{{i}}"
+        [(ngModel)]="meal.description2"
+        required
+      ></textarea>
+
+      <label for="prot-{{i}}">Proteínas (g):</label>
+      <input
+        id="prot-{{i}}"
+        type="number"
+        [(ngModel)]="meal.proteins"
+        name="prot-{{i}}"
+      />
+
+      <label for="carb-{{i}}">Carbohidratos (g):</label>
+      <input
+        id="carb-{{i}}"
+        type="number"
+        [(ngModel)]="meal.carbohydrates"
+        name="carb-{{i}}"
+      />
+
+      <label for="fat-{{i}}">Grasas (g):</label>
+      <input
+        id="fat-{{i}}"
+        type="number"
+        [(ngModel)]="meal.fats"
+        name="fat-{{i}}"
+      />
+
+      <label for="cal-{{i}}">Calorías (kcal):</label>
+      <input
+        id="cal-{{i}}"
+        type="number"
+        [(ngModel)]="meal.calories"
+        name="cal-{{i}}"
+      />
+
+      <label for="img-{{i}}">Imagen:</label>
+      <input
+        id="img-{{i}}"
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event, i)"
+      />
+      <div *ngIf="meal.img_url" class="preview">
+        <img [src]="meal.img_url" class="meal-preview" />
+      </div>
+
+      <hr />
+    </div>
+
+    <!-- BOTONES GUARDAR / CANCELAR -->
+    <div class="form-buttons">
+      <button
+        type="submit"
+        class="btn-save"
+        [disabled]="f.invalid || isSaving || model.meals.length < 1"
+      >
+        Guardar Dieta
+      </button>
+      <button
+        type="button"
+        class="btn-cancel"
+        (click)="cancel()"
+      >
+        Cancelar
+      </button>
+    </div>
+  </form>
+
+  <!-- MENSAJE DE CONFIRMACIÓN -->
+  <div *ngIf="savedDiet" class="confirmation">
+    <p class="confirmation-text">
+      ¡Dieta “{{ savedDiet.title }}” creada correctamente!
+    </p>
+    <button class="btn-back" (click)="cancel()">
+      Volver a Dietas
+    </button>
+  </div>
+</div>

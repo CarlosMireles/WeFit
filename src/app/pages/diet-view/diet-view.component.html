@@ -1,0 +1,169 @@
+<div class="view-container" *ngIf="diet">
+  <div class="header">
+    <ng-container *ngIf="!editMode; else editTitle">
+      <h1>{{ diet.title }}</h1>
+    </ng-container>
+    <ng-template #editTitle>
+      <input
+        type="text"
+        [(ngModel)]="updated.title"
+        placeholder="Título de la dieta"
+      />
+    </ng-template>
+  </div>
+
+  <div class="section">
+    <label>Descripción:</label>
+    <ng-container *ngIf="!editMode; else editDesc">
+      <p>{{ diet.description1 }}</p>
+    </ng-container>
+    <ng-template #editDesc>
+      <textarea
+        [(ngModel)]="updated.description1"
+        placeholder="Descripción general"
+      ></textarea>
+    </ng-template>
+  </div>
+
+  <div class="section">
+    <div class="meals-header">
+      <h2>
+        Comidas ({{ editMode ? updated.meals.length : diet.meals.length }})
+      </h2>
+      <button
+        type="button"
+        *ngIf="editMode"
+        class="btn-add"
+        [disabled]="updated.meals.length >= 10"
+        (click)="addMeal()"
+      >
+        + Añadir comida
+      </button>
+    </div>
+    <div class="meals">
+      <div
+        *ngFor="let m of (editMode ? updated.meals : diet.meals); let i = index"
+        class="meal-card"
+      >
+        <div class="meal-top">
+          <ng-container *ngIf="!editMode; else editMealTitle">
+            <h3>{{ m.lunch }}</h3>
+          </ng-container>
+          <ng-template #editMealTitle>
+            <input
+              type="text"
+              [(ngModel)]="updated.meals[i].lunch"
+              placeholder="Nombre de la comida"
+            />
+          </ng-template>
+          <button
+            type="button"
+            *ngIf="editMode"
+            class="btn-remove"
+            [disabled]="updated.meals.length <= 1"
+            (click)="removeMeal(i)"
+          >
+            ×
+          </button>
+        </div>
+
+        <ng-container *ngIf="!editMode; else editMeal">
+          <p>{{ m.description2 }}</p>
+          <ul class="macros">
+            <li *ngIf="m.proteins">Proteínas: {{ m.proteins }}g</li>
+            <li *ngIf="m.carbohydrates">
+              Carbohidratos: {{ m.carbohydrates }}g
+            </li>
+            <li *ngIf="m.fats">Grasas: {{ m.fats }}g</li>
+            <li *ngIf="m.calories">Calorías: {{ m.calories }} kcal</li>
+          </ul>
+          <img
+            *ngIf="m.img_url"
+            [src]="m.img_url"
+            alt="Foto comida"
+            class="meal-img"
+          />
+        </ng-container>
+
+        <ng-template #editMeal>
+          <textarea
+            [(ngModel)]="updated.meals[i].description2"
+            placeholder="Descripción detallada"
+          ></textarea>
+          <div class="inputs-row">
+            <input
+              type="number"
+              [(ngModel)]="updated.meals[i].proteins"
+              placeholder="Proteínas (g)"
+            />
+            <input
+              type="number"
+              [(ngModel)]="updated.meals[i].carbohydrates"
+              placeholder="Carbohidratos (g)"
+            />
+          </div>
+          <div class="inputs-row">
+            <input
+              type="number"
+              [(ngModel)]="updated.meals[i].fats"
+              placeholder="Grasas (g)"
+            />
+            <input
+              type="number"
+              [(ngModel)]="updated.meals[i].calories"
+              placeholder="Calorías"
+            />
+          </div>
+          <div class="file-input">
+            <label>Imagen:</label>
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event, updated.meals[i])"
+            />
+          </div>
+          <img
+            *ngIf="updated.meals[i].img_url"
+            [src]="updated.meals[i].img_url"
+            alt="Preview comida"
+            class="meal-img"
+          />
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button
+      type="button"
+      *ngIf="!editMode"
+      class="btn-edit"
+      (click)="toggleEdit()"
+    >
+      Editar
+    </button>
+    <button
+      type="button"
+      *ngIf="editMode"
+      class="btn-save"
+      [disabled]="saving"
+      (click)="saveEdit()"
+    >
+      {{ saving ? 'Guardando…' : 'Guardar' }}
+    </button>
+    <button
+      type="button"
+      class="btn-delete"
+      (click)="deleteDiet()"
+    >
+      Eliminar
+    </button>
+    <button
+      type="button"
+      class="btn-cancel"
+      (click)="cancel()"
+    >
+      Cerrar
+    </button>
+  </div>
+</div>
