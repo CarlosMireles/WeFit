@@ -127,4 +127,24 @@ export class UserService {
     const userRef = doc(this.firestore, `users/${uid}`);
     await updateDoc(userRef, { description: newDescription });
   }
+
+  async addBestFriend(friendUid: string): Promise<void> {
+    const me = await this.getCurrentUserUid();
+    if (!me) throw new Error('No hay usuario autenticado');
+
+    const meRef = doc(this.firestore, `users/${me}`);
+    await updateDoc(meRef, {
+      best_friends: arrayUnion(friendUid)
+    });
+  }
+
+  async removeBestFriend(friendUid: string): Promise<void> {
+    const me = await this.getCurrentUserUid();
+    if (!me) throw new Error('No hay usuario autenticado');
+
+    const meRef = doc(this.firestore, `users/${me}`);
+    await updateDoc(meRef, {
+      best_friends: arrayRemove(friendUid)
+    });
+  }
 }
