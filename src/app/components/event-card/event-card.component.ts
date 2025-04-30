@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {LanguageService} from '../../services/translate.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-event-card',

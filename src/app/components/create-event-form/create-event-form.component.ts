@@ -65,6 +65,7 @@ export class CreateEventFormComponent {
   privacies: string[] = ['Privado', 'Público', 'Mejores amigos'];
 
   constructor(private eventApi: EventService, private communicationService: CommunicationService,private langService: LanguageService, private userService: UserService) {}
+  private organizerId: string | null = null;
 
   async ngOnInit() {
     this.communicationService.mapClick$.subscribe(async data => {

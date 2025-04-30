@@ -19,6 +19,11 @@ export class SearchBarComponent {
     private langService: LanguageService
   ) {}
 
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
+
   /** Pulsado el botón Home → limpiar selección y navegar */
   goHome(): void {
     this.comm.clearLastSelected();

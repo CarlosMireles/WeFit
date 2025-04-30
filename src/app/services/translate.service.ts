@@ -11,7 +11,7 @@ export class LanguageService {
   constructor(private translate: TranslateService, private firestore: Firestore, private http: HttpClient) {
     this.translate.addLangs(['es', 'en', 'fr', 'it', 'pt']);
     this.translate.setDefaultLang('es');
-    this.translate.use('tr');
+    this.translate.use('es');
   }
 
     async changeLang(lang: string) {
