@@ -39,6 +39,7 @@ export class LanguageService {
     }
 
 
+
   translateViaBackend(json: any, targetLang: string): Promise<any> {
     return lastValueFrom(
       this.http.post('http://localhost:5000/translate', {
