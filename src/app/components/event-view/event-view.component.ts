@@ -67,7 +67,8 @@ export class EventViewComponent implements OnInit {
     "Remo","Rugby","Skateboarding","Snowboard","Surf","Tenis","Voleibol"
   ];
 
-  reportLink: string = '';
+  // URL para abrir Gmail compose
+  gmailComposeUrl: string = '';
 
   constructor(
     private router: Router,
@@ -93,7 +94,7 @@ export class EventViewComponent implements OnInit {
     if (!this.isOwner) {
       const creatorData = await this.userService.getUserById(this.eventData.organizerId);
       const creatorUsername = creatorData['username'] || creatorData['displayName'] || '';
-      this.reportLink = await this.reportService.generateMailToLink(
+      this.gmailComposeUrl = await this.reportService.getGmailComposeUrl(
         creatorUsername,
         this.eventData.title
       );
@@ -219,11 +220,12 @@ export class EventViewComponent implements OnInit {
     this.participantToDelete = null;
   }
 
-  onClose() {
+  onClose(): void {
     this.close.emit();
   }
 
   onReport() {
-    window.location.href = this.reportLink;
+    window.open(this.gmailComposeUrl, '_blank');
   }
+
 }
