@@ -44,7 +44,7 @@
 
       <h3>Comida {{ i + 1 }}</h3>
 
-      <label for="lunch-{{i}}">Comida del dia:</label>
+      <label for="lunch-{{i}}">Comida del día:</label>
       <input
         id="lunch-{{i}}"
         name="lunch-{{i}}"
@@ -55,7 +55,7 @@
       <label for="desc2-{{i}}">Contenido y preparación de la dieta:</label>
       <textarea
         id="desc2-{{i}}"
-        name="desc2-{{i}}"
+        name="description2-{{i}}"
         [(ngModel)]="meal.description2"
         required
       ></textarea>
@@ -65,7 +65,7 @@
         id="prot-{{i}}"
         type="number"
         [(ngModel)]="meal.proteins"
-        name="prot-{{i}}"
+        name="proteins-{{i}}"
       />
 
       <label for="carb-{{i}}">Carbohidratos (g):</label>
@@ -73,7 +73,7 @@
         id="carb-{{i}}"
         type="number"
         [(ngModel)]="meal.carbohydrates"
-        name="carb-{{i}}"
+        name="carbohydrates-{{i}}"
       />
 
       <label for="fat-{{i}}">Grasas (g):</label>
@@ -81,7 +81,7 @@
         id="fat-{{i}}"
         type="number"
         [(ngModel)]="meal.fats"
-        name="fat-{{i}}"
+        name="fats-{{i}}"
       />
 
       <label for="cal-{{i}}">Calorías (kcal):</label>
@@ -89,7 +89,7 @@
         id="cal-{{i}}"
         type="number"
         [(ngModel)]="meal.calories"
-        name="cal-{{i}}"
+        name="calories-{{i}}"
       />
 
       <label for="img-{{i}}">Imagen:</label>
@@ -99,8 +99,14 @@
         accept="image/*"
         (change)="onFileSelected($event, i)"
       />
-      <div *ngIf="meal.img_url" class="preview">
-        <img [src]="meal.img_url" class="meal-preview" />
+
+      <!-- siempre mostramos la vista previa: si hay img_url, la usamos; si no, el fallback -->
+      <div class="preview">
+        <img
+          [src]="meal.img_url || 'assets/healthy-food.png'"
+          class="meal-preview"
+          alt="Previsualización comida {{ i + 1 }}"
+        />
       </div>
 
       <hr />

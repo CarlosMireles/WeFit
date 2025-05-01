@@ -30,7 +30,8 @@ export class NewDietComponent {
     if (this.model.meals.length < 10) {
       this.model.meals.push({
         lunch: '',
-        description2: ''
+        description2: '',
+        // no ponemos img_url, se asignará al salvar o al preview
       } as Meal);
     }
   }
@@ -48,6 +49,14 @@ export class NewDietComponent {
 
   async saveDiet() {
     this.isSaving = true;
+
+    // asignar fallback a cada meal sin imagen
+    this.model.meals.forEach(meal => {
+      if (!meal.img_url) {
+        meal.img_url = 'assets/healthy-food.png';
+      }
+    });
+
     await this.dietService.createDiet(this.model);
     this.savedDiet = { ...this.model };
     this.isSaving = false;
@@ -56,10 +65,10 @@ export class NewDietComponent {
   cancel() {
     this.router.navigate(['/diets']);
   }
+
   removeMeal(index: number) {
     if (this.model.meals.length > 1) {
       this.model.meals.splice(index, 1);
     }
   }
-
 }

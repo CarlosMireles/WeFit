@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DietService } from '../../services/diet.service';
-import  {Diet, Meal} from '../../models/diet';
+import { Diet, Meal } from '../../models/diet';
 
 @Component({
   selector: 'app-diet-view',
@@ -40,8 +40,7 @@ export class DietViewComponent implements OnInit {
 
   async saveEdit(): Promise<void> {
     if (!this.diet.id) return;
-
-    // Comprobamos nombre+descripción en cada comida
+    // verifica que cada comida tenga título y descripción
     const bad = this.updated.meals.find(m =>
       !m.lunch.trim() || !m.description2.trim()
     );
@@ -52,23 +51,33 @@ export class DietViewComponent implements OnInit {
 
     this.saving = true;
     try {
+      // fallback de imagen por defecto
+      this.updated.meals.forEach(m => {
+        if (!m.img_url) {
+          m.img_url = 'assets/healthy-food.png';
+        }
+      });
+
+      // preparar payload
       const mealsToSave = this.updated.meals.map(m => {
         const clean: any = {
           lunch: m.lunch,
-          description2: m.description2
+          description2: m.description2,
+          img_url: m.img_url
         };
         if (m.proteins != null)      clean.proteins = m.proteins;
         if (m.carbohydrates != null) clean.carbohydrates = m.carbohydrates;
         if (m.fats != null)          clean.fats = m.fats;
         if (m.calories != null)      clean.calories = m.calories;
-        if (m.img_url)               clean.img_url = m.img_url;
         return clean;
       });
+
       await this.dietService.updateDiet(this.diet.id, {
         title: this.updated.title,
         description1: this.updated.description1,
         meals: mealsToSave
       });
+
       this.diet = { ...this.updated, meals: mealsToSave as Meal[] };
       this.editMode = false;
     } finally {
