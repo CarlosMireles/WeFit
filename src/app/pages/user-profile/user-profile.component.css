@@ -1,4 +1,3 @@
-/* src/app/pages/user-profile/user-profile.component.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 .container {
@@ -68,10 +67,33 @@
   text-align: center;
 }
 
+/* Descripción del usuario */
 .description {
   font-size: 14px;
   text-align: center;
   margin-top: 15px;
+  padding: 0 10px;
+}
+
+/* BLOQUE DE ICONOS bajo la descripción, ahora centrado */
+.icon-menu {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;    /* centrado */
+  gap: 20px;                   /* un poco más de espacio */
+  width: 100%;
+}
+
+.icon-menu-svg {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  transition: transform .15s ease-in-out;
+}
+
+.icon-menu-svg:hover {
+  transform: scale(1.1);
 }
 
 .content-container {
@@ -103,12 +125,15 @@
   -ms-overflow-style: none;  /* IE/Edge */
   scrollbar-width: none;      /* Firefox */
 }
+
 .card-flex.active {
   cursor: grabbing;
 }
+
 .card-flex * {
   user-select: none;
 }
+
 .card-flex::-webkit-scrollbar {
   display: none; /* Chrome/Safari/Opera */
 }
@@ -118,17 +143,12 @@
   margin-right: 5%;
 }
 
-/* ------------------------------------------------------------------ */
-/* Nuevas reglas para posicionar iconos sobre las tarjetas             */
-/* ------------------------------------------------------------------ */
-
-/* Contenedor que envuelve cada tarjeta y su icono */
+/* Posicionamiento de iconos dentro de cada tarjeta */
 .card-wrapper {
   position: relative;
   display: inline-block;
 }
 
-/* Papelera (trash.svg) */
 .card-wrapper .icon-trash {
   position: absolute;
   top: 8px;
@@ -141,7 +161,6 @@
   background-size: contain;
 }
 
-/* Logout (logout.svg) */
 .card-wrapper .icon-logout {
   position: absolute;
   top: 8px;
@@ -154,7 +173,6 @@
   background-size: contain;
 }
 
-/* Hover ligero */
 .card-wrapper .icon-trash:hover,
 .card-wrapper .icon-logout:hover {
   opacity: 0.8;

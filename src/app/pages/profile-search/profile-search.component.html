@@ -1,6 +1,8 @@
 <div class="container">
+  <!-- Barra de búsqueda -->
   <app-search-bar></app-search-bar>
 
+  <!-- TARJETA DE PERFIL -->
   <div class="profile-card">
     <div class="cover-photo">
       <div
@@ -35,10 +37,33 @@
     </button>
 
     <p class="description">{{ description }}</p>
+
+    <!-- ═══════ BLOQUE DE ICONOS ═══════ -->
+    <div class="icon-menu">
+      <img
+        src="assets/map-pin.svg"
+        alt="Ver eventos"
+        class="icon-menu-svg"
+        (click)="onMapPinClick()"
+      />
+      <img
+        src="assets/diets-icon.svg"
+        alt="Ver dietas"
+        class="icon-menu-svg"
+        (click)="onDietClick()"
+      />
+      <img
+        src="assets/photo.svg"
+        alt="Fotos (pendiente)"
+        class="icon-menu-svg"
+        (click)="onPhotoClick()"
+      />
+    </div>
   </div>
 
-  <div class="content-container">
-    <!-- Eventos creados -->
+  <!-- ═══════ CONTENIDO ═══════ -->
+  <!-- Eventos -->
+  <div class="content-container" *ngIf="selectedView === 'events'">
     <div class="eventos-container">
       <h1 class="eventos-text">Eventos creados</h1>
       <hr class="divider" />
@@ -59,7 +84,6 @@
       </div>
     </div>
 
-    <!-- Eventos inscritos -->
     <div class="eventos-container">
       <h1 class="eventos-text">Eventos inscritos</h1>
       <hr class="divider" />
@@ -77,6 +101,19 @@
           [longitude]="event.longitude"
           (selected)="onEventSelected($event)"
         ></app-event-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dietas -->
+  <div class="content-container" *ngIf="selectedView === 'diet'">
+    <div class="eventos-container">
+      <h1 class="eventos-text">Dietas</h1>
+      <hr class="divider" />
+      <div #cardFlex class="card-flex">
+        <div class="card-wrapper" *ngFor="let diet of diets">
+          <app-diet-card [diet]="diet"></app-diet-card>
+        </div>
       </div>
     </div>
   </div>

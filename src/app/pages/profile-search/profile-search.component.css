@@ -1,10 +1,12 @@
+/* src/app/pages/profile-search/profile-search.component.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 .container {
   background-color: #fffee2;
 }
 
-/* Panel lateral */
+/* Panel lateral de perfil */
 .profile-card {
   width: 25%;
   height: 100vh;
@@ -12,12 +14,13 @@
   color: #f1f1f1;
   padding: 4% 20px 20px;
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 10%;
+  gap: 1rem;               /* <<-- reducido para acercar los elementos */
   border-top-right-radius: 30px;
   box-shadow: 5px 0 25px rgba(0, 0, 0, 0.8);
 }
@@ -75,10 +78,34 @@
   background-color: #265a42;
 }
 
+/* Descripción del usuario */
 .description {
   font-size: 14px;
   text-align: center;
-  margin-top: 15px;
+  margin-top: 0;           /* eliminamos separación extra */
+  padding: 0 10px;
+}
+
+/* BLOQUE DE ICONOS bajo la descripción, centrado */
+.icon-menu {
+  margin-top: 0.5rem;      /* muy poca separación */
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.icon-menu-svg {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  transition: transform .15s ease-in-out, opacity .15s ease-in-out;
+}
+
+.icon-menu-svg:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
 }
 
 /* Zona de contenido principal */
@@ -123,4 +150,10 @@
 .eventos-container {
   margin-bottom: 10px;
   margin-right: 5%;
+}
+
+/* Posicionamiento de tarjetas de dieta */
+.card-wrapper {
+  position: relative;
+  display: inline-block;
 }
