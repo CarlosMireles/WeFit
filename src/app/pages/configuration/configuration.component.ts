@@ -3,6 +3,8 @@ import {Router} from '@angular/router';
 import {NgForOf, NgIf} from '@angular/common';
 import {UserConfigurationComponent} from './user-configuration/user-configuration.component';
 import {EditProfileComponent} from './user-configuration/edit-profile/edit-profile.component';
+import {BestFriendsComponent} from './best-friends/best-friends.component';
+import {AddBestFriendsComponent} from './best-friends/add-best-friends/add-best-friends.component';
 
 @Component({
   selector: 'app-configuration',
@@ -10,7 +12,9 @@ import {EditProfileComponent} from './user-configuration/edit-profile/edit-profi
     NgIf,
     NgForOf,
     UserConfigurationComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    BestFriendsComponent,
+    AddBestFriendsComponent
   ],
   templateUrl: './configuration.component.html',
   styleUrl: './configuration.component.css'
@@ -19,6 +23,7 @@ export class ConfigurationComponent {
 
   selectedSection = 'usuario';
   showEditProfile = false;
+  showAddBestFriends = false;
 
   constructor(private router: Router) {}
 
@@ -43,5 +48,13 @@ export class ConfigurationComponent {
 
   onEditProfileBackClicked(): void {
     this.showEditProfile = false;
+  }
+
+  onAddBestFriendClicked(): void {
+    this.showAddBestFriends = true;
+  }
+
+  onAddBestFriendBackClicked(): void {
+    this.showAddBestFriends = false;
   }
 }

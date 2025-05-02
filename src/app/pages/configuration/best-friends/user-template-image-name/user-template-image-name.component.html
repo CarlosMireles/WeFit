@@ -1,0 +1,7 @@
+<div id="wrapper">
+  <img class="profile-img" [src]="u.photoURL" alt="{{ u.username }}">
+  <div class="info">
+    <span class="name" *ngIf="u.name">{{ u.name }}</span>
+    <span class="username">{{ u.username }}</span>
+  </div>
+</div>

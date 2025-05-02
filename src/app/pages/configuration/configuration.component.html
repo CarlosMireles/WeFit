@@ -32,8 +32,8 @@
       <p>Notificaciones</p>
     </div>
     <div *ngIf="selectedSection === 'mejos'">
-      <h1>Mejores amigos</h1>
-      <p>Mejores amigos</p>
+      <app-best-friends *ngIf="!showAddBestFriends" (AddFriend)="onAddBestFriendClicked()"></app-best-friends>
+      <app-add-best-friends *ngIf="showAddBestFriends" (backClickedAddFriend)="onAddBestFriendBackClicked()"></app-add-best-friends>
     </div>
   </div>
 </div>
