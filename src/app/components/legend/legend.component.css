@@ -1,0 +1,42 @@
+.legend-container {
+  background-color: #1a1a1a;
+  border-radius: 0.8rem;
+  padding: 1rem;
+  width: max-content;
+  color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot.public {
+  background-color: #3498db; /* Azul */
+}
+
+.legend-dot.private {
+  background-color: #7f8c8d; /* Gris */
+}
+
+.legend-dot.friends {
+  background-color: #2ecc71; /* Verde */
+}

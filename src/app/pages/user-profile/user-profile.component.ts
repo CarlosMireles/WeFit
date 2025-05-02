@@ -108,6 +108,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
 
   private fetchPlaces(events: any[], target: string[]) {
     events.forEach((e, i) => {
+
       if (e.latitude != null && e.longitude != null) {
         this.geocodingService.getPlaceFromCoords(e.latitude, e.longitude)
           .subscribe({
