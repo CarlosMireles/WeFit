@@ -10,15 +10,17 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { EventCardComponent } from '../../components/event-card/event-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
-import { UserService } from '../../services/user.service';
-import { EventService } from '../../services/event.service';
-import { GeocodingService } from '../../services/geocoding.service';
-import { CommunicationService } from '../../services/CommunicationService';
 import { DeleteEventAlertComponent } from '../../components/delete-event-alert/delete-event-alert.component';
 import { LeaveEventAlertComponent } from '../../components/leave-event-alert/leave-event-alert.component';
-import {TranslatePipe} from '@ngx-translate/core';
-import {LanguageService} from '../../services/translate.service';
-
+import { DietCardComponent } from '../../components/diet-card/diet-card.component';
+import { UserService } from '../../services/user.service';
+import { EventService } from '../../services/event.service';
+import { DietService } from '../../services/diet.service';           // <-- import añadido
+import { GeocodingService } from '../../services/geocoding.service';
+import { CommunicationService } from '../../services/CommunicationService';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../services/translate.service';
+import { Diet } from '../../models/diet';                              // <-- import modelo
 
 @Component({
   selector: 'app-user-profile',
@@ -27,6 +29,7 @@ import {LanguageService} from '../../services/translate.service';
     CommonModule,
     EventCardComponent,
     SearchBarComponent,
+    DietCardComponent,
     TranslatePipe,
     DeleteEventAlertComponent,
     LeaveEventAlertComponent
@@ -45,11 +48,12 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   placesOrganizing: string[] = [];
   placesAttending: string[] = [];
 
+  diets: Diet[] = [];                                               // <-- array de dietas
+
   currentUserId: string | null = null;
 
   @ViewChildren('cardFlex') cardFlexContainers!: QueryList<ElementRef>;
 
-  // **Estados de alerta**
   showDeleteEventAlert = false;
   eventToDelete: any | null = null;
 
@@ -60,9 +64,12 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   private startX = 0;
   private scrollLeft = 0;
 
+  selectedView: 'events' | 'diet' = 'events';
+
   constructor(
     private userService: UserService,
     private eventService: EventService,
+    private dietService: DietService,                               // <-- inyectado
     private geocodingService: GeocodingService,
     private comm: CommunicationService,
     private router: Router,
@@ -72,6 +79,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     const lang = this.langService.currentLang;
     await this.langService.changeLang(lang);
+
     const uid = await this.userService.getCurrentUserUid();
     if (!uid) return;
     this.currentUserId = uid;
@@ -91,9 +99,11 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     ]);
     this.eventsOrganizing = org;
     this.eventsAttending  = att;
-
     this.fetchPlaces(org, this.placesOrganizing);
     this.fetchPlaces(att, this.placesAttending);
+
+    // —— NUEVO: cargamos las dietas del usuario ——
+    this.diets = await this.dietService.getUserDiets();
   }
 
   private fetchPlaces(events: any[], target: string[]) {
@@ -125,12 +135,10 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         const x = e.pageX - container.offsetLeft;
         container.scrollLeft = this.scrollLeft - (x - this.startX);
       });
-
       container.addEventListener('mouseup', () => {
         this.isDragging = false;
         container.classList.remove('active');
       });
-
       container.addEventListener('mouseleave', () => {
         this.isDragging = false;
         container.classList.remove('active');
@@ -147,16 +155,24 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/home']);
   }
 
-  /** Abre alerta de BORRAR evento */
+  // —— NUEVOS HANDLERS para los iconos ——
+  onMapPinClick() {
+    this.selectedView = 'events';
+  }
+  onDietClick() {
+    this.selectedView = 'diet';
+  }
+  onPhotoClick() {
+    // Sin funcionalidad por ahora
+  }
+
   askDeleteEvent(e: any) {
     this.eventToDelete = e;
     this.showDeleteEventAlert = true;
   }
-  /** Confirma BORRAR evento */
   async onDeleteEventConfirm() {
     if (!this.eventToDelete) return;
     await this.eventService.deleteEvent(this.eventToDelete.id);
-    // Elimina de arrays
     const i = this.eventsOrganizing.findIndex(x => x.id === this.eventToDelete.id);
     if (i > -1) {
       this.eventsOrganizing.splice(i,1);
@@ -170,12 +186,10 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     this.eventToDelete = null;
   }
 
-  /** Abre alerta de ABANDONAR evento */
   askLeaveEvent(e: any) {
     this.eventToLeave = e;
     this.showLeaveEventAlert = true;
   }
-  /** Confirma ABANDONAR evento */
   async onLeaveEventConfirm() {
     if (!this.eventToLeave || !this.currentUserId) return;
     await this.eventService.leaveEvent(this.eventToLeave.id, this.currentUserId);
