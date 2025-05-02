@@ -13,19 +13,18 @@
 
   <!-- Lista de amigos -->
   <div class="friends-list">
-    <div class="friend-card" *ngFor="let friend of friends">
+    <div class="friend-card" *ngFor="let friend of bestFriendsUsers">
       <app-user-template-image-name
-        [name]="friend.name"
         [username]="friend.username"
-        [photoURL]="friend.profilePicture">
+        [photoURL]="friend.image_url">
       </app-user-template-image-name>
       <button class="action-button">
-        <span class="action-icon">•••</span>
+        <span class="action-icon" (click)="removeBestFriend(friend)">✖</span>
       </button>
     </div>
 
     <!-- Mensaje cuando no hay amigos -->
-    <div class="no-friends" *ngIf="friends.length === 0">
+    <div class="no-friends" *ngIf="bestFriendsUsers.length === 0">
       <p>No has añadido mejores amigos todavía</p>
     </div>
   </div>

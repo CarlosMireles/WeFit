@@ -16,16 +16,10 @@
   flex-direction: column;
 }
 
-.name {
+.username {
   font-size: 16px;
   font-weight: 600;
   margin: 0;
-}
-
-.username {
-  font-size: 14px;
-  color: #8e8e8e;
-  margin: 2px 0 0;
 }
 
 @media (max-width: 480px) {
@@ -34,11 +28,7 @@
     height: 40px;
   }
 
-  .name {
-    font-size: 14px;
-  }
-
   .username {
-    font-size: 12px;
+    font-size: 14px;
   }
 }

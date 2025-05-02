@@ -11,7 +11,6 @@ import {CommonModule} from '@angular/common';
 export class UserTemplateImageNameComponent implements OnInit {
   @Input() username: string = '';
   @Input() photoURL: string = '';
-  @Input() name: string = '';
 
   u = {
     username: '',
@@ -22,6 +21,5 @@ export class UserTemplateImageNameComponent implements OnInit {
   ngOnInit() {
     this.u.username = this.username;
     this.u.photoURL = this.photoURL;
-    this.u.name = this.name;
   }
 }

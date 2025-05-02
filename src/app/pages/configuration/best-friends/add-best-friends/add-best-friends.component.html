@@ -1,3 +1,28 @@
-<p>add-best-friends works!</p>
+<div class="best-friends-container">
+  <div class="header">
+    <button class="back-button" (click)="goBack()">
+      <span class="material-icons">arrow_back</span>
+    </button>
+    <h1>Añadir mejores amigos</h1>
+    <button class="save-button" (click)="saveBestFriends()">
+      Guardar
+    </button>
+  </div>
 
-<button (click)="goBack()"></button>
+  <div class="divider"></div>
+
+  <div class="friend-list">
+    <button (click)="toggleUserSelection(user)" class="friend-card"
+            [ngClass]="{'selected': isUserSelected(user)}"
+            *ngFor="let user of followedUsers">
+      <app-user-template-image-name
+        [username]="user.username"
+        [photoURL]="user.image_url">
+      </app-user-template-image-name>
+    </button>
+
+    <div class="no-friends" *ngIf="followedUsers.length === 0">
+      <p>Sigue a usuarios para poder añadirlos a mejores amigos</p>
+    </div>
+  </div>
+</div>
