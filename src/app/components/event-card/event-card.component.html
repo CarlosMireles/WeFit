@@ -1,22 +1,22 @@
-<button
-  class="event-card-modern"
-  (click)="onCardClick()"
-  role="button"
-  [attr.aria-label]="'Ver evento ' + title"
->
-  <div class="card-header">
-    <h2 class="event-title">{{ title }}</h2>
+<div class="custom-card" (click)="onCardClick()" role="button" [attr.aria-label]="'Ver evento ' + title">
+  <img [src]="image_route" alt="Imagen del deporte" class="custom-card-img" />
+
+  <div class="custom-card-body">
+    <h5 class="custom-card-title">{{ title }}</h5>
+
+    <p class="custom-card-text">
+      📍 <strong>Ubicación:</strong> {{ place }}
+    </p>
+
+    <p class="custom-card-text">
+      👥 <strong>Participantes:</strong> {{ participants }} / {{ maxParticipants }}
+    </p>
+
+    <p class="custom-card-text">
+      📅 <strong>Fecha:</strong> {{ date }}<br />
+      ⏰ <strong>Hora:</strong> {{ hour }}
+    </p>
+
+    <button class="custom-card-button">Ver evento</button>
   </div>
-
-  <p class="event-location">
-    <i class="fas fa-map-marker-alt"></i> {{ place }}
-  </p>
-
-  <p class="event-participants">
-    <i class="fas fa-user-friends"></i> {{ participants }} / {{ maxParticipants }} participantes
-  </p>
-
-  <p class="event-date">
-    <i class="fas fa-calendar-alt"></i> {{ date }} <i class="fas fa-clock"></i> {{ hour }}
-  </p>
-</button>
+</div>

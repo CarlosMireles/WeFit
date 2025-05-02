@@ -6,6 +6,7 @@ import {CreateEventFormComponent} from '../../components/create-event-form/creat
 import {CommunicationService} from '../../services/CommunicationService';
 import {NgIf} from '@angular/common';
 import {FilterToggleComponent} from '../../components/filter-toggle/filter-toggle.component';
+import {LegendComponent} from '../../components/legend/legend.component';
 
 
 @Component({
@@ -16,7 +17,8 @@ import {FilterToggleComponent} from '../../components/filter-toggle/filter-toggl
     SearchBarComponent,
     CreateEventFormComponent,
     NgIf,
-    FilterToggleComponent
+    FilterToggleComponent,
+    LegendComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
