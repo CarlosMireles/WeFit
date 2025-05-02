@@ -7,7 +7,7 @@
       </button>
 
       <!-- Buscar usuarios -->
-      <button class="nav-button" [routerLink]="['/user-search']" [attr.title]="'tooltips.search'">
+      <button class="nav-button" [routerLink]="['/user-search']" [attr.title]="'tooltips.search' | translate">
         <img ngSrc="/assets/search-icon.svg" alt="search" height="32" width="32" />
       </button>
 
@@ -16,14 +16,13 @@
         class="nav-button"
         id="map-container"
         (click)="goHome()"
-        [routerLink]="['/home']"
-        [attr.title]="'tooltips.home' | translate"
+        [routerLink]="['/home']" [attr.title]="'tooltips.home' | translate"
       >
         <img ngSrc="/assets/logo.svg" alt="map" height="32" width="32" id="map" />
       </button>
 
       <!-- Dietas -->
-      <button class="nav-button" [attr.title]="'tooltips.diets' | translate">
+      <button class="nav-button" [routerLink]="['/diets']" [attr.title]="'tooltips.diets' | translate">
         <img ngSrc="/assets/diets-icon.svg" alt="recipe" height="32" width="32" />
       </button>
 
@@ -34,6 +33,3 @@
     </div>
   </footer>
 </div>
-
-
-

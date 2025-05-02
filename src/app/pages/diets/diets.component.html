@@ -1,0 +1,25 @@
+<div class="diets-container">
+  <h1 class="title">Tus Dietas:</h1>
+
+  <div class="diets-grid">
+    <ng-container *ngIf="diets$ | async as diets">
+      <ng-container *ngFor="let _ of dietSlots; let i = index">
+        <ng-container *ngIf="diets[i]; else showAdd">
+          <app-diet-card [diet]="diets[i]"></app-diet-card>
+        </ng-container>
+        <ng-template #showAdd>
+          <div class="diet-item" (click)="addNewDiet()">
+            <img
+              src="assets/circle-plus.svg"
+              alt="Añadir nueva dieta"
+              class="plus-icon"
+            />
+            <span class="label">Añadir nueva dieta</span>
+          </div>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <app-search-bar></app-search-bar>
+</div>
