@@ -1,6 +1,6 @@
-<!-- src/app/pages/user-profile/user-profile.component.html -->
 <div class="container">
   <div class="profile-card">
+    <!-- Icono de configuración -->
     <svg class="settings-icon" (click)="onSettings()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
          stroke-linecap="round" stroke-linejoin="round">
@@ -16,6 +16,7 @@
       <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/>
     </svg>
 
+    <!-- Foto de perfil y nombre -->
     <div class="cover-photo">
       <div class="avatar"
            [ngStyle]="{'background-image': image_url ? 'url(' + image_url + ')' : 'url(/assets/avatar.jpg)'}">
@@ -24,21 +25,51 @@
       <hr class="divider-user" />
     </div>
 
+    <!-- Seguidores y seguidos -->
     <div class="stats">
-      <div><strong>{{ 'profile.followers' | translate}}</strong><p>{{ followers.length }}</p></div>
-      <div><strong>{{ 'profile.followed' | translate}}</strong><p>{{ follows.length }}</p></div>
+      <div>
+        <strong>{{ 'profile.followers' | translate }}</strong>
+        <p>{{ followers.length }}</p>
+      </div>
+      <div>
+        <strong>{{ 'profile.followed' | translate }}</strong>
+        <p>{{ follows.length }}</p>
+      </div>
     </div>
 
+    <!-- Descripción del usuario -->
     <p class="description">{{ description }}</p>
+
+    <!-- —— BLOQUE DE ICONOS debajo de la descripción —— -->
+    <div class="icon-menu">
+      <img
+        src="assets/map-pin.svg"
+        alt="Ver eventos"
+        class="icon-menu-svg"
+        (click)="onMapPinClick()"
+      />
+      <img
+        src="assets/diets-icon.svg"
+        alt="Ver dietas"
+        class="icon-menu-svg"
+        (click)="onDietClick()"
+      />
+      <img
+        src="assets/photo.svg"
+        alt="Fotos (pendiente)"
+        class="icon-menu-svg"
+        (click)="onPhotoClick()"
+      />
+    </div>
   </div>
 
-  <div class="content-container">
+  <!-- —— SECCIÓN DE EVENTOS CREADOS —— -->
+  <div class="content-container" *ngIf="selectedView === 'events'">
     <div class="eventos-container">
-      <h1 class="eventos-text">{{ 'profile.created-events' | translate}}</h1>
+      <h1 class="eventos-text">{{ 'profile.created-events' | translate }}</h1>
       <hr class="divider" />
       <div #cardFlex class="card-flex">
         <div class="card-wrapper" *ngFor="let event of eventsOrganizing; let idx = index">
-          <!-- Usamos <img> con ruta relativa para trash.svg -->
           <img
             src="assets/trash.svg"
             class="icon-trash"
@@ -61,12 +92,12 @@
       </div>
     </div>
 
+    <!-- —— SECCIÓN DE EVENTOS REGISTRADOS —— -->
     <div class="eventos-container">
-      <h1 class="eventos-text">{{ 'profile.registered-events' | translate}}</h1>
+      <h1 class="eventos-text">{{ 'profile.registered-events' | translate }}</h1>
       <hr class="divider" />
       <div #cardFlex class="card-flex">
         <div class="card-wrapper" *ngFor="let event of eventsAttending; let idx = index">
-          <!-- Logout sigue igual -->
           <img
             src="assets/logout.svg"
             class="icon-logout"
@@ -90,6 +121,20 @@
     </div>
   </div>
 
+  <!-- —— SECCIÓN DE DIETAS —— -->
+  <div class="content-container" *ngIf="selectedView === 'diet'">
+    <div class="eventos-container">
+      <h1 class="eventos-text">Mis Dietas</h1>
+      <hr class="divider" />
+      <div #dietFlex class="card-flex">
+        <div class="card-wrapper" *ngFor="let diet of diets">
+          <app-diet-card [diet]="diet"></app-diet-card>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de búsqueda -->
   <app-search-bar></app-search-bar>
 
   <!-- Alerta BORRAR EVENTO -->
