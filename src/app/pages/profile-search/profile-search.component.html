@@ -71,6 +71,7 @@
         <app-event-card
           *ngFor="let event of eventsOrganizing; let idx = index"
           [id]="event.id"
+          [image]="event.sport"
           [title]="event.title"
           [date]="event.day"
           [hour]="event.hour"
@@ -91,6 +92,7 @@
         <app-event-card
           *ngFor="let event of eventsAttending; let idx = index"
           [id]="event.id"
+          [image]="event.sport"
           [title]="event.title"
           [date]="event.day"
           [hour]="event.hour"

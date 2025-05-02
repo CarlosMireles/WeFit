@@ -214,3 +214,6 @@
 .card-wrapper .icon-logout:hover {
   opacity: 0.8;
 }
+.container {
+  min-height: 100vh;
+}
