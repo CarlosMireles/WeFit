@@ -1,5 +1,3 @@
-// src/app/services/report.service.ts
-
 import { Injectable } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { UserService } from './user.service';
@@ -8,28 +6,20 @@ import { UserService } from './user.service';
   providedIn: 'root'
 })
 export class ReportService {
+  private readonly REPORT_EMAIL = 'wefitreportsection@gmail.com';
+
   constructor(
     private auth: Auth,
     private userService: UserService
   ) {}
 
-  /**
-   * Genera un mailto donde el asunto incluye el username
-   * del usuario que reporta, no su correo.
-   *
-   * @param creatorUsername Username del creador del evento
-   * @param eventName Nombre del evento a reportar
-   * @returns Enlace mailto con asunto codificado
-   */
-  async generateMailToLink(
+  async getGmailComposeUrl(
     creatorUsername: string,
     eventName: string
   ): Promise<string> {
     const uid = this.auth.currentUser?.uid;
     let reportingUsername = '';
-
     if (uid) {
-      // Obtenemos los datos del usuario y accedemos con corchetes
       const userData = await this.userService.getUserData(uid);
       reportingUsername =
         (userData?.['username'] as string) ||
@@ -38,6 +28,14 @@ export class ReportService {
     }
 
     const subject = `${reportingUsername} reporting event '${eventName}' by ${creatorUsername}`;
-    return `mailto:wefit@gmail.com?subject=${encodeURIComponent(subject)}`;
+
+    const base = 'https://mail.google.com/mail/u/0/';
+    const params = new URLSearchParams({
+      view: 'cm',
+      fs: '1',
+      to: this.REPORT_EMAIL,
+      su: subject
+    });
+    return `${base}?${params.toString()}`;
   }
 }

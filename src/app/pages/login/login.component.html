@@ -5,17 +5,17 @@
   </div>
 
   <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
-    <input type="email" name="email" ngModel placeholder="Correo electrónico" required />
-    <input type="password" name="password" ngModel placeholder="Contraseña" required />
-    <button type="submit">Iniciar sesión</button>
+    <input type="email" name="email" ngModel [placeholder]="'login.mail' | translate" required />
+    <input type="password" name="password" ngModel [placeholder]="'login.password' | translate" required />
+    <button type="submit">{{ 'login.button-login-session' | translate}}</button>
   </form>
 
   <p class="register-text">
-    ¿No tienes cuenta? <a [routerLink]="['/register']">Regístrate aquí</a>
+    {{ 'login.text-account' | translate }} <a [routerLink]="['/register']">{{ 'login.text-register' | translate }}</a>
 
   </p>
   <p class="forgot-password">
-    <a href="#">¿Olvidaste tu contraseña?</a>
+    <a [routerLink]="['/forgotPassword']">{{ 'login.forgot-password' | translate }}</a>
   </p>
 </div>
 

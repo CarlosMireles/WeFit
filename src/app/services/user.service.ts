@@ -15,7 +15,7 @@ import {
   signInWithEmailAndPassword,
   sendEmailVerification,
   user as authState,
-  User
+  User, sendPasswordResetEmail
 } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 
@@ -49,6 +49,7 @@ export class UserService {
       description: '',
       follows: [],
       followers: [],
+      best_friends: [],
       events_organizing: [],
       events_attending: [],
       createdAt: new Date()
@@ -59,6 +60,10 @@ export class UserService {
   async loginUser(email: string, password: string): Promise<User> {
     const credential = await signInWithEmailAndPassword(this.auth, email, password);
     return credential.user;
+  }
+
+  async resetPassword(email: string): Promise<void> {
+    await sendPasswordResetEmail(this.auth, email);
   }
 
   async getUserData(uid: string | null): Promise<DocumentData | null> {
@@ -121,5 +126,25 @@ export class UserService {
 
     const userRef = doc(this.firestore, `users/${uid}`);
     await updateDoc(userRef, { description: newDescription });
+  }
+
+  async addBestFriend(friendUid: string): Promise<void> {
+    const me = await this.getCurrentUserUid();
+    if (!me) throw new Error('No hay usuario autenticado');
+
+    const meRef = doc(this.firestore, `users/${me}`);
+    await updateDoc(meRef, {
+      best_friends: arrayUnion(friendUid)
+    });
+  }
+
+  async removeBestFriend(friendUid: string): Promise<void> {
+    const me = await this.getCurrentUserUid();
+    if (!me) throw new Error('No hay usuario autenticado');
+
+    const meRef = doc(this.firestore, `users/${me}`);
+    await updateDoc(meRef, {
+      best_friends: arrayRemove(friendUid)
+    });
   }
 }

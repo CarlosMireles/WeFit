@@ -1,11 +1,13 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {LanguageService} from '../../services/translate.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-event-card',
-  standalone: true,
-  templateUrl: './event-card.component.html',
-  styleUrls: ['./event-card.component.css']
+    selector: 'app-event-card',
+    imports: [],
+    templateUrl: './event-card.component.html',
+    standalone: true,
+    styleUrl: './event-card.component.css'
 })
 export class EventCardComponent {
   @Input() id!: string;
@@ -24,7 +26,12 @@ export class EventCardComponent {
     longitude: number;
   }>();
 
-  constructor(private router: Router) {}
+  constructor(private langService: LanguageService, private router: Router) {}
+
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
 
   onCardClick() {
     // 1) Emitimos la selección para que el mapa lo recoja
@@ -37,4 +44,5 @@ export class EventCardComponent {
     // 2) Navegamos al mapa donde el MapComponent está suscrito a eventSelected$
     this.router.navigate(['/home']);
   }
+
 }

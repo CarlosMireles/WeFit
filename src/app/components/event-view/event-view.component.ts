@@ -8,15 +8,17 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { DeleteUserAlertComponent } from '../delete-user-alert/delete-user-alert.component';
 import { CommunicationService } from '../../services/CommunicationService';
 import { ReportService } from '../../services/report.service';
+import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageService} from '../../services/translate.service';
 
 @Component({
   selector: 'app-event-view',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [CommonModule,
     FormsModule,
     ConfirmDialogComponent,
-    DeleteUserAlertComponent
+    DeleteUserAlertComponent,
+    TranslatePipe
   ],
   templateUrl: './event-view.component.html',
   styleUrls: ['./event-view.component.css']
@@ -67,20 +69,24 @@ export class EventViewComponent implements OnInit {
     "Remo","Rugby","Skateboarding","Snowboard","Surf","Tenis","Voleibol"
   ];
 
-  reportLink: string = '';
+  // URL para abrir Gmail compose
+  gmailComposeUrl: string = '';
 
   constructor(
     private router: Router,
     private eventService: EventService,
     private userService: UserService,
     private communicationService: CommunicationService,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private langService: LanguageService
   ) {}
 
   async ngOnInit() {
     this.currentUserId = await this.userService.getCurrentUserUid();
 
     if (this.currentUserId) {
+      const lang = this.langService.currentLang;
+      await this.langService.changeLang(lang);
       this.isOwner = this.eventData.organizerId === this.currentUserId;
       this.hasJoined = this.eventData.participants.includes(this.currentUserId);
       const hasCapacity = this.eventData.participants.length < this.eventData.maxParticipants;
@@ -93,7 +99,7 @@ export class EventViewComponent implements OnInit {
     if (!this.isOwner) {
       const creatorData = await this.userService.getUserById(this.eventData.organizerId);
       const creatorUsername = creatorData['username'] || creatorData['displayName'] || '';
-      this.reportLink = await this.reportService.generateMailToLink(
+      this.gmailComposeUrl = await this.reportService.getGmailComposeUrl(
         creatorUsername,
         this.eventData.title
       );
@@ -219,11 +225,12 @@ export class EventViewComponent implements OnInit {
     this.participantToDelete = null;
   }
 
-  onClose() {
+  onClose(): void {
     this.close.emit();
   }
 
   onReport() {
-    window.location.href = this.reportLink;
+    window.open(this.gmailComposeUrl, '_blank');
   }
+
 }

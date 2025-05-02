@@ -1,0 +1,32 @@
+.language-switcher {
+  position: relative;
+  display: inline-block;
+
+  .lang-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .lang-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #14d578;
+    border: 1px solid #ccc;
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0 0;
+    width: 100px;
+    z-index: 10;
+
+    li {
+      padding: 8px;
+      cursor: pointer;
+
+      &:hover {
+        background: #16e786;
+      }
+    }
+  }
+}

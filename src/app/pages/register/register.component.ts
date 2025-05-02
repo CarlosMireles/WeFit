@@ -5,6 +5,8 @@ import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 import { User, sendEmailVerification } from 'firebase/auth';
+import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageService} from '../../services/translate.service';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +14,8 @@ import { User, sendEmailVerification } from 'firebase/auth';
   imports: [
     FormsModule,
     NgIf,
-    RouterLink
+    RouterLink,
+    TranslatePipe
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -35,7 +38,12 @@ export class RegisterComponent {
   private currentUser: User | null = null;
   private verificationInterval: any;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router, private langService: LanguageService) {}
+
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
 
   validateForm() {
     this.user.usernameError = '';

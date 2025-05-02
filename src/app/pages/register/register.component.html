@@ -8,7 +8,7 @@
       type="text"
       name="user"
       ngModel
-      placeholder="Usuario"
+      [placeholder]="'register.user' | translate"
       required
       [class.is-invalid]="user.usernameError" />
     <div *ngIf="user.usernameError" class="error-message">
@@ -19,7 +19,7 @@
       type="email"
       name="email"
       ngModel
-      placeholder="Correo electrónico"
+      [placeholder]="'register.mail' | translate"
       required
       [class.is-invalid]="user.emailError" />
     <div *ngIf="user.emailError" class="error-message">
@@ -30,14 +30,14 @@
       type="password"
       name="password"
       ngModel
-      placeholder="Contraseña"
+      [placeholder]="'register.password' | translate"
       required
       [class.is-invalid]="user.passwordError" />
     <div *ngIf="user.passwordError" class="error-message">
       {{ user.passwordError }}
     </div>
 
-    <button type="submit">Registrarse</button>
+    <button type="submit">{{ 'register.register-button' | translate }}</button>
   </form>
 
   <!-- Mensaje de éxito -->
@@ -60,6 +60,6 @@
   </div>
 
   <p class="login-text">
-    ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+    {{ 'register.text-already' | translate }} <a routerLink="/login">{{ 'register.login-link' | translate }}</a>
   </p>
 </div>
