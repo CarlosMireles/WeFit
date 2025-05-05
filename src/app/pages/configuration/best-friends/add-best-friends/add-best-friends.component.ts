@@ -21,7 +21,7 @@ interface UserInfo {
     NgIf,
     NgForOf,
     NgClass,
-    LoadingCircleComponent
+    LoadingCircleComponent,
     NgClass,
     ConfirmationQuestionComponent
   ],
