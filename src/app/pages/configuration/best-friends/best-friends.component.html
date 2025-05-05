@@ -27,7 +27,7 @@
         [photoURL]="friend.image_url">
       </app-user-template-image-name>
       <button class="action-button">
-        <span class="action-icon" (click)="removeBestFriend(friend)">✖</span>
+        <span class="action-icon" (click)="selectFriend(friend)">✖</span>
       </button>
     </div>
 
@@ -36,4 +36,14 @@
       <p>No has añadido mejores amigos todavía</p>
     </div>
   </div>
+
+  <app-confirmation-question
+    [title]="'¿Estás seguro?'"
+    [message]="confirmationMessage"
+    [confirmText]="'Si'"
+    [cancelText]="'No'"
+    [visible]="showConfirmation"
+    (confirm)="onConfirm()"
+    (cancel)="onCancel()">
+  </app-confirmation-question>
 </div>

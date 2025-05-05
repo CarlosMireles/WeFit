@@ -74,6 +74,7 @@
 
 .friend-card.selected {
   background-color: #42df9d;
+  color: black;
 }
 
 .no-friends {

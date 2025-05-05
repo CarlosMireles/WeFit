@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {UserTemplateImageNameComponent} from './user-template-image-name/user-template-image-name.component';
 import {UserService} from '../../../services/user.service';
 import {LoadingCircleComponent} from '../../../components/loading-circle/loading-circle.component';
+import {ConfirmationQuestionComponent} from '../../../components/confirmation-question/confirmation-question.component';
 
 interface UserInfo {
   uid: string;
@@ -14,7 +15,7 @@ interface UserInfo {
 @Component({
   selector: 'app-best-friends',
   standalone: true,
-  imports: [CommonModule, UserTemplateImageNameComponent, LoadingCircleComponent],
+  imports: [CommonModule, UserTemplateImageNameComponent, LoadingCircleComponent, ConfirmationQuestionComponent],
   templateUrl: './best-friends.component.html',
   styleUrl: './best-friends.component.css'
 })
@@ -23,7 +24,12 @@ export class BestFriendsComponent implements OnInit {
   private best_friends: any;
   bestFriendsUsers: UserInfo[] = [];
 
+  deletedFriend: UserInfo | null = null;
+
+  confirmationMessage: string = '';
+
   isLoading: boolean = false;
+  showConfirmation: boolean = false;
 
   constructor(private router: Router,
               private userService: UserService) {}
@@ -70,5 +76,23 @@ export class BestFriendsComponent implements OnInit {
     }).catch(error => {
       console.error('Error al eliminar mejor amigo:', error);
     });
+  }
+
+  onConfirm() {
+    if (!this.deletedFriend) return;
+    this.removeBestFriend(this.deletedFriend)
+    this.deletedFriend = null;
+    this.showConfirmation = false;
+  }
+
+  onCancel() {
+    this.deletedFriend = null;
+    this.showConfirmation = false;
+  }
+
+  selectFriend(friend: UserInfo) {
+    this.deletedFriend = friend;
+    this.confirmationMessage = `Se eliminará ${friend.username} de tu lista de mejores amigos`;
+    this.showConfirmation = true;
   }
 }
