@@ -23,6 +23,8 @@ import { CommunicationService } from '../../services/CommunicationService';
 
 import { Diet } from '../../models/diet';
 import { Subscription } from 'rxjs';
+import {LanguageService} from '../../services/translate.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile-search',
@@ -33,7 +35,8 @@ import { Subscription } from 'rxjs';
     NgStyle,
     EventCardComponent,
     SearchBarComponent,
-    DietCardComponent
+    DietCardComponent,
+    TranslatePipe
   ],
   templateUrl: './profile-search.component.html',
   styleUrls: ['./profile-search.component.css']
@@ -74,7 +77,8 @@ export class ProfileSearchComponent implements OnInit, AfterViewInit {
     private eventService: EventService,
     private dietService: DietService,
     private geocodingService: GeocodingService,
-    private comm: CommunicationService
+    private comm: CommunicationService,
+    private langService: LanguageService
   ) {}
 
   async ngOnInit() {
@@ -114,6 +118,9 @@ export class ProfileSearchComponent implements OnInit, AfterViewInit {
         .getUserDietsByUid$(uid)
         .subscribe(diets => this.diets = diets);
     });
+
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
   }
 
   private fetchPlaces(events: any[], target: string[]) {

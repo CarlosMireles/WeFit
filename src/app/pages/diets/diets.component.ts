@@ -9,6 +9,8 @@ import { DietService } from '../../services/diet.service';
 import { Diet } from '../../models/diet';
 import { DietCardComponent } from '../../components/diet-card/diet-card.component';
 import { UserService } from '../../services/user.service';
+import {LanguageService} from '../../services/translate.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-diets',
@@ -16,7 +18,8 @@ import { UserService } from '../../services/user.service';
   imports: [
     CommonModule,
     SearchBarComponent,
-    DietCardComponent
+    DietCardComponent,
+    TranslatePipe
   ],
   templateUrl: './diets.component.html',
   styleUrls: ['./diets.component.css']
@@ -28,15 +31,18 @@ export class DietsComponent implements OnInit {
   constructor(
     private router: Router,
     private dietService: DietService,
-    private userService: UserService
+    private userService: UserService,
+    private langService: LanguageService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.diets$ = this.userService.currentUser$.pipe(
       filter(u => !!u?.uid),
       switchMap(u => this.dietService.getUserDietsByUid$(u!.uid)),
       tap(ds => console.log('Dietas cargadas:', ds))
     );
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
   }
 
   addNewDiet() {

@@ -7,11 +7,12 @@ import { Router } from '@angular/router';
 
 import { DietService, NewDiet } from '../../services/diet.service';
 import { Meal } from '../../models/diet';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-new-diet',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './new-diet.component.html',
   styleUrls: ['./new-diet.component.css']
 })

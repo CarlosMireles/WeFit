@@ -8,6 +8,8 @@ import { Auth } from '@angular/fire/auth';
 
 import { DietService } from '../../services/diet.service';
 import { Diet, Meal } from '../../models/diet';
+import {LanguageService} from '../../services/translate.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-diet-view',
@@ -15,7 +17,8 @@ import { Diet, Meal } from '../../models/diet';
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    TranslatePipe
   ],
   templateUrl: './diet-view.component.html',
   styleUrls: ['./diet-view.component.css']
@@ -41,7 +44,8 @@ export class DietViewComponent implements OnInit {
     private router: Router,
     private dietService: DietService,
     private auth: Auth,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private langService: LanguageService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -67,6 +71,9 @@ export class DietViewComponent implements OnInit {
 
     // 3) Determinar autoría
     this.isOwner = this.currentUserId === this.diet.userId;
+
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
   }
 
   toggleEdit(): void {

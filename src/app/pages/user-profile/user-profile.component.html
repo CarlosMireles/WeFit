@@ -126,7 +126,7 @@
   <!-- —— SECCIÓN DE DIETAS —— -->
   <div class="content-container" *ngIf="selectedView === 'diet'">
     <div class="eventos-container">
-      <h1 class="eventos-text">Mis Dietas</h1>
+      <h1 class="eventos-text">{{ 'profile.diets' | translate }}</h1>
       <hr class="divider" />
       <div #dietFlex class="card-flex">
         <div class="card-wrapper" *ngFor="let diet of diets">
