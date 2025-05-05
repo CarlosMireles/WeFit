@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { DietService, NewDiet } from '../../services/diet.service';
 import { Meal } from '../../models/diet';
 import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageService} from '../../services/translate.service';
 
 @Component({
   selector: 'app-new-diet',
@@ -29,8 +30,14 @@ export class NewDietComponent {
 
   constructor(
     private dietService: DietService,
-    private router: Router
+    private router: Router,
+    private langService: LanguageService
   ) {}
+
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
 
   /** Añade una comida vacía (hasta 10) */
   addMeal() {

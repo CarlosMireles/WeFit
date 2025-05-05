@@ -3,6 +3,8 @@ import {Router} from '@angular/router';
 import {NgForOf, NgIf} from '@angular/common';
 import {UserConfigurationComponent} from './user-configuration/user-configuration.component';
 import {EditProfileComponent} from './user-configuration/edit-profile/edit-profile.component';
+import {LanguageService} from '../../services/translate.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-configuration',
@@ -10,7 +12,8 @@ import {EditProfileComponent} from './user-configuration/edit-profile/edit-profi
     NgIf,
     NgForOf,
     UserConfigurationComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    TranslatePipe
   ],
   templateUrl: './configuration.component.html',
   styleUrl: './configuration.component.css'
@@ -20,7 +23,12 @@ export class ConfigurationComponent {
   selectedSection = 'usuario';
   showEditProfile = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private langService: LanguageService) {}
+
+  async ngOnInit() {
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
+  }
 
   sections = [
     { key: 'usuario', label: 'Configuración de Usuario'},

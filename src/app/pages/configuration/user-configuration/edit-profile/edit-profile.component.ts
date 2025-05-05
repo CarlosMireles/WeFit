@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationQuestionComponent } from '../../../../components/confirmation-question/confirmation-question.component';
 import { UserService } from '../../../../services/user.service';
+import {LanguageService} from '../../../../services/translate.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmationQuestionComponent],
+  imports: [CommonModule, FormsModule, ConfirmationQuestionComponent, TranslatePipe],
   templateUrl: './edit-profile.component.html',
   styleUrl: './edit-profile.component.css'
 })
@@ -36,30 +38,32 @@ export class EditProfileComponent implements OnInit {
   // Textos para el pop-up según el tipo
   confirmationTexts = {
     save: {
-      title: 'Guardar cambios',
-      message: '¿Estás seguro de que quieres guardar los cambios en tu perfil?',
-      confirmText: 'Guardar',
-      cancelText: 'Cancelar'
+      title: 'edit-profile.save-changes',
+      message: 'edit-profile.save-message',
+      confirmText: 'edit-profile.save-button',
+      cancelText: 'edit-profile.save-cancel-button'
     },
     exit: {
-      title: 'Descartar cambios',
-      message: 'Si sales ahora, los cambios no guardados se perderán. ¿Deseas continuar?',
-      confirmText: 'Sí, salir',
-      cancelText: 'No, continuar editando'
+      title: 'edit-profile.exit-undo',
+      message: 'edit-profile.exit-message',
+      confirmText: 'edit-profile.exit-confirm',
+      cancelText: 'edit-profile.exit-cancel'
     }
   };
 
   usernameAvailabilityMessage: string = ''; // Mensaje de disponibilidad del nombre de usuario
 
-  constructor(private userService: UserService) {  }
+  constructor(private userService: UserService, private langService: LanguageService) {  }
 
-  ngOnInit(): void {
-    this.getProfileData();
+  async ngOnInit() {
+    await this.getProfileData();
 
     // Asegurar que la descripción inicial no exceda el máximo
     if (this.profileData.description.length > this.maxDescriptionLength) {
       this.profileData.description = this.profileData.description.substring(0, this.maxDescriptionLength);
     }
+    const lang = this.langService.currentLang;
+    await this.langService.changeLang(lang);
   }
 
   onFileSelected(event: any): void {
