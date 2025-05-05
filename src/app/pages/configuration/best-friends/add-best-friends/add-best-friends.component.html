@@ -19,7 +19,7 @@
     </app-loading-circle>
   </div>
 
-  <div class="friend-list">
+  <div class="friend-list" *ngIf="!isLoading">
     <button (click)="toggleUserSelection(user)" class="friend-card"
             [ngClass]="{'selected': isUserSelected(user)}"
             *ngFor="let user of followedUsers">

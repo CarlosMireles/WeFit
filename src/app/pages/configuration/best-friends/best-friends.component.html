@@ -20,7 +20,7 @@
   </div>
 
   <!-- Lista de amigos -->
-  <div class="friends-list">
+  <div class="friends-list" *ngIf="!isLoading">
     <div class="friend-card" *ngFor="let friend of bestFriendsUsers">
       <app-user-template-image-name
         [username]="friend.username"
