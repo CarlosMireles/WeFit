@@ -1,10 +1,10 @@
 <div class="best-friends-container">
   <!-- Header con botón de añadir -->
   <div class="header">
-    <h1>Mejores Amigos</h1>
+    <h1>{{ 'best-friends.close-friends' | translate}}</h1>
     <button class="add-button" (click)="navigateToAddFriend()">
       <span class="add-icon">+</span>
-      <span>Añadir</span>
+      <span>{{ 'best-friends.add' | translate}}</span>
     </button>
   </div>
 
@@ -33,15 +33,15 @@
 
     <!-- Mensaje cuando no hay amigos -->
     <div class="no-friends" *ngIf="bestFriendsUsers.length === 0 && !isLoading">
-      <p>No has añadido mejores amigos todavía</p>
+      <p>{{ 'best-friends.no-close-friends' | translate}}</p>
     </div>
   </div>
 
   <app-confirmation-question
-    [title]="'¿Estás seguro?'"
+    [title]="'best-friends.confirmation' | translate"
     [message]="confirmationMessage"
-    [confirmText]="'Si'"
-    [cancelText]="'No'"
+    [confirmText]="'best-friends.yes' | translate"
+    [cancelText]="'best-friends.no' | translate"
     [visible]="showConfirmation"
     (confirm)="onConfirm()"
     (cancel)="onCancel()">

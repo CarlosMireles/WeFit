@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {UserService} from '../../../../services/user.service';
 import {UserTemplateImageNameComponent} from '../user-template-image-name/user-template-image-name.component';
 import {NgForOf, NgIf, NgClass} from '@angular/common';
@@ -6,6 +6,7 @@ import {LoadingCircleComponent} from '../../../../components/loading-circle/load
 import {
   ConfirmationQuestionComponent
 } from '../../../../components/confirmation-question/confirmation-question.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 interface UserInfo {
   uid: string;
@@ -23,7 +24,8 @@ interface UserInfo {
     NgClass,
     LoadingCircleComponent,
     NgClass,
-    ConfirmationQuestionComponent
+    ConfirmationQuestionComponent,
+    TranslatePipe
   ],
   templateUrl: './add-best-friends.component.html',
   styleUrl: './add-best-friends.component.css'

@@ -5,6 +5,7 @@ import {UserTemplateImageNameComponent} from './user-template-image-name/user-te
 import {UserService} from '../../../services/user.service';
 import {LoadingCircleComponent} from '../../../components/loading-circle/loading-circle.component';
 import {ConfirmationQuestionComponent} from '../../../components/confirmation-question/confirmation-question.component';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 
 interface UserInfo {
   uid: string;
@@ -15,7 +16,7 @@ interface UserInfo {
 @Component({
   selector: 'app-best-friends',
   standalone: true,
-  imports: [CommonModule, UserTemplateImageNameComponent, LoadingCircleComponent, ConfirmationQuestionComponent],
+  imports: [CommonModule, UserTemplateImageNameComponent, LoadingCircleComponent, ConfirmationQuestionComponent, TranslatePipe],
   templateUrl: './best-friends.component.html',
   styleUrl: './best-friends.component.css'
 })
@@ -32,7 +33,8 @@ export class BestFriendsComponent implements OnInit {
   showConfirmation: boolean = false;
 
   constructor(private router: Router,
-              private userService: UserService) {}
+              private userService: UserService,
+              private translate: TranslateService) {}
 
   navigateToAddFriend(): void {
     this.AddFriend.emit();
@@ -92,7 +94,9 @@ export class BestFriendsComponent implements OnInit {
 
   selectFriend(friend: UserInfo) {
     this.deletedFriend = friend;
-    this.confirmationMessage = `Se eliminará ${friend.username} de tu lista de mejores amigos`;
+    this.confirmationMessage = this.translate.instant('best-friends.confirmation-message', {
+      username: friend.username
+    });
     this.showConfirmation = true;
   }
 }
