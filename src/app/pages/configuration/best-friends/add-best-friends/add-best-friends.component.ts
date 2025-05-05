@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {UserService} from '../../../../services/user.service';
 import {UserTemplateImageNameComponent} from '../user-template-image-name/user-template-image-name.component';
 import {NgForOf, NgIf, NgClass} from '@angular/common';
+import {LoadingCircleComponent} from '../../../../components/loading-circle/loading-circle.component';
 
 interface UserInfo {
   uid: string;
@@ -16,13 +17,16 @@ interface UserInfo {
     UserTemplateImageNameComponent,
     NgIf,
     NgForOf,
-    NgClass
+    NgClass,
+    LoadingCircleComponent
   ],
   templateUrl: './add-best-friends.component.html',
   styleUrl: './add-best-friends.component.css'
 })
 export class AddBestFriendsComponent implements OnInit{
   @Output() backClickedAddFriend = new EventEmitter<void>();
+
+  isLoading: boolean = false;
 
   best_friends: string[] = [];
 
@@ -36,12 +40,20 @@ export class AddBestFriendsComponent implements OnInit{
   ) {}
 
   async ngOnInit() {
+    this.isLoading = true;
+
     const uid = await this.userService.getCurrentUserUid();
-    if (!uid) return;
+    if (!uid) {
+      this.isLoading = false;
+      return;
+    }
     this.currentUserId = uid;
 
     const data = await this.userService.getUserData(uid);
-    if (!data) return;
+    if (!data) {
+      this.isLoading = false;
+      return;
+    }
 
     this.follows = data['follows'] || [];
     this.best_friends = data['best_friends'] || [];
@@ -67,6 +79,7 @@ export class AddBestFriendsComponent implements OnInit{
         image_url: user['image_url']
       });
     }
+    this.isLoading = false;
   }
 
   goBack() {

@@ -85,6 +85,13 @@
   color: #8e8e8e;
 }
 
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
 /* Media queries para responsive */
 @media (max-width: 480px) {
   .best-friends-container {

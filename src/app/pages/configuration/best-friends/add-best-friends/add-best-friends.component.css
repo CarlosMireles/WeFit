@@ -81,3 +81,10 @@
   padding: 40px 0;
   color: #8e8e8e;
 }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}

@@ -11,6 +11,14 @@
   <!-- Línea divisoria -->
   <div class="divider"></div>
 
+  <!-- Indicador de carga -->
+  <div *ngIf="isLoading" class="loading-container">
+    <app-loading-circle
+      [size]="30"
+      color="#14a37e">
+    </app-loading-circle>
+  </div>
+
   <!-- Lista de amigos -->
   <div class="friends-list">
     <div class="friend-card" *ngFor="let friend of bestFriendsUsers">
@@ -24,7 +32,7 @@
     </div>
 
     <!-- Mensaje cuando no hay amigos -->
-    <div class="no-friends" *ngIf="bestFriendsUsers.length === 0">
+    <div class="no-friends" *ngIf="bestFriendsUsers.length === 0 && !isLoading">
       <p>No has añadido mejores amigos todavía</p>
     </div>
   </div>

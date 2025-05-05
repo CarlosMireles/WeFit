@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {Router} from '@angular/router';
 import {UserTemplateImageNameComponent} from './user-template-image-name/user-template-image-name.component';
 import {UserService} from '../../../services/user.service';
+import {LoadingCircleComponent} from '../../../components/loading-circle/loading-circle.component';
 
 interface UserInfo {
   uid: string;
@@ -13,7 +14,7 @@ interface UserInfo {
 @Component({
   selector: 'app-best-friends',
   standalone: true,
-  imports: [CommonModule, UserTemplateImageNameComponent],
+  imports: [CommonModule, UserTemplateImageNameComponent, LoadingCircleComponent],
   templateUrl: './best-friends.component.html',
   styleUrl: './best-friends.component.css'
 })
@@ -21,6 +22,8 @@ export class BestFriendsComponent implements OnInit {
   @Output() AddFriend = new EventEmitter<void>();
   private best_friends: any;
   bestFriendsUsers: UserInfo[] = [];
+
+  isLoading: boolean = false;
 
   constructor(private router: Router,
               private userService: UserService) {}
@@ -30,11 +33,19 @@ export class BestFriendsComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.isLoading = true;
+
     const uid = await this.userService.getCurrentUserUid();
-    if (!uid) return;
+    if (!uid) {
+      this.isLoading = false;
+      return;
+    }
 
     const data = await this.userService.getUserData(uid);
-    if (!data) return;
+    if (!data) {
+      this.isLoading = false;
+      return;
+    }
 
     this.best_friends = data['best_friends'] || [];
 
@@ -48,6 +59,8 @@ export class BestFriendsComponent implements OnInit {
         image_url: user['image_url']
       });
     }
+
+    this.isLoading = false;
   }
 
   removeBestFriend(friend: UserInfo) {
