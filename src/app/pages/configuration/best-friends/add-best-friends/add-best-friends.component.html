@@ -4,7 +4,7 @@
       <svg  xmlns="http://www.w3.org/2000/svg"  width="30"  height="30"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="material-icons"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
     </button>
     <h1>Añadir mejores amigos</h1>
-    <button class="save-button" (click)="saveBestFriends()">
+    <button class="save-button" (click)="showConfirm()">
       Guardar
     </button>
   </div>
@@ -33,4 +33,14 @@
       <p>Sigue a usuarios para poder añadirlos a mejores amigos</p>
     </div>
   </div>
+
+  <app-confirmation-question
+    [title]="'¿Estás seguro?'"
+    [message]="'Se guardarán los usuarios seleccionados como amigos'"
+    [confirmText]="'Si'"
+    [cancelText]="'No'"
+    [visible]="showConfirmation"
+    (confirm)="onConfirm()"
+    (cancel)="onCancel()">
+  </app-confirmation-question>
 </div>
