@@ -5,6 +5,8 @@ import {UserConfigurationComponent} from './user-configuration/user-configuratio
 import {EditProfileComponent} from './user-configuration/edit-profile/edit-profile.component';
 import {LanguageService} from '../../services/translate.service';
 import {TranslatePipe} from '@ngx-translate/core';
+import {BestFriendsComponent} from './best-friends/best-friends.component';
+import {AddBestFriendsComponent} from './best-friends/add-best-friends/add-best-friends.component';
 
 @Component({
   selector: 'app-configuration',
@@ -13,7 +15,9 @@ import {TranslatePipe} from '@ngx-translate/core';
     NgForOf,
     UserConfigurationComponent,
     EditProfileComponent,
-    TranslatePipe
+    TranslatePipe,
+    BestFriendsComponent,
+    AddBestFriendsComponent
   ],
   templateUrl: './configuration.component.html',
   styleUrl: './configuration.component.css'
@@ -22,6 +26,7 @@ export class ConfigurationComponent {
 
   selectedSection = 'usuario';
   showEditProfile = false;
+  showAddBestFriends = false;
 
   constructor(private router: Router, private langService: LanguageService) {}
 
@@ -51,5 +56,13 @@ export class ConfigurationComponent {
 
   onEditProfileBackClicked(): void {
     this.showEditProfile = false;
+  }
+
+  onAddBestFriendClicked(): void {
+    this.showAddBestFriends = true;
+  }
+
+  onAddBestFriendBackClicked(): void {
+    this.showAddBestFriends = false;
   }
 }

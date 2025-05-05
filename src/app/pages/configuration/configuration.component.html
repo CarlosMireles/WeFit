@@ -32,8 +32,8 @@
       <p>{{ 'configuration.notification' | translate }}</p>
     </div>
     <div *ngIf="selectedSection === 'mejos'">
-      <h1>{{ 'configuration.close-friends' | translate }}</h1>
-      <p>{{ 'configuration.close-friends' | translate }}</p>
+      <app-best-friends *ngIf="!showAddBestFriends" (AddFriend)="onAddBestFriendClicked()"></app-best-friends>
+      <app-add-best-friends *ngIf="showAddBestFriends" (backClickedAddFriend)="onAddBestFriendBackClicked()"></app-add-best-friends>
     </div>
   </div>
 </div>

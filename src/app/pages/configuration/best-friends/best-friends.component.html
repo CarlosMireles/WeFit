@@ -1,0 +1,49 @@
+<div class="best-friends-container">
+  <!-- Header con botón de añadir -->
+  <div class="header">
+    <h1>Mejores Amigos</h1>
+    <button class="add-button" (click)="navigateToAddFriend()">
+      <span class="add-icon">+</span>
+      <span>Añadir</span>
+    </button>
+  </div>
+
+  <!-- Línea divisoria -->
+  <div class="divider"></div>
+
+  <!-- Indicador de carga -->
+  <div *ngIf="isLoading" class="loading-container">
+    <app-loading-circle
+      [size]="30"
+      color="#14a37e">
+    </app-loading-circle>
+  </div>
+
+  <!-- Lista de amigos -->
+  <div class="friends-list" *ngIf="!isLoading">
+    <div class="friend-card" *ngFor="let friend of bestFriendsUsers">
+      <app-user-template-image-name
+        [username]="friend.username"
+        [photoURL]="friend.image_url">
+      </app-user-template-image-name>
+      <button class="action-button">
+        <span class="action-icon" (click)="selectFriend(friend)">✖</span>
+      </button>
+    </div>
+
+    <!-- Mensaje cuando no hay amigos -->
+    <div class="no-friends" *ngIf="bestFriendsUsers.length === 0 && !isLoading">
+      <p>No has añadido mejores amigos todavía</p>
+    </div>
+  </div>
+
+  <app-confirmation-question
+    [title]="'¿Estás seguro?'"
+    [message]="confirmationMessage"
+    [confirmText]="'Si'"
+    [cancelText]="'No'"
+    [visible]="showConfirmation"
+    (confirm)="onConfirm()"
+    (cancel)="onCancel()">
+  </app-confirmation-question>
+</div>
