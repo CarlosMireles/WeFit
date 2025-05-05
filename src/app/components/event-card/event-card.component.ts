@@ -19,6 +19,8 @@ export class EventCardComponent {
   @Input() maxParticipants!: number;
   @Input() latitude!: number;
   @Input() longitude!: number;
+  @Input() image!: string;
+  image_route: string = "";
 
   @Output() selected = new EventEmitter<{
     id: string;
@@ -29,6 +31,8 @@ export class EventCardComponent {
   constructor(private langService: LanguageService, private router: Router) {}
 
   async ngOnInit() {
+    this.image_route = "assets/sports/" + this.image + ".jpg";
+    console.log(this.image_route);
     const lang = this.langService.currentLang;
     await this.langService.changeLang(lang);
   }

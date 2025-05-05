@@ -1,35 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
+
+/* Contenedor principal */
 .diet-card {
-  max-width: 300px;
-  background: #1e1e1e;
-  border-radius: 8px;
-  overflow: hidden;
+  width: 18rem;
+  background: #1a1a1a;
   color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-  font-family: 'Poppins', sans-serif;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
 }
 
+.diet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* Carrusel de imágenes con proporción 16:9 */
 .carousel {
   position: relative;
-  height: 200px;
-  background: #333;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #111;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.carousel-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
+/* Imagen escalada dentro del contenedor sin recortes excesivos */
+.diet-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
   transition: opacity 0.5s ease-in-out;
   opacity: 1;
 }
-.carousel-img.fade {
+.diet-card-img.fade {
   opacity: 0;
 }
 
+/* Navegación del carrusel */
 .nav {
   position: absolute;
   top: 50%;
@@ -42,60 +57,69 @@
   height: 2rem;
   border-radius: 50%;
   cursor: pointer;
+  line-height: 1;
 }
-.prev {
-  left: 0.5rem;
-}
-.next {
-  right: 0.5rem;
-}
+.prev { left: 0.5rem; }
+.next { right: 0.5rem; }
 
+/* Placeholder cuando no hay imagen */
 .no-img {
-  height: 200px;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #888;
+  color: #555;
   font-size: 1rem;
 }
 
-.info {
-  padding: 1rem;
-  text-align: center;
+/* Cuerpo de la tarjeta */
+.diet-card-body {
+  padding: 1.2rem;
+  background-color: #111;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.title {
-  margin: 0;
-  font-size: 1.25rem;
+/* Título */
+.diet-card-title {
+  font-size: 1.4rem;
+  color: #38ef7d;
+  margin: 0 0 0.75rem;
   font-weight: 600;
 }
 
-.desc1 {
-  margin: 0.5rem 0;
+/* Descripción */
+.diet-card-desc {
+  font-size: 0.95rem;
   color: #ccc;
+  margin: 0 0 0.75rem;
+  line-height: 1.4;
 }
 
-.count {
-  margin: 0;
+/* Conteo de comidas */
+.diet-card-count {
+  font-size: 0.9rem;
   color: #aaa;
+  margin: 0 0 1rem;
 }
 
-.view-button-container {
-  text-align: center;
-  padding: 0.75rem 1rem 1rem;
-}
-
-.btn-view {
-  background: #14d578;
+/* Botón de acción */
+.diet-card-button {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background-color: #38ef7d;
   border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  color: #fff;
-  font-weight: 500;
+  border-radius: 0.5rem;
+  color: #111;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
 }
-.btn-view:hover {
-  background: #0fb864;
+
+.diet-card-button:hover {
+  background-color: #2ddc6e;
 }

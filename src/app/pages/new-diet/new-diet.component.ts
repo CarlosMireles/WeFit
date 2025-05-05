@@ -1,24 +1,30 @@
+// src/app/pages/new-diet/new-diet.component.ts
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DietService } from '../../services/diet.service';
-import { Diet, Meal } from '../../models/diet';
+
+import { DietService, NewDiet } from '../../services/diet.service';
+import { Meal } from '../../models/diet';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-new-diet',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './new-diet.component.html',
   styleUrls: ['./new-diet.component.css']
 })
 export class NewDietComponent {
-  model: Diet = {
+  /** Modelo de nueva dieta sin id ni userId */
+  model: NewDiet = {
     title: '',
     description1: '',
     meals: []
   };
-  savedDiet: Diet | null = null;
+
+  savedDiet: NewDiet | null = null;
   isSaving = false;
 
   constructor(
@@ -26,16 +32,18 @@ export class NewDietComponent {
     private router: Router
   ) {}
 
+  /** Añade una comida vacía (hasta 10) */
   addMeal() {
     if (this.model.meals.length < 10) {
       this.model.meals.push({
         lunch: '',
         description2: '',
-        // no ponemos img_url, se asignará al salvar o al preview
+        // img_url se asigna en saveDiet o en preview
       } as Meal);
     }
   }
 
+  /** Captura archivo y lo carga en base64 */
   onFileSelected(evt: Event, index: number) {
     const input = evt.target as HTMLInputElement;
     if (!input.files?.length) return;
@@ -47,10 +55,11 @@ export class NewDietComponent {
     reader.readAsDataURL(file);
   }
 
+  /** Guarda la nueva dieta */
   async saveDiet() {
     this.isSaving = true;
 
-    // asignar fallback a cada meal sin imagen
+    // fallback de imagen
     this.model.meals.forEach(meal => {
       if (!meal.img_url) {
         meal.img_url = 'assets/healthy-food.png';
@@ -62,10 +71,12 @@ export class NewDietComponent {
     this.isSaving = false;
   }
 
+  /** Cancela y vuelve al listado */
   cancel() {
     this.router.navigate(['/diets']);
   }
 
+  /** Elimina la comida en la posición dada (manteniendo al menos 1) */
   removeMeal(index: number) {
     if (this.model.meals.length > 1) {
       this.model.meals.splice(index, 1);

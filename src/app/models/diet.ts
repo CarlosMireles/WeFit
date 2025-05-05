@@ -9,7 +9,8 @@ export interface Meal {
 }
 
 export interface Diet {
-  id?: string;
+  id: string;
+  userId: string;
   title: string;
   description1: string;
   meals: Meal[];

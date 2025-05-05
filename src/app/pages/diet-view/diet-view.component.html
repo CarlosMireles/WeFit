@@ -1,5 +1,5 @@
 <div class="view-container" *ngIf="diet">
-  <!-- HEADER CON TÍTULO O INPUT -->
+  <!-- HEADER -->
   <div class="header">
     <ng-container *ngIf="!editMode; else editTitle">
       <h1>{{ diet.title }}</h1>
@@ -8,37 +8,36 @@
       <input
         type="text"
         [(ngModel)]="updated.title"
-        placeholder="Título de la dieta"
+        placeholder="'diet-view.title' | translate"
       />
     </ng-template>
   </div>
 
-  <!-- SECCIÓN DESCRIPCIÓN GENERAL -->
+  <!-- DESCRIPCIÓN GENERAL -->
   <div class="section overview">
-    <label>Descripción general:</label>
+    <label>{{ 'diet-view.description' | translate }}</label>
     <ng-container *ngIf="!editMode; else editDesc">
       <p>{{ diet.description1 }}</p>
     </ng-container>
     <ng-template #editDesc>
       <textarea
         [(ngModel)]="updated.description1"
-        placeholder="Descripción general"
+        placeholder="'diet-view.description' | translate"
       ></textarea>
     </ng-template>
   </div>
 
-  <!-- SECCIÓN COMIDAS -->
+  <!-- COMIDAS -->
   <div class="section">
     <div class="meals-header">
-      <h2>Comidas ({{ editMode ? updated.meals.length : diet.meals.length }})</h2>
+      <h2>{{ 'diet-view.meals' | translate }} ({{ editMode ? updated.meals.length : diet.meals.length }})</h2>
       <button
-        type="button"
         *ngIf="editMode"
         class="btn-add"
         [disabled]="updated.meals.length >= 10"
         (click)="addMeal()"
       >
-        + Añadir comida
+        {{ 'diet-view.add-meal' | translate }}
       </button>
     </div>
 
@@ -47,9 +46,8 @@
         *ngFor="let m of (editMode ? updated.meals : diet.meals); let i = index"
         class="meal-card"
       >
-        <!-- TÍTULO DE LA COMIDA -->
         <div class="meal-section meal-title">
-          <h4>Comida del día</h4>
+          <h4>{{ 'diet-view.meal' | translate }}</h4>
           <div class="title-row">
             <ng-container *ngIf="!editMode; else editMealTitle">
               <h3>{{ m.lunch }}</h3>
@@ -58,11 +56,10 @@
               <input
                 type="text"
                 [(ngModel)]="updated.meals[i].lunch"
-                placeholder="Nombre de la comida"
+                placeholder="'diet-view.name' | translate"
               />
             </ng-template>
             <button
-              type="button"
               *ngIf="editMode"
               class="btn-remove"
               [disabled]="updated.meals.length <= 1"
@@ -73,21 +70,19 @@
           </div>
         </div>
 
-        <!-- CONTENIDO Y PREPARACIÓN -->
         <div class="meal-section meal-content">
-          <h4>Contenido y preparación</h4>
+          <h4>{{ 'diet-view.meal-content' | translate }}</h4>
           <ng-container *ngIf="!editMode; else editMeal">
             <p>{{ m.description2 }}</p>
           </ng-container>
           <ng-template #editMeal>
             <textarea
               [(ngModel)]="updated.meals[i].description2"
-              placeholder="Descripción detallada"
+              placeholder="'diet-view.details' | translate"
             ></textarea>
           </ng-template>
         </div>
 
-        <!-- MACROS (modo lectura solo si hay datos) -->
         <div
           class="meal-section meal-macros"
           *ngIf="
@@ -95,48 +90,47 @@
             (m.proteins || m.carbohydrates || m.fats || m.calories)
           "
         >
-          <h4>Macros</h4>
+          <h4>{{ 'diet-view.macros' | translate }}</h4>
           <ul class="macros">
-            <li *ngIf="m.proteins">Proteínas: {{ m.proteins }} g</li>
+            <li *ngIf="m.proteins">{{ 'diet-view.proteins' | translate }} {{ m.proteins }} g</li>
             <li *ngIf="m.carbohydrates">
-              Carbohidratos: {{ m.carbohydrates }} g
+              {{ 'diet-view.carbohydrates' | translate }} {{ m.carbohydrates }} g
             </li>
-            <li *ngIf="m.fats">Grasas: {{ m.fats }} g</li>
-            <li *ngIf="m.calories">Calorías: {{ m.calories }} kcal</li>
+            <li *ngIf="m.fats">{{ 'diet-view.fats' | translate }} {{ m.fats }} g</li>
+            <li *ngIf="m.calories">{{ 'diet-view.calories' | translate }} {{ m.calories }} kcal</li>
           </ul>
         </div>
 
-        <!-- CAMPOS DE EDICIÓN DE MACROS E IMAGEN -->
         <ng-container *ngIf="editMode">
           <div class="meal-section meal-macros">
-            <h4>Macros</h4>
+            <h4>{{ 'diet-view.macros' | translate }}</h4>
             <div class="inputs-row">
               <input
                 type="number"
                 [(ngModel)]="updated.meals[i].proteins"
-                placeholder="Proteínas (g)"
+                placeholder="'diet-view.proteins-ph' | translate"
               />
               <input
                 type="number"
                 [(ngModel)]="updated.meals[i].carbohydrates"
-                placeholder="Carbohidratos (g)"
+                placeholder="'diet-view.carbohydrates-ph' | translate"
               />
             </div>
             <div class="inputs-row">
               <input
                 type="number"
                 [(ngModel)]="updated.meals[i].fats"
-                placeholder="Grasas (g)"
+                placeholder="'diet-view.fats-ph' | translate"
               />
               <input
                 type="number"
                 [(ngModel)]="updated.meals[i].calories"
-                placeholder="Calorías"
+                placeholder="'diet-view.calories-ph' | translate"
               />
             </div>
           </div>
           <div class="meal-section meal-image">
-            <h4>Imagen</h4>
+            <h4>{{ 'diet-view.image' | translate }}</h4>
             <div class="file-input">
               <input
                 type="file"
@@ -153,9 +147,8 @@
           </div>
         </ng-container>
 
-        <!-- IMAGEN (modo lectura, tras guardar fallback garantizado) -->
         <div class="meal-section meal-image" *ngIf="!editMode">
-          <h4>Imagen</h4>
+          <h4>{{ 'diet-view.image' | translate }}</h4>
           <img
             [src]="m.img_url"
             alt="Foto comida"
@@ -169,16 +162,14 @@
   <!-- BOTONES FINALES -->
   <div class="buttons">
     <button
-      type="button"
-      *ngIf="!editMode"
+      *ngIf="isOwner && !editMode"
       class="btn-edit"
       (click)="toggleEdit()"
     >
-      Editar
+      {{ 'diet-view.edit' | translate }}
     </button>
     <button
-      type="button"
-      *ngIf="editMode"
+      *ngIf="isOwner && editMode"
       class="btn-save"
       [disabled]="saving"
       (click)="saveEdit()"
@@ -186,18 +177,17 @@
       {{ saving ? 'Guardando…' : 'Guardar' }}
     </button>
     <button
-      type="button"
+      *ngIf="isOwner"
       class="btn-delete"
       (click)="deleteDiet()"
     >
-      Eliminar
+      {{ 'diet-view.delete' | translate }}
     </button>
     <button
-      type="button"
       class="btn-cancel"
       (click)="cancel()"
     >
-      Cerrar
+      {{ 'diet-view.close' | translate }}
     </button>
   </div>
 </div>

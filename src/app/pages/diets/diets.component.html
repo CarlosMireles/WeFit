@@ -1,5 +1,5 @@
 <div class="diets-container">
-  <h1 class="title">Tus Dietas:</h1>
+  <h1 class="title">{{ 'diets.title' | translate }}</h1>
 
   <div class="diets-grid">
     <ng-container *ngIf="diets$ | async as diets">
@@ -14,7 +14,7 @@
               alt="Añadir nueva dieta"
               class="plus-icon"
             />
-            <span class="label">Añadir nueva dieta</span>
+            <span class="label">{{ 'diets.add' | translate }}</span>
           </div>
         </ng-template>
       </ng-container>

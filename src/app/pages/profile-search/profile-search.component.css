@@ -1,10 +1,26 @@
+/* src/app/pages/profile-search/profile-search.component.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
+/* Aseguramos que el contenedor ocupe toda la altura de la ventana */
 .container {
   background-color: #fffee2;
+  padding-bottom: 5rem; /* espacio inferior para la barra fija */
+  min-height: 100vh;    /* ocupa al menos toda la altura del viewport */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Panel lateral */
+/* Barra de búsqueda fija al pie, siempre encima */
+.container app-search-bar {
+  position: fixed;
+  bottom: 0;
+  left: 30%;
+  width: 70%;
+  z-index: 1000;
+}
+
+/* PANEL LATERAL DE PERFIL */
 .profile-card {
   width: 25%;
   height: 100vh;
@@ -12,24 +28,29 @@
   color: #f1f1f1;
   padding: 4% 20px 20px;
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 10%;
+  gap: 1rem;
   border-top-right-radius: 30px;
   box-shadow: 5px 0 25px rgba(0, 0, 0, 0.8);
+}
+
+.settings-icon {
+  position: absolute;
+  top: 16px;
+  right: 12px;
+  cursor: pointer;
 }
 
 .cover-photo {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.divider-user {
-  width: 100%;
+  margin-top: 0.5rem;
 }
 
 .avatar {
@@ -38,19 +59,28 @@
   border-radius: 50%;
   background-size: cover;
   background-position: center;
-  margin: 20px 0;
+  margin: 10px 0;
   background-color: #2b2b2b;
 }
 
 .username {
-  font-size: 20px;
-  margin-bottom: 15px;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.divider-user {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: none;
+  margin: 0;
 }
 
 .stats {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  padding: 0.5rem 0;
 }
 
 .stats div {
@@ -58,10 +88,14 @@
   text-align: center;
 }
 
+.stats div p {
+  margin-top: 4px;
+}
+
 .btn-follow {
   width: 80%;
   padding: 0.6rem 0;
-  margin: 0.5rem 0;
+  margin: 0.3rem 0;
   background-color: #00a556;
   color: #fff;
   font-weight: 500;
@@ -76,22 +110,48 @@
 }
 
 .description {
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
-  margin-top: 15px;
+  margin-top: 0;
+  padding: 0 8px;
 }
 
-/* Zona de contenido principal */
+.icon-menu {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.icon-menu-svg {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  transition: transform .15s ease-in-out, opacity .15s ease-in-out;
+}
+
+.icon-menu-svg:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+/* CONTENIDO PRINCIPAL */
 .content-container {
   margin-left: 30%;
-  padding: 1% 5% 10%;
+  padding: 1% 5% 6rem;  /* bottom padding ≥ altura de la barra */
   display: flex;
   flex-direction: column;
+  flex-grow: 1;         /* para estirarse y llenar el espacio restante */
 }
 
 .divider {
   width: 100%;
   background-color: #ffffff40;
+  height: 1px;
+  border: none;
+  margin: 0.5rem 0;
 }
 
 .eventos-text {
@@ -99,10 +159,11 @@
   color: #2b2b2b;
 }
 
+/* Scroll horizontal de tarjetas */
 .card-flex {
   display: flex;
   gap: 15px;
-  overflow-x: scroll;
+  overflow-x: auto;
   white-space: nowrap;
   padding: 4%;
   cursor: grab;
@@ -123,4 +184,36 @@
 .eventos-container {
   margin-bottom: 10px;
   margin-right: 5%;
+}
+
+/* Posicionamiento de tarjetas de dieta */
+.card-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.card-wrapper .icon-trash,
+.card-wrapper .icon-logout {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  z-index: 5;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.card-wrapper .icon-trash {
+  background-image: url('/assets/trash.svg');
+}
+
+.card-wrapper .icon-logout {
+  background-image: url('/assets/logout.svg');
+}
+
+.card-wrapper .icon-trash:hover,
+.card-wrapper .icon-logout:hover {
+  opacity: 0.8;
 }

@@ -1,14 +1,22 @@
-<button
-  class="event-card"
-  (click)="onCardClick()"
-  role="button"
-  [attr.aria-label]="'Ver evento ' + title"
->
-  <h2 class="name">{{ title }}</h2>
-  <hr />
-  <p class="place">{{ place }}</p>
-  <p class="participants">
-    Participantes: {{ participants }} / {{ maxParticipants }}
-  </p>
-  <p class="datetime">{{ date }} {{ hour }}</p>
-</button>
+<div class="custom-card" (click)="onCardClick()" role="button" [attr.aria-label]="'Ver evento ' + title">
+  <img [src]="image_route" alt="Imagen del deporte" class="custom-card-img" />
+
+  <div class="custom-card-body">
+    <h5 class="custom-card-title">{{ title }}</h5>
+
+    <p class="custom-card-text">
+      📍 <strong>Ubicación:</strong> {{ place }}
+    </p>
+
+    <p class="custom-card-text">
+      👥 <strong>Participantes:</strong> {{ participants }} / {{ maxParticipants }}
+    </p>
+
+    <p class="custom-card-text">
+      📅 <strong>Fecha:</strong> {{ date }}<br />
+      ⏰ <strong>Hora:</strong> {{ hour }}
+    </p>
+
+    <button class="custom-card-button">Ver evento</button>
+  </div>
+</div>

@@ -1,10 +1,10 @@
 <div class="new-diet-container">
-  <h1>Nueva Dieta</h1>
+  <h1>{{ 'new-diet.title' | translate }}</h1>
 
   <!-- FORMULARIO DE CREACIÓN -->
   <form (ngSubmit)="saveDiet()" #f="ngForm" novalidate>
     <!-- TÍTULO -->
-    <label for="title">Título:</label>
+    <label for="title">{{ 'new-diet.name' | translate }}</label>
     <input
       id="title"
       name="title"
@@ -13,7 +13,7 @@
     />
 
     <!-- DESCRIPCIÓN -->
-    <label for="desc1">Descripción:</label>
+    <label for="desc1">{{ 'new-diet.description' | translate }}</label>
     <textarea
       id="desc1"
       name="description1"
@@ -28,7 +28,7 @@
       (click)="addMeal()"
       [disabled]="model.meals.length >= 10"
     >
-      Añadir comida ({{ model.meals.length }}/10)
+      {{ 'new-diet.add-meal' | translate }} ({{ model.meals.length }}/10)
     </button>
 
     <!-- BLOQUES DE COMIDA -->
@@ -42,9 +42,9 @@
         ×
       </button>
 
-      <h3>Comida {{ i + 1 }}</h3>
+      <h3>{{ 'new-diet.meal' | translate }} {{ i + 1 }}</h3>
 
-      <label for="lunch-{{i}}">Comida del día:</label>
+      <label for="lunch-{{i}}">{{ 'new-diet.mealOfTheDay' | translate }}</label>
       <input
         id="lunch-{{i}}"
         name="lunch-{{i}}"
@@ -52,7 +52,7 @@
         required
       />
 
-      <label for="desc2-{{i}}">Contenido y preparación de la dieta:</label>
+      <label for="desc2-{{i}}">{{ 'new-diet.meal-content' | translate }}</label>
       <textarea
         id="desc2-{{i}}"
         name="description2-{{i}}"
@@ -60,7 +60,7 @@
         required
       ></textarea>
 
-      <label for="prot-{{i}}">Proteínas (g):</label>
+      <label for="prot-{{i}}">{{ 'diet-view.proteins-ph' | translate }}</label>
       <input
         id="prot-{{i}}"
         type="number"
@@ -68,7 +68,7 @@
         name="proteins-{{i}}"
       />
 
-      <label for="carb-{{i}}">Carbohidratos (g):</label>
+      <label for="carb-{{i}}">{{ 'diet-view.proteins-ph' | translate }}</label>
       <input
         id="carb-{{i}}"
         type="number"
@@ -76,7 +76,7 @@
         name="carbohydrates-{{i}}"
       />
 
-      <label for="fat-{{i}}">Grasas (g):</label>
+      <label for="fat-{{i}}">{{ 'diet-view.proteins-ph' | translate }}</label>
       <input
         id="fat-{{i}}"
         type="number"
@@ -84,7 +84,7 @@
         name="fats-{{i}}"
       />
 
-      <label for="cal-{{i}}">Calorías (kcal):</label>
+      <label for="cal-{{i}}">{{ 'new-diet.calories' | translate }}</label>
       <input
         id="cal-{{i}}"
         type="number"
@@ -92,7 +92,7 @@
         name="calories-{{i}}"
       />
 
-      <label for="img-{{i}}">Imagen:</label>
+      <label for="img-{{i}}">{{ 'new-diet.image' | translate }}</label>
       <input
         id="img-{{i}}"
         type="file"
@@ -119,14 +119,14 @@
         class="btn-save"
         [disabled]="f.invalid || isSaving || model.meals.length < 1"
       >
-        Guardar Dieta
+        {{ 'new-diet.save' | translate }}
       </button>
       <button
         type="button"
         class="btn-cancel"
         (click)="cancel()"
       >
-        Cancelar
+        {{ 'new-diet.cancel' | translate }}
       </button>
     </div>
   </form>
@@ -134,10 +134,10 @@
   <!-- MENSAJE DE CONFIRMACIÓN -->
   <div *ngIf="savedDiet" class="confirmation">
     <p class="confirmation-text">
-      ¡Dieta “{{ savedDiet.title }}” creada correctamente!
+      {{ 'new-diet.confirmation' | translate }} “{{ savedDiet.title }}” {{ 'new-diet.confirmation2' | translate }}
     </p>
     <button class="btn-back" (click)="cancel()">
-      Volver a Dietas
+      {{ 'new-diet.return' | translate }}
     </button>
   </div>
 </div>
