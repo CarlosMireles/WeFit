@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SearchService } from '../../services/search.service';
 import { UserService } from '../../services/user.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-find-user',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './find-user.component.html',
   styleUrls: ['./find-user.component.css']
 })

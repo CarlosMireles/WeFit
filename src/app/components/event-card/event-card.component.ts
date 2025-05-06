@@ -1,10 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {LanguageService} from '../../services/translate.service';
 import { Router } from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-event-card',
-    imports: [],
+  imports: [
+    TranslatePipe
+  ],
     templateUrl: './event-card.component.html',
     standalone: true,
     styleUrl: './event-card.component.css'

@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FilterCardComponent } from '../filter-card/filter-card.component';
 import {CommunicationService} from '../../services/CommunicationService';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-filter-toggle',
   standalone: true,
-  imports: [CommonModule, FilterCardComponent],
+  imports: [CommonModule, FilterCardComponent, TranslatePipe],
   templateUrl: './filter-toggle.component.html',
   styleUrls: ['./filter-toggle.component.css']
 })

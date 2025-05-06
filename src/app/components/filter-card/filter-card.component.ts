@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EventFilters } from '../../services/event.service';
 import { CommunicationService } from '../../services/CommunicationService';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-filter-card',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './filter-card.component.html',
   styleUrls: ['./filter-card.component.css']
 })

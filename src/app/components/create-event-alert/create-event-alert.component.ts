@@ -1,8 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'create-event-alert',
   templateUrl: './create-event-alert.component.html',
+  standalone: true,
+  imports: [
+    TranslatePipe
+  ],
   styleUrls: ['./create-event-alert.component.css']
 })
 export class CreateEventAlertComponent {

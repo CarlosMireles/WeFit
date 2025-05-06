@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommunicationService } from '../../services/CommunicationService';
 import { CreateEventAlertComponent } from '../create-event-alert/create-event-alert.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-event-toggle',
   standalone: true,
-  imports: [CommonModule, CreateEventAlertComponent],
+  imports: [CommonModule, CreateEventAlertComponent, TranslatePipe],
   templateUrl: './event-toggle.component.html',
   styleUrls: ['./event-toggle.component.css']
 })
