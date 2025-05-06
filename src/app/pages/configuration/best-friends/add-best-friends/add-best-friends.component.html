@@ -3,9 +3,9 @@
     <button class="back-button" (click)="goBack()">
       <svg  xmlns="http://www.w3.org/2000/svg"  width="30"  height="30"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="material-icons"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
     </button>
-    <h1>Añadir mejores amigos</h1>
+    <h1>{{ 'best-friends.add-friend' | translate}}</h1>
     <button class="save-button" (click)="showConfirm()">
-      Guardar
+      {{ 'best-friends.save' | translate}}
     </button>
   </div>
 
@@ -30,15 +30,15 @@
     </button>
 
     <div class="no-friends" *ngIf="followedUsers.length === 0 && !isLoading">
-      <p>Sigue a usuarios para poder añadirlos a mejores amigos</p>
+      <p>{{ 'best-friends.follow-to-add' | translate}}</p>
     </div>
   </div>
 
   <app-confirmation-question
-    [title]="'¿Estás seguro?'"
-    [message]="'Se guardarán los usuarios seleccionados como mejores amigos'"
-    [confirmText]="'Si'"
-    [cancelText]="'No'"
+    [title]="'best-friends.confirmation' | translate"
+    [message]="'best-friends.notification' | translate"
+    [confirmText]="'best-friends.yes' | translate"
+    [cancelText]="'best-friends.no' | translate"
     [visible]="showConfirmation"
     (confirm)="onConfirm()"
     (cancel)="onCancel()">

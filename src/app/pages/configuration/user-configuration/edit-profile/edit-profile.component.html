@@ -7,7 +7,7 @@
         <path d="M5 12l6 6" />
         <path d="M5 12l6 -6" />
       </svg>
-      <h1>Editar perfil</h1>
+      <h1>{{ 'edit-profile.edit' | translate }}</h1>
     </div>
   </div>
 
@@ -18,13 +18,13 @@
       </div>
       <div class="profile-picture-actions">
         <h2>{{ profileData.username }}</h2>
-        <label for="file-upload" class="change-photo-btn">Cambiar foto del perfil</label>
+        <label for="file-upload" class="change-photo-btn">{{ 'edit-profile.change-image' | translate }}</label>
         <input id="file-upload" type="file" accept="image/*" (change)="onFileSelected($event)" class="file-input">
       </div>
     </div>
 
     <div class="form-group">
-      <label for="username">Nombre de usuario</label>
+      <label for="username">{{ 'edit-profile.username' | translate }}</label>
       <div class="input-container">
         <input
           type="text"
@@ -34,7 +34,7 @@
           (input)="onUsernameInput()"
           placeholder="Nombre de usuario">
         <span class="field-info">
-          Ayuda a las personas a descubrir tu cuenta usando el nombre que te identifica: tu nombre completo, apodo o nombre comercial.
+          {{ 'edit-profile.username-info' | translate }}
         </span>
         <span class="field-info" *ngIf="usernameAvailabilityMessage">
           {{ usernameAvailabilityMessage }}
@@ -43,7 +43,7 @@
     </div>
 
     <div class="form-group">
-      <label for="description">Descripción</label>
+      <label for="description">{{ 'edit-profile.description' | translate }}</label>
       <div class="input-container">
         <textarea
           id="description"
@@ -60,16 +60,16 @@
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="save-button">Enviar</button>
+      <button type="submit" class="save-button">{{ 'edit-profile.send' | translate }}</button>
     </div>
   </form>
 
   <!-- Componente de confirmación con textos dinámicos -->
   <app-confirmation-question
-    [title]="getConfirmationTitle()"
-    [message]="getConfirmationMessage()"
-    [confirmText]="getConfirmText()"
-    [cancelText]="getCancelText()"
+    [title]="getConfirmationTitle() | translate"
+    [message]="getConfirmationMessage() | translate"
+    [confirmText]="getConfirmText() | translate"
+    [cancelText]="getCancelText() | translate"
     [visible]="showConfirmation"
     (confirm)="onConfirm()"
     (cancel)="onCancel()">
