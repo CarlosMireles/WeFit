@@ -1,10 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'leave-event-alert',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './leave-event-alert.component.html',
   styleUrls: ['./leave-event-alert.component.css']
 })
@@ -25,4 +26,6 @@ export class LeaveEventAlertComponent {
     evt.stopPropagation();
     this.cancel.emit();
   }
+
+    protected readonly alert = alert;
 }

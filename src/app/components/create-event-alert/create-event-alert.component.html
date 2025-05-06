@@ -4,9 +4,9 @@
       <!-- Coloca aquí la ruta de tu imagen de alerta -->
       <img src="assets/alert-triangle.svg" alt="Imagen de alerta" />
     </div>
-    <h2>Atención</h2>
+    <h2>{{ 'create-event.alert' | translate }}</h2>
     <p>
-      Queremos recordarte la importancia de ser responsable al crear un evento. Es fundamental que el entorno en el que se realice el evento sea adecuado, accesible y garantice la seguridad de todas las personas participantes.
+      {{ 'create-event.message' | translate }}
     </p>
     <div class="buttons">
       <button type="button" (click)="onAccept($event)">Aceptar</button>

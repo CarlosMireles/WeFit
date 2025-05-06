@@ -2,11 +2,12 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import {Diet} from '../../models/diet';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-diet-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './diet-card.component.html',
   styleUrls: ['./diet-card.component.css']
 })

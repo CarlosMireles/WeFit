@@ -31,7 +31,7 @@
       {{ diet.meals.length }} comida<span *ngIf="diet.meals.length > 1">s</span>
     </p>
     <button class="diet-card-button" (click)="viewDiet(); $event.stopPropagation()">
-      Ver Dieta
+      {{ 'diet-card.view-diet' | translate }}
     </button>
   </div>
 </div>

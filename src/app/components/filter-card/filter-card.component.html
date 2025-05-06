@@ -1,34 +1,34 @@
 <div class="overlay">
   <div class="modal-window">
-    <h2>Filtrar Eventos</h2>
+    <h2>{{ 'filter.filter-event' | translate }}</h2>
 
-    <label for="date">Fecha:</label>
+    <label for="date">{{ 'filter.date' | translate }}</label>
     <input id="date" type="date" [(ngModel)]="filters.date" class="field" />
 
-    <label for="hourMinimum">Hora inicial:</label>
+    <label for="hourMinimum">{{ 'filter.start' | translate }}</label>
     <input id="hourMinimum" type="time" [(ngModel)]="filters.hourMinimum" class="field" />
 
-    <label for="hourMaximum">Hora final:</label>
+    <label for="hourMaximum">{{ 'filter.finish' | translate }}</label>
     <input id="hourMaximum" type="time" [(ngModel)]="filters.hourMaximum" class="field" />
 
-    <label for="sport">Deporte:</label>
+    <label for="sport">{{ 'filter.sport' | translate }}</label>
     <select id="sport" [(ngModel)]="filters.sport" class="field">
-      <option value="">Seleccione deporte</option>
+      <option value="">{{ 'filter.select-sport' | translate }}</option>
       <option *ngFor="let s of sports" [value]="s">{{ s }}</option>
     </select>
 
-    <label for="maxParticipants">Máximo de Participantes:</label>
+    <label for="maxParticipants">{{ 'filter.max-participants' | translate }}</label>
     <input id="maxParticipants" type="number" [(ngModel)]="filters.maxParticipants" class="field" min="1"/>
 
-    <label for="privacy">Privacidad:</label>
+    <label for="privacy">{{ 'filter.privacy' | translate }}</label>
     <select id="privacy" [(ngModel)]="filters.privacy" class="field">
-      <option value="">Seleccione privacidad</option>
+      <option value="">{{ 'filter.select-privacy' | translate }}</option>
       <option *ngFor="let p of privacies" [value]="p">{{ p }}</option>
     </select>
 
     <div class="buttons">
-      <button id="cancelButton" type="button" (click)="applyFilters()">Aplicar Filtros</button>
-      <button id="ApplyButton" type="button" (click)="cancel()">Cancelar</button>
+      <button id="cancelButton" type="button" (click)="applyFilters()">{{ 'filter.apply' | translate }}</button>
+      <button id="ApplyButton" type="button" (click)="cancel()">{{ 'filter.cancel' | translate }}</button>
     </div>
   </div>
 </div>

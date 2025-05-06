@@ -3,11 +3,11 @@
     <div class="alert-image">
       <img src="assets/alert-triangle.svg" alt="Alerta" />
     </div>
-    <h2>Salir del evento</h2>
-    <p>¿Seguro que deseas abandonar el evento <strong>"{{ eventTitle }}"</strong>?</p>
+    <h2>{{ 'leave-event-alert.leave' | translate }}</h2>
+    <p>{{ 'leave-event-alert.confirmation' | translate }} <strong>"{{ eventTitle }}"</strong>?</p>
     <div class="buttons">
-      <button type="button" (click)="onAccept($event)">Aceptar</button>
-      <button type="button" (click)="onCancel($event)">Cancelar</button>
+      <button type="button" (click)="onAccept($event)">{{ 'leave-event-alert.accept-button' | translate }}</button>
+      <button type="button" (click)="onCancel($event)">{{ 'leave-event-alert.cancel-button' | translate }}</button>
     </div>
   </div>
 </div>

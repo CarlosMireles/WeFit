@@ -1,5 +1,5 @@
 <div class="create-event-button" [class.active]="isActive" (click)="toggle()">
-    {{ isActive ? 'Desactivar Modo Creacion de Eventos' : 'Crear Evento' }}
+    {{ isActive ? ('event-toggle.deactivate' | translate) : ('event-toggle.create' | translate) }}
 </div>
 <create-event-alert *ngIf="showAlert" (accept)="closeAlert()"></create-event-alert>
 

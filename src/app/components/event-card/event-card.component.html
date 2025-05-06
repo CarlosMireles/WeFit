@@ -5,18 +5,18 @@
     <h5 class="custom-card-title">{{ title }}</h5>
 
     <p class="custom-card-text">
-      📍 <strong>Ubicación:</strong> {{ place }}
+      📍 <strong>{{ 'event-card.location' | translate }}</strong> {{ place }}
     </p>
 
     <p class="custom-card-text">
-      👥 <strong>Participantes:</strong> {{ participants }} / {{ maxParticipants }}
+      👥 <strong>{{ 'event-card.participants' | translate }}</strong> {{ participants }} / {{ maxParticipants }}
     </p>
 
     <p class="custom-card-text">
-      📅 <strong>Fecha:</strong> {{ date }}<br />
-      ⏰ <strong>Hora:</strong> {{ hour }}
+      📅 <strong>{{ 'event-card.date' | translate }}</strong> {{ date }}<br />
+      ⏰ <strong>{{ 'event-card.time' | translate }}</strong> {{ hour }}
     </p>
 
-    <button class="custom-card-button">Ver evento</button>
+    <button class="custom-card-button">{{ 'event-card.view' | translate }}</button>
   </div>
 </div>

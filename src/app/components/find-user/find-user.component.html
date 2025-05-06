@@ -1,6 +1,6 @@
 <div class="search-container">
   <div class="search-bar">
-    <input type="text" placeholder="Buscar..." #searchInput>
+    <input type="text" [placeholder]="'find-user.search-ph' | translate" #searchInput>
     <button (click)="onSearchClick()">
       <img src="/assets/search-icon.svg" alt="search icon" height="32" width="32">
     </button>
@@ -12,7 +12,7 @@
         <div class="user-info">
           <span class="username">{{ user.username }}</span>
           <span class="common-followers">
-            Seguidores en común:
+            {{ 'find-user.common-followers' | translate }}
             <ng-container *ngIf="user.commonFollowersSample.length > 0">
               {{ user.commonFollowersSample.join(', ') }}
             </ng-container>

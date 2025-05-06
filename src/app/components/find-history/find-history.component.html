@@ -1,12 +1,12 @@
 <div class="history-card">
-  <h3>Recomendados</h3>
+  <h3>{{ 'find-user.recomended' | translate }}</h3>
   <ul>
     <li *ngFor="let u of users" (click)="goTo(u)">
       <img class="profile-img" [src]="u.photoURL" alt="{{ u.username }}">
       <div class="info">
         <span class="username">{{ u.username }}</span>
         <span class="common">
-          Seguidores en común:
+          {{ 'find-user.common-followers' | translate }}
           <ng-container *ngIf="u.commonFollowersSample.length > 0">
             {{ u.commonFollowersSample.join(', ') }}
           </ng-container>

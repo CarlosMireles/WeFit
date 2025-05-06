@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SearchService } from '../../services/search.service';
 import { UserService } from '../../services/user.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-find-history',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './find-history.component.html',
   styleUrls: ['./find-history.component.css']
 })
