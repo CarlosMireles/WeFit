@@ -36,9 +36,9 @@ export class ConfigurationComponent {
   }
 
   sections = [
-    { key: 'usuario', label: 'Configuración de Usuario'},
-    { key: 'notificaciones', label: 'Notificaciones'},
-    { key: 'mejos', label: 'Mejores amigos'},
+    { key: 'usuario', label: 'configuration.user'},
+    { key: 'notificaciones', label: 'configuration.notification'},
+    { key: 'mejos', label: 'configuration.close-friends'},
   ];
 
   selectSection(section: string): void {

@@ -8,7 +8,7 @@
       <input
         type="text"
         [(ngModel)]="updated.title"
-        placeholder="'diet-view.title' | translate"
+        [placeholder]="'diet-view.title' | translate"
       />
     </ng-template>
   </div>
@@ -22,7 +22,7 @@
     <ng-template #editDesc>
       <textarea
         [(ngModel)]="updated.description1"
-        placeholder="'diet-view.description' | translate"
+        [placeholder]="'diet-view.description' | translate"
       ></textarea>
     </ng-template>
   </div>
@@ -56,7 +56,7 @@
               <input
                 type="text"
                 [(ngModel)]="updated.meals[i].lunch"
-                placeholder="'diet-view.name' | translate"
+                [placeholder]="'diet-view.name' | translate"
               />
             </ng-template>
             <button
@@ -78,7 +78,7 @@
           <ng-template #editMeal>
             <textarea
               [(ngModel)]="updated.meals[i].description2"
-              placeholder="'diet-view.details' | translate"
+              [placeholder]="'diet-view.details' | translate"
             ></textarea>
           </ng-template>
         </div>
@@ -108,24 +108,24 @@
               <input
                 type="number"
                 [(ngModel)]="updated.meals[i].proteins"
-                placeholder="'diet-view.proteins-ph' | translate"
+                [placeholder]="'diet-view.proteins-ph' | translate"
               />
               <input
                 type="number"
                 [(ngModel)]="updated.meals[i].carbohydrates"
-                placeholder="'diet-view.carbohydrates-ph' | translate"
+                [placeholder]="'diet-view.carbohydrates-ph' | translate"
               />
             </div>
             <div class="inputs-row">
               <input
                 type="number"
                 [(ngModel)]="updated.meals[i].fats"
-                placeholder="'diet-view.fats-ph' | translate"
+                [placeholder]="'diet-view.fats-ph' | translate"
               />
               <input
                 type="number"
                 [(ngModel)]="updated.meals[i].calories"
-                placeholder="'diet-view.calories-ph' | translate"
+                [placeholder]="'diet-view.calories-ph' | translate"
               />
             </div>
           </div>

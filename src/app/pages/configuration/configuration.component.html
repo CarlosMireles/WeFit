@@ -16,7 +16,7 @@
         [class.active]="selectedSection === section.key"
         (click)="selectSection(section.key)"
         style="display: flex; flex-direction: row; align-items: center; gap: 10px; cursor: pointer;">
-        {{ section.label }}
+        {{ section.label | translate }}
       </li>
     </ul>
   </div>
